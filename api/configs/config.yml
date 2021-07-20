@@ -1,0 +1,25 @@
+server:
+  port: "8001"
+  max_header_bytes: 1048576
+  read_timeout: 10
+  write_timeout: 10
+
+db:
+  host: "rlmp-db"
+  port: "5433"
+  username: "ythosa"
+  dbname: "rlmp"
+  sslmode: "disable"
+
+cache:
+  address: "rlmp-cache:6379"
+  password: ""
+  db: 0
+
+auth:
+  access_token:
+    ttl: 60
+    signing_key: "81hJ!*@#Y&12yN#UI!Yjfklsjdf"
+  refresh_token:
+    ttl: 43200
+    signing_key: "410fj12fjhsdfjksaj(UY^JIJ98adsuJIKDiHA&*"
