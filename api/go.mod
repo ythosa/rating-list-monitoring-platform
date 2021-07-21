@@ -3,7 +3,10 @@ module github.com/ythosa/rating-list-monitoring-platfrom-api
 go 1.15
 
 require (
-	github.com/joho/godotenv v1.3.0 // indirect
-	github.com/sirupsen/logrus v1.8.1 // indirect
-	github.com/spf13/viper v1.8.1 // indirect
+	github.com/go-redis/redis/v8 v8.11.0 // indirect
+	github.com/joho/godotenv v1.3.0
+	github.com/lib/pq v1.10.2
+	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/viper v1.8.1
+	gopkg.in/errgo.v2 v2.1.0
 )
