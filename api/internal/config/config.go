@@ -103,22 +103,26 @@ func newServer() *Server {
 }
 
 type DB struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	DBName   string
-	SSLMode  string
+	Driver         string
+	Host           string
+	Port           string
+	Username       string
+	Password       string
+	DBName         string
+	SSLMode        string
+	MigrationsPath string
 }
 
 func newDB() *DB {
 	return &DB{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		Password: os.Getenv("DB_PASSWORD"),
-		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"),
+		Driver:         viper.GetString("db.driver"),
+		Host:           viper.GetString("db.host"),
+		Port:           viper.GetString("db.port"),
+		Username:       viper.GetString("db.username"),
+		Password:       os.Getenv("DB_PASSWORD"),
+		DBName:         viper.GetString("db.dbname"),
+		SSLMode:        viper.GetString("db.sslmode"),
+		MigrationsPath: viper.GetString("db.migrations_path"),
 	}
 }
 

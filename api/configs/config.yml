@@ -5,11 +5,13 @@ server:
   write_timeout: 10
 
 db:
+  driver: "postgres"
   host: "rlmp-db"
   port: "5433"
   username: "ythosa"
   dbname: "rlmp"
   sslmode: "disable"
+  migrations_path: "/usr/src/app/schema"
 
 cache:
   address: "rlmp-cache:6379"
