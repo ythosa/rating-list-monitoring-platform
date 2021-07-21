@@ -4,8 +4,8 @@ type DBError struct {
 	err string
 }
 
-func NewDBError(err string) DBError {
-	return DBError{err}
+func NewDBError(err string) *DBError {
+	return &DBError{err}
 }
 
 func (e *DBError) Error() string {

@@ -11,13 +11,17 @@ var redisCtx = context.TODO()
 
 const emptyValue = ""
 
-func NewCache(cfg *config.Cache) *cache.Cache {
+func NewClient(cfg *config.Cache) *redis.Client {
 	rc := redis.NewClient(&redis.Options{
 		Addr:     cfg.Address,
 		Password: cfg.Password,
 		DB:       cfg.DB,
 	})
 
+	return rc
+}
+
+func NewCache(rc *redis.Client) *cache.Cache {
 	return &cache.Cache{
 		RefreshToken: NewRefreshToken(rc),
 	}

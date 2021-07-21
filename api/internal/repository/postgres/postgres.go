@@ -48,6 +48,6 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 
 func NewRepository(db *sqlx.DB) *repository.Repository {
 	return &repository.Repository{
-		//User
+		User: NewUser(db),
 	}
 }
