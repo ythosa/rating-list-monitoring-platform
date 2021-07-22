@@ -8,6 +8,13 @@ type RefreshToken interface {
 	Delete(userID int) error
 }
 
+type Blacklist interface {
+	Save(userID int, accessToken string, ttl time.Duration) error
+	Get(userID int) error
+	Delete(userID int) error
+}
+
 type Cache struct {
 	RefreshToken
+	Blacklist
 }

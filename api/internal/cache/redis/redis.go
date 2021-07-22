@@ -9,8 +9,6 @@ import (
 
 var redisCtx = context.TODO()
 
-const emptyValue = ""
-
 func NewClient(cfg *config.Cache) *redis.Client {
 	rc := redis.NewClient(&redis.Options{
 		Addr:     cfg.Address,
@@ -23,6 +21,7 @@ func NewClient(cfg *config.Cache) *redis.Client {
 
 func NewCache(rc *redis.Client) *cache.Cache {
 	return &cache.Cache{
-		RefreshToken: NewRefreshToken(rc),
+		RefreshToken: NewRefreshTokenImpl(rc),
+		Blacklist:    NewBlacklistImpl(rc),
 	}
 }
