@@ -32,4 +32,5 @@ func NewInternalServerError(err error) *Error {
 var (
 	UserAlreadyExistsError         = NewError(http.StatusConflict, errors.New("user already exists"))
 	InvalidUserNameOrPasswordError = NewError(http.StatusUnauthorized, errors.New("invalid username or password"))
+	InvalidTokenError              = NewError(http.StatusUnauthorized, errors.New("invalid token"))
 )
