@@ -3,7 +3,7 @@ package postgres
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
@@ -11,24 +11,28 @@ import (
 )
 
 type User struct {
-	db *sqlx.DB
+	db     *sqlx.DB
+	logger *logging.Logger
 }
 
 func NewUser(db *sqlx.DB) *User {
-	return &User{db}
+	return &User{
+		db:     db,
+		logger: logging.NewLogger("user repository"),
+	}
 }
 
 func (r *User) Create(user rdto.UserCreating) (int, error) {
 	var id int
 
 	query := fmt.Sprintf(
-		`INSERT INTO %s (nickname, password, first_name, middle_name, last_name, snils) 
+		`INSERT INTO %s (username, password, first_name, middle_name, last_name, snils) 
 		VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
 		usersTable,
 	)
-	row := r.db.QueryRow(query, user.Nickname, user.Password, user.FirstName, user.MiddleName, user.LastName, user.Snils)
+	row := r.db.QueryRow(query, user.Username, user.Password, user.FirstName, user.MiddleName, user.LastName, user.Snils)
 	if err := row.Scan(&id); err != nil {
-		logrus.Error(err)
+		r.logger.Error(err.Error())
 
 		return 0, repository.ErrUserAlreadyExists
 	}
@@ -36,11 +40,11 @@ func (r *User) Create(user rdto.UserCreating) (int, error) {
 	return id, nil
 }
 
-func (r *User) GetUserByNickname(nickname string) (*models.User, error) {
+func (r *User) GetUserByUsername(username string) (*models.User, error) {
 	var user models.User
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE nickname=$1", usersTable)
-	if err := r.db.Get(&user, query, nickname); err != nil {
+	query := fmt.Sprintf("SELECT * FROM %s WHERE username=$1", usersTable)
+	if err := r.db.Get(&user, query, username); err != nil {
 		return nil, repository.ErrRecordNotFound
 	}
 
@@ -102,7 +106,7 @@ func (r *User) PatchUser(id int, data rdto.UserPatching) error {
 
 	result, err := r.db.Exec(query, args...)
 	if err != nil {
-		logrus.Error(err)
+		r.logger.Error(err.Error())
 
 		return repository.ErrRecordNotFound
 	}

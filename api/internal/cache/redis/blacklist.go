@@ -3,6 +3,7 @@ package redis
 import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"gopkg.in/errgo.v2/fmt/errors"
 	"time"
 )
 
@@ -20,7 +21,7 @@ func (b *BlacklistImpl) Save(userID int, accessToken string, ttl time.Duration) 
 
 func (b *BlacklistImpl) Get(userID int) error {
 	if err := b.rc.Get(redisCtx, b.formatKey(userID)).Err(); err != nil {
-		return fmt.Errorf("there is no user in the blacklist")
+		return errors.New("there is no user in the blacklist")
 	}
 
 	return nil

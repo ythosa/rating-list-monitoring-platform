@@ -7,7 +7,7 @@ import (
 
 type User interface {
 	Create(user rdto.UserCreating) (int, error)
-	GetUserByNickname(nickname string) (*models.User, error)
+	GetUserByUsername(username string) (*models.User, error)
 	GetUserByID(id int) (*models.User, error)
 	UpdatePassword(id int, password string) error
 	PatchUser(id int, data rdto.UserPatching) error

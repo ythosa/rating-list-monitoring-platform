@@ -5,7 +5,7 @@ import (
 )
 
 type UserCredentials struct {
-	Nickname string `json:"nickname" validate:"required,min=4,max=10"`
+	Username string `json:"username" validate:"required,min=4,max=10"`
 	Password string `json:"password" validate:"required,min=5,max=20"`
 }
 

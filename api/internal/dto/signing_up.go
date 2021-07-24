@@ -1,13 +1,13 @@
 package dto
 
 import (
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/validation"
+	"gopkg.in/errgo.v2/fmt/errors"
 )
 
 type SigningUp struct {
-	Nickname   string `json:"nickname" validate:"required,min=4,max=10"`
+	Username   string `json:"username" validate:"required,min=4,max=10"`
 	Password   string `json:"password" validate:"required,min=5,max=20"`
 	FirstName  string `json:"first_name" validate:"required,alpha,min=3"`
 	MiddleName string `json:"middle_name" validate:"required,alpha,min=3"`
@@ -17,11 +17,11 @@ type SigningUp struct {
 
 func (d *SigningUp) Validate(validate *validator.Validate) error {
 	if err := validate.Struct(d); err != nil {
-		return fmt.Errorf("failed to validate dto: %w", err)
+		return errors.Newf("failed to validate dto: %s", err)
 	}
 
 	if err := validation.Snils(d.Snils); err != nil {
-		return fmt.Errorf("invalid snils: %w", err)
+		return errors.Newf("invalid snils: %s", err)
 	}
 
 	return nil

@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
+	"gopkg.in/errgo.v2/fmt/errors"
 )
 
 const (
@@ -23,12 +24,12 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 		),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error occurred while opening db connection: %w", err)
+		return nil, errors.Newf("error occurred while opening db connection: %s", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return nil, fmt.Errorf("error occurred while pinging db: %w", err)
+		return nil, errors.Newf("error occurred while pinging db: %s", err)
 	}
 
 	// Create new migrate connections
@@ -38,7 +39,7 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 			cfg.Driver, cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("failed to migrate new: %s", err)
+		return nil, errors.Newf("failed to migrate new: %s", err)
 	}
 
 	_ = m.Up() // Up migrations
