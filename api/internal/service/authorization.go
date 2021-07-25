@@ -35,10 +35,10 @@ func NewAuthorizationImpl(
 	}
 }
 
-func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (int, *Error) {
+func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (int, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return 0, NewInternalServerError(err)
+		return 0, err
 	}
 
 	userData.Password = string(hashedPassword)
@@ -52,33 +52,33 @@ func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (int, *Error) {
 	return id, nil
 }
 
-func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) (*dto.AuthorizationTokens, *Error) {
+func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) (*dto.AuthorizationTokens, error) {
 	user, err := s.userRepository.GetUserByUsername(userCredentials.Username)
 	if err != nil {
-		return nil, InvalidUserNameOrPasswordError
+		return nil, InvalidUsernameOrPasswordError
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userCredentials.Password)); err != nil {
-		return nil, InvalidUserNameOrPasswordError
+		return nil, InvalidUsernameOrPasswordError
 	}
 
 	if err := s.blacklistCache.Delete(user.ID); err != nil {
-		return nil, NewInternalServerError(err)
+		return nil, err
 	}
 
 	tokens, err := authorization.GenerateTokensFromPayload(user.ID)
 	if err != nil {
-		return nil, NewInternalServerError(err)
+		return nil, err
 	}
 
 	if err := s.refreshTokenCache.Save(user.ID, tokens.RefreshToken, config.Get().Auth.RefreshToken.TTL); err != nil {
-		return nil, NewInternalServerError(err)
+		return nil, err
 	}
 
 	return tokens, nil
 }
 
-func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, *Error) {
+func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, error) {
 	tokenClaims, err := authorization.ParseToken(refreshToken, authorization.RefreshToken)
 	if err != nil {
 		return nil, InvalidTokenError
@@ -95,19 +95,19 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 
 	newlyGeneratedTokens, err := authorization.GenerateTokensFromPayload(tokenClaims.UserID)
 	if err != nil {
-		return nil, NewInternalServerError(err)
+		return nil, err
 	}
 
 	if err := s.refreshTokenCache.Save(
 		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().Auth.RefreshToken.TTL,
 	); err != nil {
-		return nil, NewInternalServerError(err)
+		return nil, err
 	}
 
 	return newlyGeneratedTokens, nil
 }
 
-func (s *AuthorizationImpl) LogoutUser(userID int, accessToken string) *Error {
+func (s *AuthorizationImpl) LogoutUser(userID int, accessToken string) error {
 	tokenClaims, err := authorization.ParseToken(accessToken, authorization.AccessToken)
 	if err != nil {
 		return InvalidTokenError
@@ -115,11 +115,11 @@ func (s *AuthorizationImpl) LogoutUser(userID int, accessToken string) *Error {
 
 	storageTimeInTheBlacklist := time.Until(time.Unix(tokenClaims.ExpiresAt, 0))
 	if err := s.blacklistCache.Save(userID, accessToken, storageTimeInTheBlacklist); err != nil {
-		return NewInternalServerError(err)
+		return err
 	}
 
 	if err := s.refreshTokenCache.Delete(userID); err != nil {
-		return NewInternalServerError(err)
+		return err
 	}
 
 	return nil

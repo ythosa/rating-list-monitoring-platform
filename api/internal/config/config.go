@@ -97,8 +97,8 @@ func newServer() *Server {
 	return &Server{
 		Port:           viper.GetString("server.port"),
 		MaxHeaderBytes: viper.GetInt("server.max_header_bytes"),
-		ReadTimeout:    time.Duration(viper.GetInt("server.read_timeout")),
-		WriteTimeout:   time.Duration(viper.GetInt("server.write_timeout")),
+		ReadTimeout:    time.Duration(viper.GetInt("server.read_timeout")) * time.Second,
+		WriteTimeout:   time.Duration(viper.GetInt("server.write_timeout")) * time.Second,
 	}
 }
 

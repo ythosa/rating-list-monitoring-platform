@@ -1,0 +1,19 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Rating List Monitoring Platform API",
+        "title": "Rating List Monitoring Platform",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080/api",
+    "basePath": "/v1/api/",
+    "paths": {},
+    "securityDefinitions": {
+        "AccessTokenHeader": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

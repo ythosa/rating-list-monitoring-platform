@@ -8,9 +8,9 @@ import (
 // @title Rating List Monitoring Platform
 // @description Rating List Monitoring Platform API
 // @version 1.0
-// @basePath /v1/api/
+// @basePath /api/
 
-// @host localhost:8080/api
+// @host localhost:8000/api
 
 // @securityDefinitions.apiKey AccessTokenHeader
 // @in header
