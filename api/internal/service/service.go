@@ -7,11 +7,11 @@ import (
 )
 
 type Authorization interface {
-	SignUpUser(userData dto.SigningUp) (int, error)
+	SignUpUser(userData dto.SigningUp) (uint8, error)
 	GenerateTokens(userCredentials dto.UserCredentials) (*dto.AuthorizationTokens, error)
 	RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, error)
-	LogoutUser(userID int, accessToken string) error
-	IsUserLogout(userID int) bool
+	LogoutUser(userID uint8, accessToken string) error
+	IsUserLogout(userID uint8) bool
 }
 
 type Service struct {

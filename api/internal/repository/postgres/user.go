@@ -22,8 +22,8 @@ func NewUser(db *sqlx.DB) *User {
 	}
 }
 
-func (r *User) Create(user rdto.UserCreating) (int, error) {
-	var id int
+func (r *User) Create(user rdto.UserCreating) (uint8, error) {
+	var id uint8
 
 	query := fmt.Sprintf(
 		`INSERT INTO %s (username, password, first_name, middle_name, last_name, snils) 
@@ -32,7 +32,7 @@ func (r *User) Create(user rdto.UserCreating) (int, error) {
 	)
 	row := r.db.QueryRow(query, user.Username, user.Password, user.FirstName, user.MiddleName, user.LastName, user.Snils)
 	if err := row.Scan(&id); err != nil {
-		r.logger.Error(err.Error())
+		r.logger.Error(err)
 
 		return 0, repository.ErrUserAlreadyExists
 	}
@@ -51,7 +51,7 @@ func (r *User) GetUserByUsername(username string) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *User) GetUserByID(id int) (*models.User, error) {
+func (r *User) GetUserByID(id uint8) (*models.User, error) {
 	var user models.User
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)
@@ -62,7 +62,7 @@ func (r *User) GetUserByID(id int) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *User) UpdatePassword(id int, password string) error {
+func (r *User) UpdatePassword(id uint8, password string) error {
 	query := fmt.Sprintf("UPDATE %s ut SET password=$1 WHERE ut.id=$2", usersTable)
 	if _, err := r.db.Exec(query, password, id); err != nil {
 		return repository.ErrRecordNotFound
@@ -71,7 +71,7 @@ func (r *User) UpdatePassword(id int, password string) error {
 	return nil
 }
 
-func (r *User) PatchUser(id int, data rdto.UserPatching) error {
+func (r *User) PatchUser(id uint8, data rdto.UserPatching) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argID := 1
@@ -106,7 +106,7 @@ func (r *User) PatchUser(id int, data rdto.UserPatching) error {
 
 	result, err := r.db.Exec(query, args...)
 	if err != nil {
-		r.logger.Error(err.Error())
+		r.logger.Error(err)
 
 		return repository.ErrRecordNotFound
 	}

@@ -3,15 +3,15 @@ package cache
 import "time"
 
 type RefreshToken interface {
-	Save(userID int, token string, ttl time.Duration) error
-	Get(userID int) (string, error)
-	Delete(userID int) error
+	Save(userID uint8, token string, ttl time.Duration) error
+	Get(userID uint8) (string, error)
+	Delete(userID uint8) error
 }
 
 type Blacklist interface {
-	Save(userID int, accessToken string, ttl time.Duration) error
-	Get(userID int) error
-	Delete(userID int) error
+	Save(userID uint8, accessToken string, ttl time.Duration) error
+	Get(userID uint8) error
+	Delete(userID uint8) error
 }
 
 type Cache struct {

@@ -6,18 +6,21 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/ythosa/rating-list-monitoring-platfrom-api/docs"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/controller"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 )
 
 type Handler struct {
-	services *service.Service
-	validate *validator.Validate
+	services    *service.Service
+	validate    *validator.Validate
+	controllers *controller.Controller
 }
 
 func NewHandler(services *service.Service, validate *validator.Validate) *Handler {
 	return &Handler{
-		services: services,
-		validate: validate,
+		services:    services,
+		validate:    validate,
+		controllers: controller.NewController(validate, services),
 	}
 }
 

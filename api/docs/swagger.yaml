@@ -1,10 +1,120 @@
+definitions:
+  apierrors.APIError:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.AuthorizationTokens:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  dto.IDResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.SigningUp:
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      password:
+        type: string
+      snils:
+        type: string
+      username:
+        type: string
+    required:
+    - first_name
+    - last_name
+    - middle_name
+    - password
+    - snils
+    - username
+    type: object
+  dto.UserCredentials:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
 host: localhost:8000/api
 info:
   contact: {}
   description: Rating List Monitoring Platform API
   title: Rating List Monitoring Platform
   version: "1.0"
-paths: {}
+paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: receives user credentials and returns jwt access and refresh tokens
+      parameters:
+      - description: user credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserCredentials'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthorizationTokens'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      summary: sign in user with jwt tokens response
+      tags:
+      - authorization
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: receives user credentials, creates user and returns user id
+      parameters:
+      - description: user credentials
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SigningUp'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.IDResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      summary: sign up new user
+      tags:
+      - authorization
 securityDefinitions:
   AccessTokenHeader:
     in: header

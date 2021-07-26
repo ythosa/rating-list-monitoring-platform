@@ -21,7 +21,7 @@ var (
 
 type TokenClaims struct {
 	jwt.StandardClaims
-	UserID int `json:"user_id"`
+	UserID uint8 `json:"user_id"`
 }
 
 func ParseToken(token string, tokenType int) (*TokenClaims, error) {
@@ -57,7 +57,7 @@ func ParseToken(token string, tokenType int) (*TokenClaims, error) {
 	return claims, nil
 }
 
-func GenerateTokensFromPayload(userID int) (*dto.AuthorizationTokens, error) {
+func GenerateTokensFromPayload(userID uint8) (*dto.AuthorizationTokens, error) {
 	tokensCfg := config.Get().Auth
 
 	accessTokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{

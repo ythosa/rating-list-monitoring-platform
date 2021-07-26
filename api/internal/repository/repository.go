@@ -6,11 +6,11 @@ import (
 )
 
 type User interface {
-	Create(user rdto.UserCreating) (int, error)
+	Create(user rdto.UserCreating) (uint8, error)
 	GetUserByUsername(username string) (*models.User, error)
-	GetUserByID(id int) (*models.User, error)
-	UpdatePassword(id int, password string) error
-	PatchUser(id int, data rdto.UserPatching) error
+	GetUserByID(id uint8) (*models.User, error)
+	UpdatePassword(id uint8, password string) error
+	PatchUser(id uint8, data rdto.UserPatching) error
 }
 
 type Repository struct {

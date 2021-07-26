@@ -14,18 +14,18 @@ func NewRefreshTokenImpl(rc *redis.Client) *RefreshTokenImpl {
 	return &RefreshTokenImpl{rc}
 }
 
-func (r *RefreshTokenImpl) Save(userID int, token string, ttl time.Duration) error {
+func (r *RefreshTokenImpl) Save(userID uint8, token string, ttl time.Duration) error {
 	return r.rc.Set(redisCtx, r.formatKey(userID), token, ttl).Err()
 }
 
-func (r *RefreshTokenImpl) Get(userID int) (string, error) {
+func (r *RefreshTokenImpl) Get(userID uint8) (string, error) {
 	return r.rc.Get(redisCtx, r.formatKey(userID)).Result()
 }
 
-func (r *RefreshTokenImpl) Delete(userID int) error {
+func (r *RefreshTokenImpl) Delete(userID uint8) error {
 	return r.rc.Del(redisCtx, r.formatKey(userID)).Err()
 }
 
-func (r *RefreshTokenImpl) formatKey(userID int) string {
+func (r *RefreshTokenImpl) formatKey(userID uint8) string {
 	return fmt.Sprintf("rt_%d", userID)
 }

@@ -15,11 +15,11 @@ func NewBlacklistImpl(rc *redis.Client) *BlacklistImpl {
 	return &BlacklistImpl{rc}
 }
 
-func (b *BlacklistImpl) Save(userID int, accessToken string, ttl time.Duration) error {
+func (b *BlacklistImpl) Save(userID uint8, accessToken string, ttl time.Duration) error {
 	return b.rc.Set(redisCtx, b.formatKey(userID), accessToken, ttl).Err()
 }
 
-func (b *BlacklistImpl) Get(userID int) error {
+func (b *BlacklistImpl) Get(userID uint8) error {
 	if err := b.rc.Get(redisCtx, b.formatKey(userID)).Err(); err != nil {
 		return errors.New("there is no user in the blacklist")
 	}
@@ -27,10 +27,10 @@ func (b *BlacklistImpl) Get(userID int) error {
 	return nil
 }
 
-func (b *BlacklistImpl) Delete(userID int) error {
+func (b *BlacklistImpl) Delete(userID uint8) error {
 	return b.rc.Del(redisCtx, b.formatKey(userID)).Err()
 }
 
-func (b *BlacklistImpl) formatKey(userID int) string {
+func (b *BlacklistImpl) formatKey(userID uint8) string {
 	return fmt.Sprintf("bl_%d", userID)
 }

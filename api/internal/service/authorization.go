@@ -35,7 +35,7 @@ func NewAuthorizationImpl(
 	}
 }
 
-func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (int, error) {
+func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (uint8, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return 0, err
@@ -44,7 +44,7 @@ func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (int, error) {
 	userData.Password = string(hashedPassword)
 	id, err := s.userRepository.Create(rdto.UserCreating(userData))
 	if err != nil {
-		s.logger.Error(err.Error())
+		s.logger.Error(err)
 
 		return 0, UserAlreadyExistsError
 	}
@@ -107,7 +107,7 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 	return newlyGeneratedTokens, nil
 }
 
-func (s *AuthorizationImpl) LogoutUser(userID int, accessToken string) error {
+func (s *AuthorizationImpl) LogoutUser(userID uint8, accessToken string) error {
 	tokenClaims, err := authorization.ParseToken(accessToken, authorization.AccessToken)
 	if err != nil {
 		return InvalidTokenError
@@ -125,7 +125,7 @@ func (s *AuthorizationImpl) LogoutUser(userID int, accessToken string) error {
 	return nil
 }
 
-func (s *AuthorizationImpl) IsUserLogout(userID int) bool {
+func (s *AuthorizationImpl) IsUserLogout(userID uint8) bool {
 	if err := s.blacklistCache.Get(userID); err != nil {
 		return true
 	}
