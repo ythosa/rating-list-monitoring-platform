@@ -1,5 +1,4 @@
-basePath: /v1/api/
-host: localhost:8080/api
+host: localhost:8000/api
 info:
   contact: {}
   description: Rating List Monitoring Platform API

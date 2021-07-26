@@ -45,8 +45,8 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "1.0",
-	Host:        "localhost:8080/api",
-	BasePath:    "/v1/api/",
+	Host:        "localhost:8000/api",
+	BasePath:    "",
 	Schemes:     []string{},
 	Title:       "Rating List Monitoring Platform",
 	Description: "Rating List Monitoring Platform API",

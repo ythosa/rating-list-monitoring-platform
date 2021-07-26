@@ -1,0 +1,47 @@
+version: "3.3"
+
+networks:
+  rating-list-monitoring-platform:
+    driver: bridge
+
+volumes:
+  db:
+
+services:
+  nginx:
+    build: nginx
+    container_name: rlmp-nginx
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    networks:
+      - rating-list-monitoring-platform
+    depends_on:
+      - api
+      - db
+
+  api:
+    build: api
+    container_name: rlmp-api
+    command: go run ./cmd/app/main.go
+    restart: unless-stopped
+    ports:
+      - "8001:8001"
+    environment:
+      - RLMP_CONFIGS_FOLDER_PATH=/usr/src/app/configs
+      - RLMP_CONFIG_NAME=config
+      - RLMP_DOTENV_PATH=/usr/src/app/.env
+    depends_on:
+      - db
+    networks:
+      - rating-list-monitoring-platform
+
+  db:
+    container_name: rlmp-db
+    image: postgres:latest
+    env_file:
+      - postgres/db.env
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - rating-list-monitoring-platform

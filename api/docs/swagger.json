@@ -6,8 +6,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:8080/api",
-    "basePath": "/v1/api/",
+    "host": "localhost:8000/api",
     "paths": {},
     "securityDefinitions": {
         "AccessTokenHeader": {
