@@ -34,5 +34,5 @@ CREATE TABLE universities_directions
 (
     id            serial                           not null unique,
     university_id int references universities (id) not null,
-    direction_id  int references directions (id)   not null,
+    direction_id  int references directions (id)   not null
 );
