@@ -22,6 +22,10 @@ func Snils(snils string) error {
 		sum += currentNumber * (lengthWithoutCheckSum - i)
 	}
 
+	if sum >= 100 {
+		sum = sum%100 - 1
+	}
+
 	if checkSum != sum {
 		return errors.New("invalid check sum")
 	}

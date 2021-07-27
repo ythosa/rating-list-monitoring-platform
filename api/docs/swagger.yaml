@@ -55,6 +55,52 @@ info:
   title: Rating List Monitoring Platform
   version: "1.0"
 paths:
+  /auth/logout:
+    get:
+      consumes:
+      - application/json
+      description: receives access token header and logouts user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: logout success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: logout user
+      tags:
+      - authorization
+  /auth/refresh-tokens:
+    get:
+      description: receives refresh token header and returns updated jwt access and refresh tokens
+      parameters:
+      - description: refresh token header
+        in: header
+        name: RefreshToken
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.AuthorizationTokens'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      summary: update jwt access and refresh tokens
+      tags:
+      - authorization
   /auth/sign-in:
     post:
       consumes:

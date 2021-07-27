@@ -24,6 +24,78 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/logout": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "description": "receives access token header and logouts user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "logout user",
+                "responses": {
+                    "200": {
+                        "description": "logout success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh-tokens": {
+            "get": {
+                "description": "receives refresh token header and returns updated jwt access and refresh tokens",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authorization"
+                ],
+                "summary": "update jwt access and refresh tokens",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "refresh token header",
+                        "name": "RefreshToken",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.AuthorizationTokens"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/sign-in": {
             "post": {
                 "description": "receives user credentials and returns jwt access and refresh tokens",

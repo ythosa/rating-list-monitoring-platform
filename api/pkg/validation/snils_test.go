@@ -18,19 +18,29 @@ func TestSnils(t *testing.T) {
 			ok:    true,
 		},
 		{
-			name: "invalid check sum",
+			name:  "valid snils",
+			snils: "16691218387",
+			ok:    true,
+		},
+		{
+			name:  "valid snils",
+			snils: "12358325649",
+			ok:    true,
+		},
+		{
+			name:  "invalid check sum",
 			snils: "11223344594",
-			ok: false,
+			ok:    false,
 		},
 		{
-			name: "invalid check sum format",
+			name:  "invalid check sum format",
 			snils: "1122334459a",
-			ok: false,
+			ok:    false,
 		},
 		{
-			name: "invalid snils format",
+			name:  "invalid snils format",
 			snils: "11a23344595",
-			ok: false,
+			ok:    false,
 		},
 	}
 
