@@ -61,7 +61,7 @@ func (a *AuthorizationImpl) SignUp(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.IDResponse{ID: id})
+	c.JSON(http.StatusCreated, dto.IDResponse{ID: id})
 }
 
 // SignIn
@@ -71,7 +71,7 @@ func (a *AuthorizationImpl) SignUp(c *gin.Context) {
 // @accept json
 // @produce json
 // @param payload body dto.UserCredentials true "user credentials"
-// @success 201 {object} dto.AuthorizationTokens
+// @success 200 {object} dto.AuthorizationTokens
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
 // @router /auth/sign-in [post].

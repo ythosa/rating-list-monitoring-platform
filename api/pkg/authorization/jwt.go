@@ -25,7 +25,7 @@ type TokenClaims struct {
 }
 
 func ParseToken(token string, tokenType int) (*TokenClaims, error) {
-	tokensCfg := config.Get().Auth
+	tokensCfg := config.Get().Authorization
 
 	var signingKey []byte
 
@@ -58,28 +58,12 @@ func ParseToken(token string, tokenType int) (*TokenClaims, error) {
 }
 
 func GenerateTokensFromPayload(userID uint8) (*dto.AuthorizationTokens, error) {
-	tokensCfg := config.Get().Auth
-
-	accessTokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokensCfg.AccessToken.TTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-		UserID: userID,
-	})
-	accessToken, err := accessTokenRaw.SignedString(tokensCfg.AccessToken.SigningKey)
+	accessToken, err := GenerateAccessTokenFromPayload(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshTokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokensCfg.RefreshToken.TTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-		UserID: userID,
-	})
-	refreshToken, err := refreshTokenRaw.SignedString(tokensCfg.RefreshToken.SigningKey)
+	refreshToken, err := GenerateRefreshTokenFromPayload(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -88,4 +72,42 @@ func GenerateTokensFromPayload(userID uint8) (*dto.AuthorizationTokens, error) {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func GenerateAccessTokenFromPayload(userID uint8) (string, error) {
+	cfg := config.Get().Authorization.AccessToken
+
+	tokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(cfg.TTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		UserID: userID,
+	})
+
+	token, err := tokenRaw.SignedString(cfg.SigningKey)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
+}
+
+func GenerateRefreshTokenFromPayload(userID uint8) (string, error) {
+	cfg := config.Get().Authorization.RefreshToken
+
+	tokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(cfg.TTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		UserID: userID,
+	})
+
+	token, err := tokenRaw.SignedString(cfg.SigningKey)
+	if err != nil {
+		return "", err
+	}
+
+	return token, nil
 }

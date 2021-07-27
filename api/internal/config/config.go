@@ -71,18 +71,18 @@ func initDotEnvParser() error {
 }
 
 type Config struct {
-	Server *Server
-	DB     *DB
-	Cache  *Cache
-	Auth   *Auth
+	Server        *Server
+	DB            *DB
+	Cache         *Cache
+	Authorization *Authorization
 }
 
 func newConfig() *Config {
 	return &Config{
-		Server: newServer(),
-		DB:     newDB(),
-		Cache:  newCache(),
-		Auth:   newAuth(),
+		Server:        newServer(),
+		DB:            newDB(),
+		Cache:         newCache(),
+		Authorization: newAuth(),
 	}
 }
 
@@ -145,13 +145,13 @@ type JWTToken struct {
 	SigningKey []byte
 }
 
-type Auth struct {
+type Authorization struct {
 	AccessToken  JWTToken
 	RefreshToken JWTToken
 }
 
-func newAuth() *Auth {
-	return &Auth{
+func newAuth() *Authorization {
+	return &Authorization{
 		AccessToken: JWTToken{
 			TTL:        time.Minute * time.Duration(viper.GetInt("auth.access_token.ttl")),
 			SigningKey: []byte(viper.GetString("auth.access_token.signing_key")),

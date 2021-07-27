@@ -6,6 +6,8 @@ networks:
 
 volumes:
   db:
+  cache:
+  cache-cfg:
 
 services:
   nginx:
@@ -43,5 +45,16 @@ services:
       - postgres/db.env
     volumes:
       - db:/var/lib/postgresql/data
+    networks:
+      - rating-list-monitoring-platform
+
+  cache:
+    container_name: rlmp-cache
+    image: redis:6.0.9-alpine
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    volumes:
+      - cache:/var/lib/redis
+      - cache-cfg:/usr/local/etc/redis/redis.conf
     networks:
       - rating-list-monitoring-platform

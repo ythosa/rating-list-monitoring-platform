@@ -66,12 +66,30 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 		return nil, err
 	}
 
-	tokens, err := authorization.GenerateTokensFromPayload(user.ID)
-	if err != nil {
-		return nil, err
+	var tokens = &dto.AuthorizationTokens{}
+
+	latestRefreshToken, gettingLatestRefreshTokenErr := s.refreshTokenCache.Get(user.ID)
+	_, parsingLatestRefreshTokenErr := authorization.ParseToken(latestRefreshToken, authorization.RefreshToken)
+	if gettingLatestRefreshTokenErr != nil || parsingLatestRefreshTokenErr != nil {
+		tokens, err = authorization.GenerateTokensFromPayload(user.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		if err := s.refreshTokenCache.Save(
+			user.ID,
+			tokens.RefreshToken,
+			config.Get().Authorization.RefreshToken.TTL,
+		); err != nil {
+			return nil, err
+		}
+
+		return tokens, nil
 	}
 
-	if err := s.refreshTokenCache.Save(user.ID, tokens.RefreshToken, config.Get().Auth.RefreshToken.TTL); err != nil {
+	tokens.RefreshToken = latestRefreshToken
+	tokens.AccessToken, err = authorization.GenerateAccessTokenFromPayload(user.ID)
+	if err != nil {
 		return nil, err
 	}
 
@@ -99,7 +117,7 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 	}
 
 	if err := s.refreshTokenCache.Save(
-		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().Auth.RefreshToken.TTL,
+		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().Authorization.RefreshToken.TTL,
 	); err != nil {
 		return nil, err
 	}
