@@ -2,6 +2,9 @@
 .idea/
 api/.idea/
 
+# Python3 venv
+venv/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

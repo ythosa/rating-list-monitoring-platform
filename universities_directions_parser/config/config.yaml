@@ -1,0 +1,7 @@
+db:
+  host: "rlmp-db"
+  port: "5433"
+  username: "ythosa"
+  password: "qwerty"
+  dbname: "rlmp"
+  sslmode: "disable"

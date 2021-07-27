@@ -36,3 +36,7 @@ CREATE TABLE universities_directions
     university_id int references universities (id) not null,
     direction_id  int references directions (id)   not null
 );
+
+INSERT INTO universities (name, directions_page_url)
+VALUES ('СПБГУ',
+        'https://cabinet.spbu.ru/Lists/1k_EntryLists/index_comp_groups.html');
