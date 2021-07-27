@@ -7,6 +7,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 	_ "github.com/ythosa/rating-list-monitoring-platfrom-api/docs"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/controller"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/middleware"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 )
 
@@ -32,6 +33,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		swaggerDocumentation := api.Group("/docs")
 		{
 			swaggerDocumentation.GET("/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
+
+		authorization := api.Group("/auth")
+		{
+			authorization.POST("/sign-up", h.controllers.Authorization.SignUp)
+			authorization.POST("/sign-in", h.controllers.Authorization.SignIn)
+			authorization.GET("/refresh-tokens", h.controllers.Authorization.RefreshTokens)
+			authorization.GET("/logout", middleware.UserIdentity, h.controllers.Authorization.Logout)
 		}
 	}
 
