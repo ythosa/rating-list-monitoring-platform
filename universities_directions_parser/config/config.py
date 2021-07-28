@@ -4,18 +4,11 @@ from typing import Dict, IO
 
 import yaml
 
+from metaclasses import Singleton
+
 
 class InvalidConfigFormat(Exception):
     pass
-
-
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
 
 
 class DB(metaclass=Singleton):
@@ -47,7 +40,7 @@ class Config(metaclass=Singleton):
         return self._db
 
     def __init__(self):
-        config_file_path: str = os.getenv("CONFIG_FILE_PATH", "./config/config.yaml")
+        config_file_path: str = os.getenv("CONFIG_FILE_PATH", "config/config.yaml")
         config_file: IO = open(config_file_path)
         data: Dict[str, str] = yaml.load(config_file, Loader=yaml.SafeLoader)
 
