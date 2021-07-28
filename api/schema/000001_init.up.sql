@@ -31,6 +31,13 @@ CREATE TABLE users_universities
     university_id int references universities (id) not null
 );
 
+CREATE TABLE users_directions
+(
+    id           serial                         not null unique,
+    user_id      int references users (id)      not null,
+    direction_id int references directions (id) not null
+);
+
 INSERT INTO universities (name, directions_page_url)
 VALUES ('СПБГУ',
         'https://cabinet.spbu.ru/Lists/1k_EntryLists/index_comp_groups.html'),

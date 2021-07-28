@@ -1,3 +1,5 @@
+DROP TABLE users_directions;
+
 DROP TABLE users_universities;
 
 DROP TABLE directions;
