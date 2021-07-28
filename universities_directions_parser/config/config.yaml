@@ -1,5 +1,5 @@
 db:
-  host: "localhost"
+  host: "rlmp-db"
   port: "5433"
   username: "ythosa"
   password: "qwerty"

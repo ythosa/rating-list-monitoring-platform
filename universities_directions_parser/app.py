@@ -1,3 +1,5 @@
+import time
+
 import models
 from config import Config
 from parsers import parsing
@@ -5,9 +7,15 @@ from repository import Repository
 
 
 def main():
+    time.sleep(60)
+
     repository = Repository(Config().db)
 
     s = repository.get_session()
+
+    for direction in s.query(models.Direction).all():
+        s.delete(direction)
+
     for u in s.query(models.University).all():
         directions = map(
             lambda direction: models.Direction(name=direction.name, url=direction.url, university_id=u.id),
@@ -15,6 +23,7 @@ def main():
         )
         for d in directions:
             s.add(d)
+
     s.commit()
 
 

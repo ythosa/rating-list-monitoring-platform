@@ -60,3 +60,16 @@ services:
       - cache-cfg:/usr/local/etc/redis/redis.conf
     networks:
       - rating-list-monitoring-platform
+
+  parser:
+    build: universities_directions_parser
+    container_name: rlmp-parser
+    command: python3 ./app.py
+    restart: on-failure
+    networks:
+      - rating-list-monitoring-platform
+    depends_on:
+      - api
+      - db
+      - cache
+      - nginx
