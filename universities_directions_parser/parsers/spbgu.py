@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from dto import Direction
 
 
-def parse(url: str) -> List[Direction]:
+def parse(directions_url: str) -> List[Direction]:
     without_budget = (
         'СВ.5163.2021 Биология: биоинженерные технологии', 'СВ.5164.2021 Прикладные компьютерные технологии',
         'СВ.5188.2021 Международный менеджмент (с изучением европейских или восточных языков)',
@@ -16,7 +16,7 @@ def parse(url: str) -> List[Direction]:
         'СВ.5116.2021 Инструментальное исполнительство на скрипке', 'СМ.5124.2021 Станковая живопись',
     )
 
-    r = requests.get(url).content.decode('utf8')
+    r = requests.get(directions_url).content.decode('utf8')
     soup = BeautifulSoup(r, 'html.parser')
 
     names = [t.string for t in soup.find_all('b', {'style': 'font-size:12pt;'})]
