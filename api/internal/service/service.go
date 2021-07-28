@@ -17,6 +17,7 @@ type Authorization interface {
 type User interface {
 	GetUsername(id uint8) (*dto.Username, error)
 	GetProfile(id uint8) (*dto.UserProfile, error)
+	SetUniversities(id uint8, universityIDs dto.IDs) error
 }
 
 type Service struct {

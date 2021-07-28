@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/apierrors"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/middleware"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 	"net/http"
@@ -82,4 +83,44 @@ func (u *UserImpl) GetProfile(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, profile)
+}
+
+// SetUniversities
+// @tags user
+// @summary set universities to user
+// @description receives university ids and sets it to user
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @param payload body dto.IDs true "university ids"
+// @success 200 "success"
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /user/set_universities [post].
+func (u *UserImpl) SetUniversities(c *gin.Context) {
+	var payload dto.IDs
+
+	if err := c.BindJSON(&payload); err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	if err := u.userService.SetUniversities(userID, payload); err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.Status(http.StatusOK)
 }

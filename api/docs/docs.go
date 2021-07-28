@@ -255,6 +255,54 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/user/set_universities": {
+            "post": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "description": "receives university ids and sets it to user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "set universities to user",
+                "parameters": [
+                    {
+                        "description": "university ids",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.IDs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -282,6 +330,20 @@ var doc = `{
             "properties": {
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "dto.IDs": {
+            "type": "object",
+            "required": [
+                "ids"
+            ],
+            "properties": {
+                "ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
                 }
             }
         },
@@ -354,7 +416,7 @@ var doc = `{
         "dto.Username": {
             "type": "object",
             "properties": {
-                "nickname": {
+                "username": {
                     "type": "string"
                 }
             }

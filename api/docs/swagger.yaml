@@ -16,6 +16,15 @@ definitions:
       id:
         type: integer
     type: object
+  dto.IDs:
+    properties:
+      ids:
+        items:
+          type: integer
+        type: array
+    required:
+    - ids
+    type: object
   dto.SigningUp:
     properties:
       first_name:
@@ -63,7 +72,7 @@ definitions:
     type: object
   dto.Username:
     properties:
-      nickname:
+      username:
         type: string
     type: object
 host: localhost:8000/api
@@ -219,6 +228,36 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns user username
+      tags:
+      - user
+  /user/set_universities:
+    post:
+      consumes:
+      - application/json
+      description: receives university ids and sets it to user
+      parameters:
+      - description: university ids
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IDs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: set universities to user
       tags:
       - user
 securityDefinitions:

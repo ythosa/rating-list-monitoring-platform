@@ -40,3 +40,7 @@ func (u *UserImpl) GetProfile(id uint8) (*dto.UserProfile, error) {
 
 	return (*dto.UserProfile)(userProfile), nil
 }
+
+func (u *UserImpl) SetUniversities(id uint8, universityIDs dto.IDs) error {
+	return u.userRepository.SetUniversities(id, universityIDs)
+}

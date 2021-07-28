@@ -3,6 +3,7 @@ package postgres
 import (
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
@@ -148,4 +149,31 @@ func (r *User) GetProfile(id uint8) (*rdto.UserProfile, error) {
 	}
 
 	return &userProfile, nil
+}
+
+func (r *User) SetUniversities(id uint8, universityIDs dto.IDs) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		r.logger.Error(err)
+
+		return err
+	}
+
+	query := fmt.Sprintf("INSERT INTO %s (user_id, university_id) VALUES ($1, $2)", usersUniversitiesTable)
+	for _, universityID := range universityIDs.IDs {
+		if _, err := tx.Exec(query, id, universityID); err != nil {
+			r.logger.Error(err)
+			tx.Rollback()
+
+			return err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+
+		return err
+	}
+
+	return nil
 }
