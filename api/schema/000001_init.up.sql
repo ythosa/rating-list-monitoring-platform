@@ -33,4 +33,6 @@ CREATE TABLE users_universities
 
 INSERT INTO universities (name, directions_page_url)
 VALUES ('СПБГУ',
-        'https://cabinet.spbu.ru/Lists/1k_EntryLists/index_comp_groups.html');
+        'https://cabinet.spbu.ru/Lists/1k_EntryLists/index_comp_groups.html'),
+       ('ЛЭТИ',
+        'https://etu.ru/ru/abiturientam/priyom-na-1-y-kurs/podavshie-zayavlenie/');
