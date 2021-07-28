@@ -17,6 +17,7 @@ type User interface {
 	GetUsername(c *gin.Context)
 	GetProfile(c *gin.Context)
 	SetUniversities(c *gin.Context)
+	GetUniversities(c *gin.Context)
 }
 
 type Controller struct {

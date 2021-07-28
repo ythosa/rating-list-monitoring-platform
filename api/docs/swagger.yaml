@@ -75,6 +75,13 @@ definitions:
       username:
         type: string
     type: object
+  rdto.University:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
 host: localhost:8000/api
 info:
   contact: {}
@@ -207,6 +214,32 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns user profile
+      tags:
+      - user
+  /user/get_universities:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/rdto.University'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns user universities
       tags:
       - user
   /user/get_username:

@@ -14,6 +14,7 @@ import (
 
 const (
 	usersTable = "users"
+	universitiesTable = "universities"
 	usersUniversitiesTable = "users_universities"
 )
 

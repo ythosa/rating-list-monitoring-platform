@@ -177,3 +177,22 @@ func (r *User) SetUniversities(id uint8, universityIDs dto.IDs) error {
 
 	return nil
 }
+
+func (r *User) GetUniversities(id uint8) ([]rdto.University, error) {
+	var universities []rdto.University
+
+	query := fmt.Sprintf(
+		"SELECT un.id, un.name FROM %s un INNER JOIN %s uu on un.id = uu.university_id WHERE uu.user_id = $1",
+		universitiesTable, usersUniversitiesTable,
+	)
+	err := r.db.Select(&universities, query, id)
+
+	return universities, err
+}
+
+func (r *User) ClearUniversities(id uint8) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", usersUniversitiesTable)
+	_, err := r.db.Exec(query, id)
+
+	return err
+}

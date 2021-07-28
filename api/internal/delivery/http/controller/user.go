@@ -124,3 +124,33 @@ func (u *UserImpl) SetUniversities(c *gin.Context) {
 
 	c.Status(http.StatusOK)
 }
+
+// GetUniversities
+// @tags user
+// @summary returns user universities
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @success 200 {object} []rdto.University
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /user/get_universities [get].
+func (u *UserImpl) GetUniversities(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	universities, err := u.userService.GetUniversities(userID)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.JSON(http.StatusOK, universities)
+}

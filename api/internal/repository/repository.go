@@ -15,6 +15,8 @@ type User interface {
 	GetUsername(id uint8) (*rdto.Username, error)
 	GetProfile(id uint8) (*rdto.UserProfile, error)
 	SetUniversities(id uint8, universityIDs dto.IDs) error
+	GetUniversities(id uint8) ([]rdto.University, error)
+	ClearUniversities(id uint8) error
 }
 
 type Repository struct {

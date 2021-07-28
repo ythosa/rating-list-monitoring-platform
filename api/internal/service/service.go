@@ -4,6 +4,7 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
 
 type Authorization interface {
@@ -18,6 +19,7 @@ type User interface {
 	GetUsername(id uint8) (*dto.Username, error)
 	GetProfile(id uint8) (*dto.UserProfile, error)
 	SetUniversities(id uint8, universityIDs dto.IDs) error
+	GetUniversities(id uint8) ([]rdto.University, error)
 }
 
 type Service struct {
