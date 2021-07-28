@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String, ForeignKey
 
-Base = declarative_base()
+from models.base import Base
 
 
 class Direction(Base):
@@ -10,3 +9,4 @@ class Direction(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     url = Column(String, nullable=False)
+    university_id = Column(Integer, ForeignKey('universities.id'), primary_key=True)

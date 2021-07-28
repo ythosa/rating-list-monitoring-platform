@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from models.base import Base
 
 
 class University(Base):
@@ -10,3 +10,4 @@ class University(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     directions_page_url = Column(String, nullable=False)
+    children = relationship('Direction')
