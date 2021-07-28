@@ -5,6 +5,9 @@ api/.idea/
 # Python3 venv
 venv/
 
+# Python3 cache
+__pycache__/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

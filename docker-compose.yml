@@ -43,6 +43,8 @@ services:
     image: postgres:latest
     env_file:
       - postgres/db.env
+    ports:
+      - "5433:5433"
     volumes:
       - db:/var/lib/postgresql/data
     networks:
