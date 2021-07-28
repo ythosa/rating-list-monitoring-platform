@@ -35,7 +35,7 @@ func NewAuthorizationImpl(
 	}
 }
 
-func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (uint8, error) {
+func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (uint, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return 0, err
@@ -125,7 +125,7 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 	return newlyGeneratedTokens, nil
 }
 
-func (s *AuthorizationImpl) LogoutUser(userID uint8, accessToken string) error {
+func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
 	tokenClaims, err := authorization.ParseToken(accessToken, authorization.AccessToken)
 	if err != nil {
 		return InvalidTokenError
@@ -143,7 +143,7 @@ func (s *AuthorizationImpl) LogoutUser(userID uint8, accessToken string) error {
 	return nil
 }
 
-func (s *AuthorizationImpl) IsUserLogout(userID uint8) bool {
+func (s *AuthorizationImpl) IsUserLogout(userID uint) bool {
 	if err := s.blacklistCache.Get(userID); err != nil {
 		return true
 	}

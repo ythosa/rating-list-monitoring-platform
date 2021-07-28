@@ -15,7 +15,9 @@ import (
 const (
 	usersTable = "users"
 	universitiesTable = "universities"
+	directionsTable = "directions"
 	usersUniversitiesTable = "users_universities"
+	usersDirectionsTable = "users_directions"
 )
 
 func NewDB(cfg *config.DB) (*sqlx.DB, error) {

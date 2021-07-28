@@ -14,13 +14,13 @@ const (
 
 const headerPartsCount = 2
 
-func GetUserID(c *gin.Context) (uint8, error) {
+func GetUserID(c *gin.Context) (uint, error) {
 	id, ok := c.Get(userCtx)
 	if !ok {
 		return 0, errors.New("invalid user id")
 	}
 
-	userID, ok := id.(uint8)
+	userID, ok := id.(uint)
 	if !ok {
 		return 0, errors.New("invalid user id type")
 	}

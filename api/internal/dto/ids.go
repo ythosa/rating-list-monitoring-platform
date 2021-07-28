@@ -3,7 +3,7 @@ package dto
 import "github.com/go-playground/validator/v10"
 
 type IDs struct {
-	IDs []uint8 `json:"ids" validate:"required"`
+	IDs []uint `json:"ids" validate:"required"`
 }
 
 func (d *IDs) Validate(validate *validator.Validate) error {

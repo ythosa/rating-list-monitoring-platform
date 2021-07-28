@@ -7,16 +7,19 @@ import (
 )
 
 type User interface {
-	Create(user rdto.UserCreating) (uint8, error)
+	Create(user rdto.UserCreating) (uint, error)
 	GetUserByUsername(username string) (*models.User, error)
-	GetUserByID(id uint8) (*models.User, error)
-	UpdatePassword(id uint8, password string) error
-	PatchUser(id uint8, data rdto.UserPatching) error
-	GetUsername(id uint8) (*rdto.Username, error)
-	GetProfile(id uint8) (*rdto.UserProfile, error)
-	SetUniversities(id uint8, universityIDs dto.IDs) error
-	GetUniversities(id uint8) ([]rdto.University, error)
-	ClearUniversities(id uint8) error
+	GetUserByID(id uint) (*models.User, error)
+	UpdatePassword(id uint, password string) error
+	PatchUser(id uint, data rdto.UserPatching) error
+	GetUsername(id uint) (*rdto.Username, error)
+	GetProfile(id uint) (*rdto.UserProfile, error)
+	SetUniversities(id uint, universityIDs dto.IDs) error
+	GetUniversities(id uint) ([]rdto.University, error)
+	ClearUniversities(id uint) error
+	SetDirections(id uint, directionIDs dto.IDs) error
+	GetDirections(id uint) ([]rdto.Direction, error)
+	ClearDirections(id uint) error
 }
 
 type Repository struct {

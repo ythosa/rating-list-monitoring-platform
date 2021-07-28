@@ -20,7 +20,7 @@ func NewUserImpl(userRepository repository.User) *UserImpl {
 	}
 }
 
-func (u *UserImpl) GetUsername(id uint8) (*dto.Username, error) {
+func (u *UserImpl) GetUsername(id uint) (*dto.Username, error) {
 	username, err := u.userRepository.GetUsername(id)
 	if err != nil {
 		u.logger.Error(err)
@@ -31,7 +31,7 @@ func (u *UserImpl) GetUsername(id uint8) (*dto.Username, error) {
 	return (*dto.Username)(username), nil
 }
 
-func (u *UserImpl) GetProfile(id uint8) (*dto.UserProfile, error) {
+func (u *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
 	userProfile, err := u.userRepository.GetProfile(id)
 	if err != nil {
 		u.logger.Error(err)
@@ -42,7 +42,7 @@ func (u *UserImpl) GetProfile(id uint8) (*dto.UserProfile, error) {
 	return (*dto.UserProfile)(userProfile), nil
 }
 
-func (u *UserImpl) SetUniversities(id uint8, universityIDs dto.IDs) error {
+func (u *UserImpl) SetUniversities(id uint, universityIDs dto.IDs) error {
 	err := u.userRepository.ClearUniversities(id)
 	if err != nil {
 		return err
@@ -51,8 +51,33 @@ func (u *UserImpl) SetUniversities(id uint8, universityIDs dto.IDs) error {
 	return u.userRepository.SetUniversities(id, universityIDs)
 }
 
-func (u *UserImpl) GetUniversities(id uint8) ([]rdto.University, error) {
-	universities, err := u.userRepository.GetUniversities(id)
+func (u *UserImpl) GetUniversities(id uint) ([]rdto.University, error) {
+	return u.userRepository.GetUniversities(id)
+}
 
-	return universities, err
+func (u *UserImpl) SetDirections(id uint, directionIDs dto.IDs) error {
+	err := u.userRepository.ClearUniversities(id)
+	if err != nil {
+		return err
+	}
+
+	return u.userRepository.SetDirections(id, directionIDs)
+}
+
+func (u *UserImpl) GetDirections(id uint) (map[string][]dto.Direction, error) {
+	directions, err := u.userRepository.GetDirections(id)
+	if err != nil {
+		return nil, err
+	}
+
+	directionsUniversity := make(map[string][]dto.Direction)
+	for _, d := range directions {
+		direction := dto.Direction{
+			ID:   d.DirectionID,
+			Name: d.DirectionName,
+		}
+		directionsUniversity[d.UniversityName] = append(directionsUniversity[d.UniversityName], direction)
+	}
+
+	return directionsUniversity, nil
 }

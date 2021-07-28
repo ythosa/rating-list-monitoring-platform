@@ -18,6 +18,8 @@ type User interface {
 	GetProfile(c *gin.Context)
 	SetUniversities(c *gin.Context)
 	GetUniversities(c *gin.Context)
+	SetDirections(c *gin.Context)
+	GetDirections(c *gin.Context)
 }
 
 type Controller struct {

@@ -11,6 +11,13 @@ definitions:
       refresh_token:
         type: string
     type: object
+  dto.Direction:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   dto.IDResponse:
     properties:
       id:
@@ -195,6 +202,34 @@ paths:
       summary: sign up new user
       tags:
       - authorization
+  /user/get_directions:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/dto.Direction'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns user directions
+      tags:
+      - user
   /user/get_profile:
     get:
       consumes:
@@ -261,6 +296,36 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns user username
+      tags:
+      - user
+  /user/set_directions:
+    post:
+      consumes:
+      - application/json
+      description: receives direction ids and sets it to user
+      parameters:
+      - description: direction ids
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IDs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: set directions to user
       tags:
       - user
   /user/set_universities:

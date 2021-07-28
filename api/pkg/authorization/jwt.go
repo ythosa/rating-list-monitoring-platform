@@ -21,7 +21,7 @@ var (
 
 type TokenClaims struct {
 	jwt.StandardClaims
-	UserID uint8 `json:"user_id"`
+	UserID uint `json:"user_id"`
 }
 
 func ParseToken(token string, tokenType int) (*TokenClaims, error) {
@@ -57,7 +57,7 @@ func ParseToken(token string, tokenType int) (*TokenClaims, error) {
 	return claims, nil
 }
 
-func GenerateTokensFromPayload(userID uint8) (*dto.AuthorizationTokens, error) {
+func GenerateTokensFromPayload(userID uint) (*dto.AuthorizationTokens, error) {
 	accessToken, err := GenerateAccessTokenFromPayload(userID)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func GenerateTokensFromPayload(userID uint8) (*dto.AuthorizationTokens, error) {
 	}, nil
 }
 
-func GenerateAccessTokenFromPayload(userID uint8) (string, error) {
+func GenerateAccessTokenFromPayload(userID uint) (string, error) {
 	cfg := config.Get().Authorization.AccessToken
 
 	tokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{
@@ -93,7 +93,7 @@ func GenerateAccessTokenFromPayload(userID uint8) (string, error) {
 	return token, nil
 }
 
-func GenerateRefreshTokenFromPayload(userID uint8) (string, error) {
+func GenerateRefreshTokenFromPayload(userID uint) (string, error) {
 	cfg := config.Get().Authorization.RefreshToken
 
 	tokenRaw := jwt.NewWithClaims(jwt.SigningMethodHS256, &TokenClaims{

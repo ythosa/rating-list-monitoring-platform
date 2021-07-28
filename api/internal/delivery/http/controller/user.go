@@ -154,3 +154,73 @@ func (u *UserImpl) GetUniversities(c *gin.Context) {
 
 	c.JSON(http.StatusOK, universities)
 }
+
+// SetDirections
+// @tags user
+// @summary set directions to user
+// @description receives direction ids and sets it to user
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @param payload body dto.IDs true "direction ids"
+// @success 200 "success"
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /user/set_directions [post].
+func (u *UserImpl) SetDirections(c *gin.Context) {
+	var payload dto.IDs
+
+	if err := c.BindJSON(&payload); err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	if err := u.userService.SetDirections(userID, payload); err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.Status(http.StatusOK)
+}
+
+// GetDirections
+// @tags user
+// @summary returns user directions
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @success 200 {object} map[string][]dto.Direction
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /user/get_directions [get].
+func (u *UserImpl) GetDirections(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	directions, err := u.userService.GetDirections(userID)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.JSON(http.StatusOK, directions)
+}

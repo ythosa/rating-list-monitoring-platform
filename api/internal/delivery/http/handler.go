@@ -49,6 +49,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			user.GET("/get_profile", h.controllers.User.GetProfile)
 			user.POST("/set_universities", h.controllers.User.SetUniversities)
 			user.GET("/get_universities", h.controllers.User.GetUniversities)
+			user.POST("/set_directions", h.controllers.User.SetDirections)
+			user.GET("/get_directions", h.controllers.User.GetDirections)
 		}
 	}
 

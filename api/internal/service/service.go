@@ -8,18 +8,20 @@ import (
 )
 
 type Authorization interface {
-	SignUpUser(userData dto.SigningUp) (uint8, error)
+	SignUpUser(userData dto.SigningUp) (uint, error)
 	GenerateTokens(userCredentials dto.UserCredentials) (*dto.AuthorizationTokens, error)
 	RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, error)
-	LogoutUser(userID uint8, accessToken string) error
-	IsUserLogout(userID uint8) bool
+	LogoutUser(userID uint, accessToken string) error
+	IsUserLogout(userID uint) bool
 }
 
 type User interface {
-	GetUsername(id uint8) (*dto.Username, error)
-	GetProfile(id uint8) (*dto.UserProfile, error)
-	SetUniversities(id uint8, universityIDs dto.IDs) error
-	GetUniversities(id uint8) ([]rdto.University, error)
+	GetUsername(id uint) (*dto.Username, error)
+	GetProfile(id uint) (*dto.UserProfile, error)
+	SetUniversities(id uint, universityIDs dto.IDs) error
+	GetUniversities(id uint) ([]rdto.University, error)
+	SetDirections(id uint, directionIDs dto.IDs) error
+	GetDirections(id uint) (map[string][]dto.Direction, error)
 }
 
 type Service struct {
