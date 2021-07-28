@@ -48,6 +48,24 @@ definitions:
     - password
     - username
     type: object
+  dto.UserProfile:
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      snils:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.Username:
+    properties:
+      nickname:
+        type: string
+    type: object
 host: localhost:8000/api
 info:
   contact: {}
@@ -161,6 +179,48 @@ paths:
       summary: sign up new user
       tags:
       - authorization
+  /user/get_profile:
+    get:
+      consumes:
+      - application/json
+      description: returns user username, firstname, lastname, middlename and snils
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserProfile'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns user profile
+      tags:
+      - user
+  /user/get_username:
+    get:
+      consumes:
+      - application/json
+      description: returns user username by passing auth access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Username'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns user username
+      tags:
+      - user
 securityDefinitions:
   AccessTokenHeader:
     in: header

@@ -117,3 +117,35 @@ func (r *User) PatchUser(id uint8, data rdto.UserPatching) error {
 
 	return nil
 }
+
+func (r *User) GetUsername(id uint8) (*rdto.Username, error) {
+	var username rdto.Username
+
+	query := fmt.Sprintf(
+		"SELECT (username) FROM %s WHERE id=$1",
+		usersTable,
+	)
+	if err := r.db.Get(&username, query, id); err != nil {
+		r.logger.Error(err)
+
+		return nil, repository.ErrRecordNotFound
+	}
+
+	return &username, nil
+}
+
+func (r *User) GetProfile(id uint8) (*rdto.UserProfile, error) {
+	var userProfile rdto.UserProfile
+
+	query := fmt.Sprintf(
+		"SELECT username, first_name, middle_name, last_name, snils FROM %s WHERE id=$1",
+		usersTable,
+	)
+	if err := r.db.Get(&userProfile, query, id); err != nil {
+		r.logger.Error(err)
+
+		return nil, repository.ErrRecordNotFound
+	}
+
+	return &userProfile, nil
+}

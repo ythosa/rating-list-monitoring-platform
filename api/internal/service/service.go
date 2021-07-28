@@ -14,12 +14,19 @@ type Authorization interface {
 	IsUserLogout(userID uint8) bool
 }
 
+type User interface {
+	GetUsername(id uint8) (*dto.Username, error)
+	GetProfile(id uint8) (*dto.UserProfile, error)
+}
+
 type Service struct {
 	Authorization
+	User
 }
 
 func New(repository *repository.Repository, cache *cache.Cache) *Service {
 	return &Service{
 		Authorization: NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist),
+		User:          NewUserImpl(repository.User),
 	}
 }

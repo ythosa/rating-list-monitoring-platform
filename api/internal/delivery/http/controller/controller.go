@@ -13,12 +13,19 @@ type Authorization interface {
 	Logout(c *gin.Context)
 }
 
+type User interface {
+	GetUsername(c *gin.Context)
+	GetProfile(c *gin.Context)
+}
+
 type Controller struct {
 	Authorization
+	User
 }
 
 func NewController(validate *validator.Validate, services *service.Service) *Controller {
 	return &Controller{
 		Authorization: NewAuthorizationImpl(validate, services.Authorization),
+		User:          NewUserImpl(validate, services.User),
 	}
 }

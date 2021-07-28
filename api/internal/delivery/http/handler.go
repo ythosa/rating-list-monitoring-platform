@@ -42,6 +42,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			authorization.GET("/refresh-tokens", h.controllers.Authorization.RefreshTokens)
 			authorization.GET("/logout", middleware.UserIdentity, h.controllers.Authorization.Logout)
 		}
+
+		user := api.Group("/user", middleware.UserIdentity)
+		{
+			user.GET("/get_username", h.controllers.User.GetUsername)
+			user.GET("/get_profile", h.controllers.User.GetProfile)
+		}
 	}
 
 	return router

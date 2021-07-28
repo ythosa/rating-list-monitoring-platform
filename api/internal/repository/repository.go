@@ -11,6 +11,8 @@ type User interface {
 	GetUserByID(id uint8) (*models.User, error)
 	UpdatePassword(id uint8, password string) error
 	PatchUser(id uint8, data rdto.UserPatching) error
+	GetUsername(id uint8) (*rdto.Username, error)
+	GetProfile(id uint8) (*rdto.UserProfile, error)
 }
 
 type Repository struct {
