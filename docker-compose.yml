@@ -1,7 +1,7 @@
 version: "3.3"
 
 networks:
-  rating-list-monitoring-platform:
+  rlmp:
     driver: bridge
 
 volumes:
@@ -15,9 +15,9 @@ services:
     container_name: rlmp-nginx
     ports:
       - "8000:80"
-    restart: unless-stopped
+    restart: on-failure
     networks:
-      - rating-list-monitoring-platform
+      - rlmp
     depends_on:
       - api
       - db
@@ -26,7 +26,7 @@ services:
     build: api
     container_name: rlmp-api
     command: go run ./cmd/app/main.go
-    restart: unless-stopped
+    restart: on-failure
     ports:
       - "8001:8001"
     environment:
@@ -36,11 +36,12 @@ services:
     depends_on:
       - db
     networks:
-      - rating-list-monitoring-platform
+      - rlmp
 
   db:
     container_name: rlmp-db
     image: postgres:latest
+    restart: on-failure
     env_file:
       - postgres/db.env
     ports:
@@ -48,18 +49,19 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     networks:
-      - rating-list-monitoring-platform
+      - rlmp
 
   cache:
     container_name: rlmp-cache
     image: redis:6.0.9-alpine
+    restart: on-failure
     environment:
       - REDIS_REPLICATION_MODE=master
     volumes:
       - cache:/var/lib/redis
       - cache-cfg:/usr/local/etc/redis/redis.conf
     networks:
-      - rating-list-monitoring-platform
+      - rlmp
 
   parser:
     build: universities_directions_parser
@@ -67,7 +69,7 @@ services:
     command: python3 ./app.py
     restart: on-failure
     networks:
-      - rating-list-monitoring-platform
+      - rlmp
     depends_on:
       - api
       - db
