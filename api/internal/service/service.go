@@ -40,10 +40,15 @@ type Service struct {
 }
 
 func New(repository *repository.Repository, cache *cache.Cache) *Service {
+	authorizationService := NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist)
+	userService := NewUserImpl(repository.User)
+	universityService := NewUniversityImpl(repository.University)
+	directionService := NewDirectionImpl(repository.Direction, universityService)
+
 	return &Service{
-		Authorization: NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist),
-		User:          NewUserImpl(repository.User),
-		University:    NewUniversityImpl(repository.University),
-		Direction:     NewDirectionImpl(repository.Direction),
+		Authorization: authorizationService,
+		User:          userService,
+		University:    universityService,
+		Direction:     directionService,
 	}
 }

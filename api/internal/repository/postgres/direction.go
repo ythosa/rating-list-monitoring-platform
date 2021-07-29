@@ -34,6 +34,21 @@ func (r *Direction) GetAll() ([]rdto.Direction, error) {
 	return directions, err
 }
 
+func (r *Direction) GetByID(id uint) (rdto.Direction, error) {
+	var direction rdto.Direction
+
+	query := fmt.Sprintf(
+		`SELECT d.id as direction_id, d.name as direction_name, 
+					un.id as university_id, un.name as university_name FROM %s d 
+			INNER JOIN %s un on d.university_id = un.id
+			WHERE d.id = $1`,
+		directionsTable, universitiesTable,
+	)
+	err := r.db.Get(&direction, query, id)
+
+	return direction, err
+}
+
 func (r *Direction) Get(userID uint) ([]rdto.Direction, error) {
 	var directions []rdto.Direction
 

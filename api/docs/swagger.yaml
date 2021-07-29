@@ -30,7 +30,7 @@ definitions:
           type: integer
         type: array
     required:
-    - ids
+      - ids
     type: object
   dto.SigningUp:
     properties:
@@ -47,12 +47,12 @@ definitions:
       username:
         type: string
     required:
-    - first_name
-    - last_name
-    - middle_name
-    - password
-    - snils
-    - username
+      - first_name
+      - last_name
+      - middle_name
+      - password
+      - snils
+      - username
     type: object
   dto.UserCredentials:
     properties:
@@ -61,8 +61,8 @@ definitions:
       username:
         type: string
     required:
-    - password
-    - username
+      - password
+      - username
     type: object
   dto.UserProfile:
     properties:
@@ -91,7 +91,7 @@ definitions:
     type: object
 host: localhost:8000/api
 info:
-  contact: {}
+  contact: { }
   description: Rating List Monitoring Platform API
   title: Rating List Monitoring Platform
   version: "1.0"
@@ -99,10 +99,10 @@ paths:
   /auth/logout:
     get:
       consumes:
-      - application/json
+        - application/json
       description: receives access token header and logouts user
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: logout success
@@ -115,21 +115,21 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: logout user
       tags:
-      - authorization
+        - authorization
   /auth/refresh-tokens:
     get:
       description: receives refresh token header and returns updated jwt access and refresh tokens
       parameters:
-      - description: refresh token header
-        in: header
-        name: RefreshToken
-        required: true
-        type: string
+        - description: refresh token header
+          in: header
+          name: RefreshToken
+          required: true
+          type: string
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -141,21 +141,21 @@ paths:
             $ref: '#/definitions/apierrors.APIError'
       summary: update jwt access and refresh tokens
       tags:
-      - authorization
+        - authorization
   /auth/sign-in:
     post:
       consumes:
-      - application/json
+        - application/json
       description: receives user credentials and returns jwt access and refresh tokens
       parameters:
-      - description: user credentials
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dto.UserCredentials'
+        - description: user credentials
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: '#/definitions/dto.UserCredentials'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -171,21 +171,21 @@ paths:
             $ref: '#/definitions/apierrors.APIError'
       summary: signs in user with jwt tokens response
       tags:
-      - authorization
+        - authorization
   /auth/sign-up:
     post:
       consumes:
-      - application/json
+        - application/json
       description: receives user credentials, creates user and returns user id
       parameters:
-      - description: user credentials
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dto.SigningUp'
+        - description: user credentials
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: '#/definitions/dto.SigningUp'
       produces:
-      - application/json
+        - application/json
       responses:
         "201":
           description: Created
@@ -201,13 +201,13 @@ paths:
             $ref: '#/definitions/apierrors.APIError'
       summary: signs up new user
       tags:
-      - authorization
+        - authorization
   /direction/get:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -226,16 +226,16 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns user directions
       tags:
-      - direction
+        - direction
   /direction/get_all:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -254,24 +254,24 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns all directions
       tags:
-      - direction
+        - direction
   /direction/set:
     post:
       consumes:
-      - application/json
+        - application/json
       description: receives direction ids and sets it to user
       parameters:
-      - description: direction ids
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dto.IDs'
+        - description: direction ids
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: '#/definitions/dto.IDs'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: success
@@ -284,16 +284,16 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: set directions to user
       tags:
-      - direction
+        - direction
   /university/get:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -310,16 +310,16 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns user universities
       tags:
-      - university
+        - university
   /university/get_all:
     get:
       consumes:
-      - application/json
+        - application/json
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -336,24 +336,24 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns all universities
       tags:
-      - university
+        - university
   /university/set:
     post:
       consumes:
-      - application/json
+        - application/json
       description: receives university ids and sets it to user
       parameters:
-      - description: university ids
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dto.IDs'
+        - description: university ids
+          in: body
+          name: payload
+          required: true
+          schema:
+            $ref: '#/definitions/dto.IDs'
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: success
@@ -366,17 +366,17 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: set universities to user
       tags:
-      - university
+        - university
   /user/get_profile:
     get:
       consumes:
-      - application/json
+        - application/json
       description: returns user username, firstname, lastname, middlename and snils
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -387,17 +387,17 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns user profile
       tags:
-      - user
+        - user
   /user/get_username:
     get:
       consumes:
-      - application/json
+        - application/json
       description: returns user username by passing auth access token
       produces:
-      - application/json
+        - application/json
       responses:
         "200":
           description: OK
@@ -408,10 +408,10 @@ paths:
           schema:
             $ref: '#/definitions/apierrors.APIError'
       security:
-      - AccessTokenHeader: []
+        - AccessTokenHeader: [ ]
       summary: returns user username
       tags:
-      - user
+        - user
 securityDefinitions:
   AccessTokenHeader:
     in: header

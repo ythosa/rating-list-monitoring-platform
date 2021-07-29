@@ -25,6 +25,7 @@ type University interface {
 
 type Direction interface {
 	GetAll() ([]rdto.Direction, error)
+	GetByID(id uint) (rdto.Direction, error)
 	Get(userID uint) ([]rdto.Direction, error)
 	Set(userID uint, directionIDs dto.IDs) error
 	Clear(userID uint) error

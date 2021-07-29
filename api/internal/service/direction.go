@@ -4,16 +4,22 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
+	"sync"
 )
 
 type DirectionImpl struct {
 	directionRepository repository.Direction
+	universityService   University
 	logger              *logging.Logger
 }
 
-func NewDirectionImpl(directionRepository repository.Direction) *DirectionImpl {
+func NewDirectionImpl(
+	directionRepository repository.Direction,
+	universityService University,
+) *DirectionImpl {
 	return &DirectionImpl{
 		directionRepository: directionRepository,
+		universityService:   universityService,
 		logger:              logging.NewLogger("directions service"),
 	}
 }
@@ -60,5 +66,38 @@ func (u *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
 		return err
 	}
 
-	return u.directionRepository.Set(userID, directionIDs)
+	if err := u.directionRepository.Set(userID, directionIDs); err != nil {
+		return err
+	}
+
+	var (
+		wg sync.WaitGroup
+		mu sync.Mutex
+	)
+
+	universityIDs := make([]uint, 0)
+	for _, directionID := range directionIDs.IDs {
+		wg.Add(1)
+		go func(id uint) {
+			d, _ := u.directionRepository.GetByID(id)
+
+			mu.Lock()
+			stored := false
+			for _, uID := range universityIDs {
+				if uID == d.UniversityID {
+					stored = true
+					break
+				}
+			}
+			if !stored {
+				universityIDs = append(universityIDs, d.UniversityID)
+			}
+			mu.Unlock()
+
+			wg.Done()
+		}(directionID)
+	}
+	wg.Wait()
+
+	return u.universityService.Set(userID, dto.IDs{IDs: universityIDs})
 }
