@@ -4,7 +4,6 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
 
 type UserImpl struct {
@@ -42,21 +41,8 @@ func (u *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
 	return (*dto.UserProfile)(userProfile), nil
 }
 
-func (u *UserImpl) SetUniversities(id uint, universityIDs dto.IDs) error {
-	err := u.userRepository.ClearUniversities(id)
-	if err != nil {
-		return err
-	}
-
-	return u.userRepository.SetUniversities(id, universityIDs)
-}
-
-func (u *UserImpl) GetUniversities(id uint) ([]rdto.University, error) {
-	return u.userRepository.GetUniversities(id)
-}
-
 func (u *UserImpl) SetDirections(id uint, directionIDs dto.IDs) error {
-	err := u.userRepository.ClearUniversities(id)
+	err := u.userRepository.ClearDirections(id)
 	if err != nil {
 		return err
 	}

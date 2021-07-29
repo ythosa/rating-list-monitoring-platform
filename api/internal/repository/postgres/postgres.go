@@ -13,11 +13,11 @@ import (
 )
 
 const (
-	usersTable = "users"
-	universitiesTable = "universities"
-	directionsTable = "directions"
+	usersTable             = "users"
+	universitiesTable      = "universities"
+	directionsTable        = "directions"
 	usersUniversitiesTable = "users_universities"
-	usersDirectionsTable = "users_directions"
+	usersDirectionsTable   = "users_directions"
 )
 
 func NewDB(cfg *config.DB) (*sqlx.DB, error) {
@@ -53,6 +53,7 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 
 func NewRepository(db *sqlx.DB) *repository.Repository {
 	return &repository.Repository{
-		User: NewUser(db),
+		User:       NewUser(db),
+		University: NewUniversity(db),
 	}
 }

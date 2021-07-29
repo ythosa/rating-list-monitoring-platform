@@ -151,52 +151,6 @@ func (r *User) GetProfile(id uint) (*rdto.UserProfile, error) {
 	return &userProfile, nil
 }
 
-func (r *User) SetUniversities(id uint, universityIDs dto.IDs) error {
-	tx, err := r.db.Begin()
-	if err != nil {
-		r.logger.Error(err)
-
-		return err
-	}
-
-	query := fmt.Sprintf("INSERT INTO %s (user_id, university_id) VALUES ($1, $2)", usersUniversitiesTable)
-	for _, universityID := range universityIDs.IDs {
-		if _, err := tx.Exec(query, id, universityID); err != nil {
-			r.logger.Error(err)
-			tx.Rollback()
-
-			return err
-		}
-	}
-
-	if err := tx.Commit(); err != nil {
-		tx.Rollback()
-
-		return err
-	}
-
-	return nil
-}
-
-func (r *User) GetUniversities(id uint) ([]rdto.University, error) {
-	var universities []rdto.University
-
-	query := fmt.Sprintf(
-		"SELECT un.id, un.name FROM %s un INNER JOIN %s uu on un.id = uu.university_id WHERE uu.user_id = $1",
-		universitiesTable, usersUniversitiesTable,
-	)
-	err := r.db.Select(&universities, query, id)
-
-	return universities, err
-}
-
-func (r *User) ClearUniversities(id uint) error {
-	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", usersUniversitiesTable)
-	_, err := r.db.Exec(query, id)
-
-	return err
-}
-
 func (r *User) SetDirections(id uint, directionIDs dto.IDs) error {
 	tx, err := r.db.Begin()
 	if err != nil {

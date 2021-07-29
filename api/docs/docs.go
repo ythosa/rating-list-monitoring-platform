@@ -188,6 +188,138 @@ var doc = `{
                 }
             }
         },
+        "/university/get": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "returns user universities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/rdto.University"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/university/get_all": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "returns all universities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/rdto.University"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/university/set": {
+            "post": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "description": "receives university ids and sets it to user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "set universities to user",
+                "parameters": [
+                    {
+                        "description": "university ids",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.IDs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/user/get_directions": {
             "get": {
                 "security": [
@@ -267,48 +399,6 @@ var doc = `{
                 }
             }
         },
-        "/user/get_universities": {
-            "get": {
-                "security": [
-                    {
-                        "AccessTokenHeader": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "returns user universities",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/rdto.University"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    }
-                }
-            }
-        },
         "/user/get_username": {
             "get": {
                 "security": [
@@ -364,54 +454,6 @@ var doc = `{
                 "parameters": [
                     {
                         "description": "direction ids",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.IDs"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "success"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/set_universities": {
-            "post": {
-                "security": [
-                    {
-                        "AccessTokenHeader": []
-                    }
-                ],
-                "description": "receives university ids and sets it to user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "set universities to user",
-                "parameters": [
-                    {
-                        "description": "university ids",
                         "name": "payload",
                         "in": "body",
                         "required": true,

@@ -18,20 +18,26 @@ type Authorization interface {
 type User interface {
 	GetUsername(id uint) (*dto.Username, error)
 	GetProfile(id uint) (*dto.UserProfile, error)
-	SetUniversities(id uint, universityIDs dto.IDs) error
-	GetUniversities(id uint) ([]rdto.University, error)
 	SetDirections(id uint, directionIDs dto.IDs) error
 	GetDirections(id uint) (map[string][]dto.Direction, error)
+}
+
+type University interface {
+	GetAll() ([]rdto.University, error)
+	Get(userID uint) ([]rdto.University, error)
+	Set(userID uint, universityIDs dto.IDs) error
 }
 
 type Service struct {
 	Authorization
 	User
+	University
 }
 
 func New(repository *repository.Repository, cache *cache.Cache) *Service {
 	return &Service{
 		Authorization: NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist),
 		User:          NewUserImpl(repository.User),
+		University:    NewUniversityImpl(repository.University),
 	}
 }

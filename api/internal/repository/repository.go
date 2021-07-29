@@ -14,14 +14,19 @@ type User interface {
 	PatchUser(id uint, data rdto.UserPatching) error
 	GetUsername(id uint) (*rdto.Username, error)
 	GetProfile(id uint) (*rdto.UserProfile, error)
-	SetUniversities(id uint, universityIDs dto.IDs) error
-	GetUniversities(id uint) ([]rdto.University, error)
-	ClearUniversities(id uint) error
 	SetDirections(id uint, directionIDs dto.IDs) error
 	GetDirections(id uint) ([]rdto.Direction, error)
 	ClearDirections(id uint) error
 }
 
+type University interface {
+	GetAll() ([]rdto.University, error)
+	Get(userID uint) ([]rdto.University, error)
+	Set(userID uint, universityIDs dto.IDs) error
+	Clear(userID uint) error
+}
+
 type Repository struct {
 	User
+	University
 }

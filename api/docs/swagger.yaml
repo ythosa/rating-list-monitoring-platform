@@ -202,6 +202,88 @@ paths:
       summary: sign up new user
       tags:
       - authorization
+  /university/get:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/rdto.University'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns user universities
+      tags:
+      - university
+  /university/get_all:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/rdto.University'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns all universities
+      tags:
+      - university
+  /university/set:
+    post:
+      consumes:
+      - application/json
+      description: receives university ids and sets it to user
+      parameters:
+      - description: university ids
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.IDs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: set universities to user
+      tags:
+      - university
   /user/get_directions:
     get:
       consumes:
@@ -249,32 +331,6 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns user profile
-      tags:
-      - user
-  /user/get_universities:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/rdto.University'
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-      security:
-      - AccessTokenHeader: []
-      summary: returns user universities
       tags:
       - user
   /user/get_username:
@@ -326,36 +382,6 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: set directions to user
-      tags:
-      - user
-  /user/set_universities:
-    post:
-      consumes:
-      - application/json
-      description: receives university ids and sets it to user
-      parameters:
-      - description: university ids
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/dto.IDs'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-      security:
-      - AccessTokenHeader: []
-      summary: set universities to user
       tags:
       - user
 securityDefinitions:
