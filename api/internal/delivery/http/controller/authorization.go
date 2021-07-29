@@ -27,7 +27,7 @@ func NewAuthorizationImpl(validate *validator.Validate, authorizationService ser
 
 // SignUp
 // @tags authorization
-// @summary sign up new user
+// @summary signs up new user
 // @description receives user credentials, creates user and returns user id
 // @accept json
 // @produce json
@@ -66,7 +66,7 @@ func (a *AuthorizationImpl) SignUp(c *gin.Context) {
 
 // SignIn
 // @tags authorization
-// @summary sign in user with jwt tokens response
+// @summary signs in user with jwt tokens response
 // @description receives user credentials and returns jwt access and refresh tokens
 // @accept json
 // @produce json

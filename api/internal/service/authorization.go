@@ -17,8 +17,7 @@ type AuthorizationImpl struct {
 	userRepository    repository.User
 	refreshTokenCache cache.RefreshToken
 	blacklistCache    cache.Blacklist
-
-	logger *logging.Logger
+	logger            *logging.Logger
 }
 
 func NewAuthorizationImpl(

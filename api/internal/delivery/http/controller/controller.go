@@ -16,11 +16,15 @@ type Authorization interface {
 type User interface {
 	GetUsername(c *gin.Context)
 	GetProfile(c *gin.Context)
-	SetDirections(c *gin.Context)
-	GetDirections(c *gin.Context)
 }
 
 type University interface {
+	GetAll(c *gin.Context)
+	Get(c *gin.Context)
+	Set(c *gin.Context)
+}
+
+type Direction interface {
 	GetAll(c *gin.Context)
 	Get(c *gin.Context)
 	Set(c *gin.Context)
@@ -30,6 +34,7 @@ type Controller struct {
 	Authorization
 	User
 	University
+	Direction
 }
 
 func NewController(validate *validator.Validate, services *service.Service) *Controller {
@@ -37,5 +42,6 @@ func NewController(validate *validator.Validate, services *service.Service) *Con
 		Authorization: NewAuthorizationImpl(validate, services.Authorization),
 		User:          NewUserImpl(validate, services.User),
 		University:    NewUniversityImpl(validate, services.University),
+		Direction:     NewDirectionImpl(validate, services.Direction),
 	}
 }

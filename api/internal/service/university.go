@@ -9,8 +9,7 @@ import (
 
 type UniversityImpl struct {
 	universityRepository repository.University
-
-	logger *logging.Logger
+	logger               *logging.Logger
 }
 
 func NewUniversityImpl(universityRepository repository.University) *UniversityImpl {

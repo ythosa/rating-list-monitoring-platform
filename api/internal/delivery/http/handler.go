@@ -47,8 +47,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			user.GET("/get_username", h.controllers.User.GetUsername)
 			user.GET("/get_profile", h.controllers.User.GetProfile)
-			user.POST("/set_directions", h.controllers.User.SetDirections)
-			user.GET("/get_directions", h.controllers.User.GetDirections)
 		}
 
 		university := api.Group("/university", middleware.UserIdentity)
@@ -56,6 +54,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			university.GET("/get_all", h.controllers.University.GetAll)
 			university.GET("/get", h.controllers.University.Get)
 			university.POST("/set", h.controllers.University.Set)
+		}
+
+		direction := api.Group("/direction", middleware.UserIdentity)
+		{
+			direction.GET("/get_all", h.controllers.Direction.GetAll)
+			direction.GET("/get", h.controllers.Direction.Get)
+			direction.POST("/set", h.controllers.Direction.Set)
 		}
 	}
 

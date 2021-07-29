@@ -8,8 +8,7 @@ import (
 
 type UserImpl struct {
 	userRepository repository.User
-
-	logger *logging.Logger
+	logger         *logging.Logger
 }
 
 func NewUserImpl(userRepository repository.User) *UserImpl {
@@ -39,31 +38,4 @@ func (u *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
 	}
 
 	return (*dto.UserProfile)(userProfile), nil
-}
-
-func (u *UserImpl) SetDirections(id uint, directionIDs dto.IDs) error {
-	err := u.userRepository.ClearDirections(id)
-	if err != nil {
-		return err
-	}
-
-	return u.userRepository.SetDirections(id, directionIDs)
-}
-
-func (u *UserImpl) GetDirections(id uint) (map[string][]dto.Direction, error) {
-	directions, err := u.userRepository.GetDirections(id)
-	if err != nil {
-		return nil, err
-	}
-
-	directionsUniversity := make(map[string][]dto.Direction)
-	for _, d := range directions {
-		direction := dto.Direction{
-			ID:   d.DirectionID,
-			Name: d.DirectionName,
-		}
-		directionsUniversity[d.UniversityName] = append(directionsUniversity[d.UniversityName], direction)
-	}
-
-	return directionsUniversity, nil
 }

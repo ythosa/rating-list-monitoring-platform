@@ -55,5 +55,6 @@ func NewRepository(db *sqlx.DB) *repository.Repository {
 	return &repository.Repository{
 		User:       NewUser(db),
 		University: NewUniversity(db),
+		Direction:  NewDirection(db),
 	}
 }
