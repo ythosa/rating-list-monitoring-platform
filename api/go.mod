@@ -3,6 +3,7 @@ module github.com/ythosa/rating-list-monitoring-platfrom-api
 go 1.15
 
 require (
+	github.com/PuerkitoBio/goquery v1.7.1
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.2
