@@ -85,6 +85,36 @@ func (u *DirectionImpl) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, directions)
 }
 
+// GetWithRating
+// @tags direction
+// @summary returns user directions with user rating
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @success 200 {object} map[string][]dto.DirectionWithRating
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /direction/get_with_rating [get].
+func (u *DirectionImpl) GetWithRating(c *gin.Context) {
+	userID, err := middleware.GetUserID(c)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	directionsWithRating, err := u.directionService.GetWithRating(userID)
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.JSON(http.StatusOK, directionsWithRating)
+}
+
 // Set
 // @tags direction
 // @summary set directions to user

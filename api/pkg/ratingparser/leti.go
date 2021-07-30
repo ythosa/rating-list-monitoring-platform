@@ -8,20 +8,20 @@ import (
 	"strings"
 )
 
-func LETI(url string, userSnils string) (*ParsingResult, error) {
-	res, err := http.Get(url)
+func leti(ratingURL string, userSnils string) (*ParsingResult, error) {
+	res, err := http.Get(ratingURL)
 	if err != nil {
 		return nil, err
 	}
 
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
-		return nil, errors.Newf("getting %s by HTML: %v", url, res.Status)
+		return nil, errors.Newf("getting %s by HTML: %v", ratingURL, res.Status)
 	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
-		return nil, errors.Newf("analise %s by HTML: %v", url, err.Error())
+		return nil, errors.Newf("analise %s by HTML: %v", ratingURL, err.Error())
 	}
 
 	var (

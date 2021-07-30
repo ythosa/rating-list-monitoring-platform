@@ -13,6 +13,7 @@ type User interface {
 	UpdatePassword(id uint, password string) error
 	PatchUser(id uint, data rdto.UserPatching) error
 	GetUsername(id uint) (*rdto.Username, error)
+	GetSnils(id uint) (*rdto.Snils, error)
 	GetProfile(id uint) (*rdto.UserProfile, error)
 }
 

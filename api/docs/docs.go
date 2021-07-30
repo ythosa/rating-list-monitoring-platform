@@ -278,6 +278,51 @@ var doc = `{
                 }
             }
         },
+        "/direction/get_with_rating": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "direction"
+                ],
+                "summary": "returns user directions with user rating",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/dto.DirectionWithRating"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/direction/set": {
             "post": {
                 "security": [
@@ -555,6 +600,29 @@ var doc = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.DirectionWithRating": {
+            "type": "object",
+            "properties": {
+                "budget_places": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "position": {
+                    "type": "integer"
+                },
+                "priority_one_upper": {
+                    "type": "integer"
+                },
+                "score": {
+                    "type": "integer"
                 }
             }
         },

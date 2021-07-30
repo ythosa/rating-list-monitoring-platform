@@ -134,6 +134,22 @@ func (r *User) GetUsername(id uint) (*rdto.Username, error) {
 	return &username, nil
 }
 
+func (r *User) GetSnils(id uint) (*rdto.Snils, error) {
+	var snils rdto.Snils
+
+	query := fmt.Sprintf(
+		"SELECT (snils) FROM %s WHERE id=$1",
+		usersTable,
+	)
+	if err := r.db.Get(&snils, query, id); err != nil {
+		r.logger.Error(err)
+
+		return nil, repository.ErrRecordNotFound
+	}
+
+	return &snils, nil
+}
+
 func (r *User) GetProfile(id uint) (*rdto.UserProfile, error) {
 	var userProfile rdto.UserProfile
 

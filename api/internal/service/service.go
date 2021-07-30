@@ -29,6 +29,7 @@ type University interface {
 type Direction interface {
 	GetAll() (map[string][]dto.Direction, error)
 	Get(userID uint) (map[string][]dto.Direction, error)
+	GetWithRating(userID uint) (map[string][]dto.DirectionWithRating, error)
 	Set(userID uint, directionIDs dto.IDs) error
 }
 
@@ -43,7 +44,7 @@ func New(repository *repository.Repository, cache *cache.Cache) *Service {
 	authorizationService := NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist)
 	userService := NewUserImpl(repository.User)
 	universityService := NewUniversityImpl(repository.University)
-	directionService := NewDirectionImpl(repository.Direction, universityService)
+	directionService := NewDirectionImpl(repository.Direction, repository.User, universityService)
 
 	return &Service{
 		Authorization: authorizationService,

@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func SPBGU(url string, userSnils string) (*ParsingResult, error) {
+func spbgu(url string, userSnils string) (*ParsingResult, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -39,30 +39,32 @@ func SPBGU(url string, userSnils string) (*ParsingResult, error) {
 	)
 	isUserFound := false
 	doc.Find("tr").Each(func(_ int, s *goquery.Selection) {
-		if _, exists := s.Attr("id"); exists {
-			if isUserFound {
-				return
-			}
+		if _, exists := s.Attr("id"); !exists {
+			return
+		}
 
-			parts := strings.Split(s.Text(), "\n")
-			pos := strings.TrimSpace(parts[1])
-			priority := strings.TrimSpace(parts[4])
-			score := strings.TrimSpace(parts[5])
-			snils := strings.TrimSpace(parts[2])
-			if snils == userSnils {
-				s, _ := strconv.Atoi(strings.Split(score, ",")[0])
-				userScore = uint(s)
-				p, _ := strconv.Atoi(pos)
-				userPosition = uint(p)
-				isUserFound = true
+		if isUserFound {
+			return
+		}
 
-				return
-			}
+		parts := strings.Split(s.Text(), "\n")
+		pos := strings.TrimSpace(parts[1])
+		priority := strings.TrimSpace(parts[4])
+		score := strings.TrimSpace(parts[5])
+		snils := strings.TrimSpace(parts[2])
+		if snils == userSnils {
+			s, _ := strconv.Atoi(strings.Split(score, ",")[0])
+			userScore = uint(s)
+			p, _ := strconv.Atoi(pos)
+			userPosition = uint(p)
+			isUserFound = true
 
-			p, _ := strconv.Atoi(priority)
-			if p == 1 {
-				priorityOneUpper += 1
-			}
+			return
+		}
+
+		p, _ := strconv.Atoi(priority)
+		if p == 1 {
+			priorityOneUpper += 1
 		}
 	})
 

@@ -53,7 +53,7 @@ func (r *Direction) Get(userID uint) ([]rdto.Direction, error) {
 	var directions []rdto.Direction
 
 	query := fmt.Sprintf(
-		`SELECT d.id as direction_id, d.name as direction_name, 
+		`SELECT d.id as direction_id, d.name as direction_name, d.url as direction_url,
 					un.id as university_id, un.name as university_name FROM %s d 
 			INNER JOIN %s ud on d.id = ud.direction_id
 			INNER JOIN %s un on d.university_id = un.id

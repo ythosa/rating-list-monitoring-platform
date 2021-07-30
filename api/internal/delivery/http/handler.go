@@ -60,6 +60,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			direction.GET("/get_all", h.controllers.Direction.GetAll)
 			direction.GET("/get", h.controllers.Direction.Get)
+			direction.GET("/get_with_rating", h.controllers.Direction.GetWithRating)
 			direction.POST("/set", h.controllers.Direction.Set)
 		}
 	}
