@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func SPBGU(url string, userSnils string) (*Data, error) {
+func SPBGU(url string, userSnils string) (*ParsingResult, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,11 @@ func SPBGU(url string, userSnils string) (*Data, error) {
 		}
 	})
 
-	return &Data{
+	if !isUserFound {
+		return nil, errors.New("user not found")
+	}
+
+	return &ParsingResult{
 		Position:         userPosition,
 		Score:            userScore,
 		PriorityOneUpper: priorityOneUpper,

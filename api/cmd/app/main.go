@@ -17,9 +17,9 @@ import (
 
 func main() {
 	//app.Run()
-	d, _ := ratingparser.SPBGU(
-		"https://cabinet.spbu.ru/Lists/1k_EntryLists/list_bb827177-7802-419a-91af-bfbb50849975.html",
-		"167-174-212 72")
+	d, _ := ratingparser.LETI(
+		"https://etu.ru/ru/abiturientam/priyom-na-1-y-kurs/podavshie-zayavlenie/ochnaya/byudzhet/programmnaya-inzheneriya",
+		"166-912-183 87")
 
 	println("Budget places:", d.BudgetPlaces)
 	println("Score:", d.Score)

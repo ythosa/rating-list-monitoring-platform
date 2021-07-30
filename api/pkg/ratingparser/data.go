@@ -1,8 +1,8 @@
 package ratingparser
 
-type Data struct {
+type ParsingResult struct {
 	Position         uint
-	Score           uint
+	Score            uint
 	PriorityOneUpper uint
 	BudgetPlaces     uint
 }
