@@ -69,7 +69,7 @@ func spbgu(url string, userSnils string) (*ParsingResult, error) {
 	})
 
 	if !isUserFound {
-		return nil, errors.New("user not found")
+		return nil, UserNotFoundErr
 	}
 
 	return &ParsingResult{

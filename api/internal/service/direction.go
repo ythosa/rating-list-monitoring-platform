@@ -1,11 +1,12 @@
 package service
 
 import (
+	"context"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/ratingparser"
+	"golang.org/x/sync/errgroup"
 	"sync"
 )
 
@@ -68,29 +69,39 @@ func (u *DirectionImpl) Get(userID uint) (map[string][]dto.Direction, error) {
 func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWithRating, error) {
 	directions, err := u.directionRepository.Get(userID)
 	if err != nil {
+		u.logger.Error(err)
+
 		return nil, err
 	}
 
-	snils, err := u.userRepository.GetSnils(userID)
+	userSnils, err := u.userRepository.GetSnils(userID)
 	if err != nil {
+		u.logger.Error(err)
+
 		return nil, err
 	}
-	formattedSnils := ratingparser.FormatSnils(snils.Snils)
+	formattedSnils := ratingparser.FormatSnils(userSnils.Snils)
 
-	var (
-		wg sync.WaitGroup
-		mu sync.Mutex
-	)
+	var mu sync.Mutex
+
+	errs, _ := errgroup.WithContext(context.TODO())
 	directionsUniversity := make(map[string][]dto.DirectionWithRating)
 	for _, d := range directions {
-		wg.Add(1)
-		go func(direction rdto.Direction) {
-			parsingResult, err := ratingparser.ParseRating(direction.UniversityName, direction.DirectionURL, formattedSnils)
-			if err != nil {
-				u.logger.Error(err)
-				wg.Done()
+		direction := d
+		errs.Go(func() error {
+			parsingResult, err := ratingparser.ParseRating(
+				direction.UniversityName,
+				direction.DirectionURL,
+				formattedSnils,
+			)
 
-				return
+			switch err {
+			case ratingparser.UserNotFoundErr:
+				parsingResult = &ratingparser.EmptyResult
+			default:
+				if err != nil {
+					return err
+				}
 			}
 
 			directionWithRating := dto.DirectionWithRating{
@@ -109,10 +120,15 @@ func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWi
 			)
 			mu.Unlock()
 
-			wg.Done()
-		}(d)
+			return nil
+		})
 	}
-	wg.Wait()
+
+	if err := errs.Wait(); err != nil {
+		u.logger.Error(err)
+
+		return nil, err
+	}
 
 	return directionsUniversity, nil
 }

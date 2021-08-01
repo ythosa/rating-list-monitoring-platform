@@ -20,5 +20,6 @@ require (
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.5.1
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
+	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 	gopkg.in/errgo.v2 v2.1.0
 )

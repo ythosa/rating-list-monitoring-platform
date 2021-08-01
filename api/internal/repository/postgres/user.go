@@ -138,7 +138,7 @@ func (r *User) GetSnils(id uint) (*rdto.Snils, error) {
 	var snils rdto.Snils
 
 	query := fmt.Sprintf(
-		"SELECT (snils) FROM %s WHERE id=$1",
+		"SELECT snils FROM %s WHERE id=$1",
 		usersTable,
 	)
 	if err := r.db.Get(&snils, query, id); err != nil {

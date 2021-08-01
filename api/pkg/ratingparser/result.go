@@ -6,3 +6,5 @@ type ParsingResult struct {
 	PriorityOneUpper uint
 	BudgetPlaces     uint
 }
+
+var EmptyResult = ParsingResult{}

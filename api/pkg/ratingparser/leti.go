@@ -60,6 +60,10 @@ func leti(ratingURL string, userSnils string) (*ParsingResult, error) {
 		userScore = uint(score)
 	})
 
+	if !isUserFound {
+		return nil, UserNotFoundErr
+	}
+
 	return &ParsingResult{
 		Position:         userPosition,
 		Score:            userScore,
