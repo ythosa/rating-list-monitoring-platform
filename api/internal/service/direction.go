@@ -5,7 +5,6 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/ratingparser"
 	"golang.org/x/sync/errgroup"
 	"sync"
 )
@@ -14,6 +13,7 @@ type DirectionImpl struct {
 	directionRepository repository.Direction
 	userRepository      repository.User
 	universityService   University
+	parsingService      Parsing
 	logger              *logging.Logger
 }
 
@@ -21,11 +21,13 @@ func NewDirectionImpl(
 	directionRepository repository.Direction,
 	userRepository repository.User,
 	universityService University,
+	parsingService Parsing,
 ) *DirectionImpl {
 	return &DirectionImpl{
 		directionRepository: directionRepository,
 		userRepository:      userRepository,
 		universityService:   universityService,
+		parsingService:      parsingService,
 		logger:              logging.NewLogger("directions service"),
 	}
 }
@@ -80,7 +82,6 @@ func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWi
 
 		return nil, err
 	}
-	formattedSnils := ratingparser.FormatSnils(userSnils.Snils)
 
 	var mu sync.Mutex
 
@@ -89,15 +90,15 @@ func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWi
 	for _, d := range directions {
 		direction := d
 		errs.Go(func() error {
-			parsingResult, err := ratingparser.ParseRating(
+			parsingResult, err := u.parsingService.ParseRating(
 				direction.UniversityName,
 				direction.DirectionURL,
-				formattedSnils,
+				userSnils.Snils,
 			)
 
 			switch err {
-			case ratingparser.UserNotFoundErr:
-				parsingResult = &ratingparser.EmptyResult
+			case UserNotFoundInRatingList:
+				parsingResult = &dto.EmptyParsingResult
 			default:
 				if err != nil {
 					return err

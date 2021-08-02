@@ -33,18 +33,24 @@ type Direction interface {
 	Set(userID uint, directionIDs dto.IDs) error
 }
 
+type Parsing interface {
+	ParseRating(universityName string,  ratingURL string, userSnils string) (*dto.ParsingResult, error)
+}
+
 type Service struct {
 	Authorization
 	User
 	University
 	Direction
+	Parsing
 }
 
 func New(repository *repository.Repository, cache *cache.Cache) *Service {
 	authorizationService := NewAuthorizationImpl(repository.User, cache.RefreshToken, cache.Blacklist)
 	userService := NewUserImpl(repository.User)
+	parsingService := NewParsingImpl(cache.RatingList)
 	universityService := NewUniversityImpl(repository.University)
-	directionService := NewDirectionImpl(repository.Direction, repository.User, universityService)
+	directionService := NewDirectionImpl(repository.Direction, repository.User, universityService, parsingService)
 
 	return &Service{
 		Authorization: authorizationService,

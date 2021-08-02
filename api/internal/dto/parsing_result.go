@@ -1,4 +1,4 @@
-package ratingparser
+package dto
 
 type ParsingResult struct {
 	Position         uint
@@ -7,4 +7,4 @@ type ParsingResult struct {
 	BudgetPlaces     uint
 }
 
-var EmptyResult = ParsingResult{}
+var EmptyParsingResult ParsingResult

@@ -23,5 +23,6 @@ func NewCache(rc *redis.Client) *cache.Cache {
 	return &cache.Cache{
 		RefreshToken: NewRefreshTokenImpl(rc),
 		Blacklist:    NewBlacklistImpl(rc),
+		RatingList:   NewRatingListImpl(rc),
 	}
 }

@@ -14,7 +14,13 @@ type Blacklist interface {
 	Delete(userID uint) error
 }
 
+type RatingList interface {
+	Save(url string, data string, ttl time.Duration) error
+	Get(url string) (string, error)
+}
+
 type Cache struct {
 	RefreshToken
 	Blacklist
+	RatingList
 }

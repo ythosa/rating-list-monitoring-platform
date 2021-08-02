@@ -75,6 +75,7 @@ type Config struct {
 	DB            *DB
 	Cache         *Cache
 	Authorization *Authorization
+	Parsing       *Parsing
 }
 
 func newConfig() *Config {
@@ -83,6 +84,7 @@ func newConfig() *Config {
 		DB:            newDB(),
 		Cache:         newCache(),
 		Authorization: newAuth(),
+		Parsing:       newParsing(),
 	}
 }
 
@@ -160,5 +162,15 @@ func newAuth() *Authorization {
 			TTL:        time.Minute * time.Duration(viper.GetInt("auth.refresh_token.ttl")),
 			SigningKey: []byte(viper.GetString("auth.refresh_token.signing_key")),
 		},
+	}
+}
+
+type Parsing struct {
+	RatingListTTL time.Duration
+}
+
+func newParsing() *Parsing {
+	return &Parsing{
+		RatingListTTL: time.Minute * time.Duration(viper.GetInt("parsing.rating_list_ttl")),
 	}
 }
