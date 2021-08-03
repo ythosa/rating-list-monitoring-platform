@@ -60,6 +60,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		direction := api.Group("/direction", middleware.UserIdentity)
 		{
 			direction.GET("/get_all", h.controllers.Direction.GetAll)
+			direction.GET("/get", h.controllers.Direction.Get)
 			direction.GET("/get_for_user", h.controllers.Direction.GetForUser)
 			direction.GET("/get_for_user_with_rating", h.controllers.Direction.GetForUserWithRating)
 			direction.POST("/set_for_user", h.controllers.Direction.SetForUser)

@@ -9,6 +9,7 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 	"net/http"
+	"strconv"
 )
 
 type DirectionImpl struct {
@@ -53,6 +54,37 @@ func (u *DirectionImpl) GetAll(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, directions)
+}
+
+// Get
+// @tags direction
+// @summary returns direction by id
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @param id query int true "direction id"
+// @success 200 {object} models.Direction
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /direction/get [get].
+func (u *DirectionImpl) Get(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.InvalidQueryIDParam)
+
+		return
+	}
+
+	university, err := u.directionService.GetByID(uint(id))
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.JSON(http.StatusOK, university)
 }
 
 // GetForUser

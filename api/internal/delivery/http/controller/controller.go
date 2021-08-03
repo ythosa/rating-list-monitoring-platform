@@ -27,6 +27,7 @@ type University interface {
 
 type Direction interface {
 	GetAll(c *gin.Context)
+	Get(c *gin.Context)
 	GetForUser(c *gin.Context)
 	GetForUserWithRating(c *gin.Context)
 	SetForUser(c *gin.Context)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
 	"golang.org/x/sync/errgroup"
 	"sync"
@@ -48,6 +49,10 @@ func (u *DirectionImpl) GetAll() (map[string][]dto.Direction, error) {
 	}
 
 	return directionsUniversity, nil
+}
+
+func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
+	return u.directionRepository.GetByID(id)
 }
 
 func (u *DirectionImpl) GetForUser(userID uint) (map[string][]dto.Direction, error) {

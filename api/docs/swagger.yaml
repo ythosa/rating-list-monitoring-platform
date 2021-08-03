@@ -97,6 +97,17 @@ definitions:
       username:
         type: string
     type: object
+  models.Direction:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      university_id:
+        type: integer
+      url:
+        type: string
+    type: object
   models.University:
     properties:
       directions_page_url:
@@ -228,6 +239,36 @@ paths:
       summary: signs up new user
       tags:
       - authorization
+  /direction/get:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: direction id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Direction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns direction by id
+      tags:
+      - direction
   /direction/get_all:
     get:
       consumes:

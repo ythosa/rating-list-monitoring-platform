@@ -5,6 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
 
@@ -34,16 +35,10 @@ func (r *DirectionImpl) GetAll() ([]rdto.Direction, error) {
 	return directions, err
 }
 
-func (r *DirectionImpl) GetByID(id uint) (*rdto.Direction, error) {
-	var direction rdto.Direction
+func (r *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
+	var direction models.Direction
 
-	query := fmt.Sprintf(
-		`SELECT d.id as direction_id, d.name as direction_name, 
-					un.id as university_id, un.name as university_name FROM %s d 
-			INNER JOIN %s un on d.university_id = un.id
-			WHERE d.id = $1`,
-		directionsTable, universitiesTable,
-	)
+	query := fmt.Sprintf(`SELECT * FROM %s d WHERE d.id = $1`, directionsTable)
 	if err := r.db.Get(&direction, query, id); err != nil {
 		return nil, err
 	}
