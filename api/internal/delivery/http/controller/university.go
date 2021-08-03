@@ -35,7 +35,7 @@ func NewUniversityImpl(validate *validator.Validate, universityService service.U
 // @success 200 {object} []rdto.University
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /university/get_all [get].
+// @router /university/ [get].
 func (u *UniversityImpl) GetAll(c *gin.Context) {
 	universities, err := u.universityService.GetAll()
 	if err != nil {
@@ -54,13 +54,13 @@ func (u *UniversityImpl) GetAll(c *gin.Context) {
 // @accept json
 // @produce json
 // @security AccessTokenHeader
-// @param id query int true "university id"
+// @param id path int true "university id"
 // @success 200 {object} models.University
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /university/get [get].
+// @router /university/{id} [get].
 func (u *UniversityImpl) Get(c *gin.Context) {
-	id, err := strconv.Atoi(c.Query("id"))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.InvalidQueryIDParam)

@@ -188,55 +188,7 @@ var doc = `{
                 }
             }
         },
-        "/direction/get": {
-            "get": {
-                "security": [
-                    {
-                        "AccessTokenHeader": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "direction"
-                ],
-                "summary": "returns direction by id",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "direction id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Direction"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    }
-                }
-            }
-        },
-        "/direction/get_all": {
+        "/direction/": {
             "get": {
                 "security": [
                     {
@@ -419,7 +371,7 @@ var doc = `{
                 }
             }
         },
-        "/university/get": {
+        "/direction/{id}": {
             "get": {
                 "security": [
                     {
@@ -433,15 +385,15 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "university"
+                    "direction"
                 ],
-                "summary": "returns university by id",
+                "summary": "returns direction by id",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "university id",
+                        "description": "direction id",
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -449,7 +401,7 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.University"
+                            "$ref": "#/definitions/models.Direction"
                         }
                     },
                     "400": {
@@ -467,7 +419,7 @@ var doc = `{
                 }
             }
         },
-        "/university/get_all": {
+        "/university/": {
             "get": {
                 "security": [
                     {
@@ -583,6 +535,54 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "success"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/university/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "returns university by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "university id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.University"
+                        }
                     },
                     "400": {
                         "description": "Bad Request",

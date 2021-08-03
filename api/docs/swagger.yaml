@@ -239,37 +239,7 @@ paths:
       summary: signs up new user
       tags:
       - authorization
-  /direction/get:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: direction id
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Direction'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-      security:
-      - AccessTokenHeader: []
-      summary: returns direction by id
-      tags:
-      - direction
-  /direction/get_all:
+  /direction/:
     get:
       consumes:
       - application/json
@@ -295,6 +265,36 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns all directions
+      tags:
+      - direction
+  /direction/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: direction id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Direction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns direction by id
       tags:
       - direction
   /direction/get_for_user:
@@ -383,37 +383,7 @@ paths:
       summary: set directions to user
       tags:
       - direction
-  /university/get:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: university id
-        in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.University'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/apierrors.APIError'
-      security:
-      - AccessTokenHeader: []
-      summary: returns university by id
-      tags:
-      - university
-  /university/get_all:
+  /university/:
     get:
       consumes:
       - application/json
@@ -437,6 +407,36 @@ paths:
       security:
       - AccessTokenHeader: []
       summary: returns all universities
+      tags:
+      - university
+  /university/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: university id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.University'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns university by id
       tags:
       - university
   /university/get_for_user:

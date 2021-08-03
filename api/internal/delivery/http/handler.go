@@ -51,16 +51,16 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 		university := api.Group("/university", middleware.UserIdentity)
 		{
-			university.GET("/get_all", h.controllers.University.GetAll)
-			university.GET("/get", h.controllers.University.Get)
+			university.GET("/", h.controllers.University.GetAll)
+			university.GET("/:id", h.controllers.University.Get)
 			university.GET("/get_for_user", h.controllers.University.GetForUser)
 			university.POST("/set_for_user", h.controllers.University.SetForUser)
 		}
 
 		direction := api.Group("/direction", middleware.UserIdentity)
 		{
-			direction.GET("/get_all", h.controllers.Direction.GetAll)
-			direction.GET("/get", h.controllers.Direction.Get)
+			direction.GET("/", h.controllers.Direction.GetAll)
+			direction.GET("/:id", h.controllers.Direction.Get)
 			direction.GET("/get_for_user", h.controllers.Direction.GetForUser)
 			direction.GET("/get_for_user_with_rating", h.controllers.Direction.GetForUserWithRating)
 			direction.POST("/set_for_user", h.controllers.Direction.SetForUser)
