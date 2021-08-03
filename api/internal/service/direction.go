@@ -51,7 +51,7 @@ func (u *DirectionImpl) GetAll() (map[string][]dto.Direction, error) {
 }
 
 func (u *DirectionImpl) Get(userID uint) (map[string][]dto.Direction, error) {
-	directions, err := u.directionRepository.Get(userID)
+	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (u *DirectionImpl) Get(userID uint) (map[string][]dto.Direction, error) {
 }
 
 func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWithRating, error) {
-	directions, err := u.directionRepository.Get(userID)
+	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
 		u.logger.Error(err)
 

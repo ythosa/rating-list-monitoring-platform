@@ -19,15 +19,16 @@ type User interface {
 
 type University interface {
 	GetAll() ([]rdto.University, error)
-	Get(userID uint) ([]rdto.University, error)
+	GetForUser(userID uint) ([]rdto.University, error)
+	GetByID(id uint) (*models.University, error)
 	Set(userID uint, universityIDs dto.IDs) error
 	Clear(userID uint) error
 }
 
 type Direction interface {
 	GetAll() ([]rdto.Direction, error)
-	GetByID(id uint) (rdto.Direction, error)
-	Get(userID uint) ([]rdto.Direction, error)
+	GetForUser(userID uint) ([]rdto.Direction, error)
+	GetByID(id uint) (*rdto.Direction, error)
 	Set(userID uint, directionIDs dto.IDs) error
 	Clear(userID uint) error
 }

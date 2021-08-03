@@ -18,7 +18,7 @@ import (
 func main() {
 	app.Run()
 
-	//res, err := http.Get("https://cabinet.spbu.ru/Lists/1k_EntryLists/list_94eb54ce-57aa-45e7-9be3-3acd8bf9ca38.html")
+	//res, err := http.GetForUser("https://cabinet.spbu.ru/Lists/1k_EntryLists/list_94eb54ce-57aa-45e7-9be3-3acd8bf9ca38.html")
 	//if err != nil {
 	//	println(err)
 	//	return

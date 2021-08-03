@@ -24,7 +24,7 @@ func (u *UniversityImpl) GetAll() ([]rdto.University, error) {
 }
 
 func (u *UniversityImpl) Get(userID uint) ([]rdto.University, error) {
-	return u.universityRepository.Get(userID)
+	return u.universityRepository.GetForUser(userID)
 }
 
 func (u *UniversityImpl) Set(userID uint, universityIDs dto.IDs) error {

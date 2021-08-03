@@ -8,19 +8,19 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
 
-type Direction struct {
+type DirectionImpl struct {
 	db     *sqlx.DB
 	logger *logging.Logger
 }
 
-func NewDirection(db *sqlx.DB) *Direction {
-	return &Direction{
+func NewDirectionImpl(db *sqlx.DB) *DirectionImpl {
+	return &DirectionImpl{
 		db:     db,
 		logger: logging.NewLogger("direction repository"),
 	}
 }
 
-func (r *Direction) GetAll() ([]rdto.Direction, error) {
+func (r *DirectionImpl) GetAll() ([]rdto.Direction, error) {
 	var directions []rdto.Direction
 
 	query := fmt.Sprintf(
@@ -34,7 +34,7 @@ func (r *Direction) GetAll() ([]rdto.Direction, error) {
 	return directions, err
 }
 
-func (r *Direction) GetByID(id uint) (rdto.Direction, error) {
+func (r *DirectionImpl) GetByID(id uint) (*rdto.Direction, error) {
 	var direction rdto.Direction
 
 	query := fmt.Sprintf(
@@ -44,12 +44,14 @@ func (r *Direction) GetByID(id uint) (rdto.Direction, error) {
 			WHERE d.id = $1`,
 		directionsTable, universitiesTable,
 	)
-	err := r.db.Get(&direction, query, id)
+	if err := r.db.Get(&direction, query, id); err != nil {
+		return nil, err
+	}
 
-	return direction, err
+	return &direction, nil
 }
 
-func (r *Direction) Get(userID uint) ([]rdto.Direction, error) {
+func (r *DirectionImpl) GetForUser(userID uint) ([]rdto.Direction, error) {
 	var directions []rdto.Direction
 
 	query := fmt.Sprintf(
@@ -65,7 +67,7 @@ func (r *Direction) Get(userID uint) ([]rdto.Direction, error) {
 	return directions, err
 }
 
-func (r *Direction) Set(userID uint, directionIDs dto.IDs) error {
+func (r *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		r.logger.Error(err)
@@ -92,7 +94,7 @@ func (r *Direction) Set(userID uint, directionIDs dto.IDs) error {
 	return nil
 }
 
-func (r *Direction) Clear(userID uint) error {
+func (r *DirectionImpl) Clear(userID uint) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", usersDirectionsTable)
 	_, err := r.db.Exec(query, userID)
 

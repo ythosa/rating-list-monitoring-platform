@@ -53,8 +53,8 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 
 func NewRepository(db *sqlx.DB) *repository.Repository {
 	return &repository.Repository{
-		User:       NewUser(db),
-		University: NewUniversity(db),
-		Direction:  NewDirection(db),
+		User:       NewUserImpl(db),
+		University: NewUniversityImpl(db),
+		Direction:  NewDirectionImpl(db),
 	}
 }

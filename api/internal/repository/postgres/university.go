@@ -5,29 +5,30 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
 
-type University struct {
+type UniversityImpl struct {
 	db     *sqlx.DB
 	logger *logging.Logger
 }
 
-func NewUniversity(db *sqlx.DB) *University {
-	return &University{
+func NewUniversityImpl(db *sqlx.DB) *UniversityImpl {
+	return &UniversityImpl{
 		db:     db,
 		logger: logging.NewLogger("university repository"),
 	}
 }
 
-func (r *University) GetAll() ([]rdto.University, error) {
+func (r *UniversityImpl) GetAll() ([]rdto.University, error) {
 	var universities []rdto.University
 	err := r.db.Select(&universities, fmt.Sprintf("SELECT id, name FROM %s", universitiesTable))
 
 	return universities, err
 }
 
-func (r *University) Get(userID uint) ([]rdto.University, error) {
+func (r *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
 	var universities []rdto.University
 
 	query := fmt.Sprintf(
@@ -39,7 +40,18 @@ func (r *University) Get(userID uint) ([]rdto.University, error) {
 	return universities, err
 }
 
-func (r *University) Set(userID uint, universityIDs dto.IDs) error {
+func (r *UniversityImpl) GetByID(id uint) (*models.University, error) {
+	var university models.University
+
+	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", universitiesTable)
+	if err := r.db.Get(&university, query, id); err != nil {
+		return nil, err
+	}
+
+	return &university, nil
+}
+
+func (r *UniversityImpl) Set(userID uint, universityIDs dto.IDs) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		r.logger.Error(err)
@@ -66,7 +78,7 @@ func (r *University) Set(userID uint, universityIDs dto.IDs) error {
 	return nil
 }
 
-func (r *University) Clear(userID uint) error {
+func (r *UniversityImpl) Clear(userID uint) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", usersUniversitiesTable)
 	_, err := r.db.Exec(query, userID)
 

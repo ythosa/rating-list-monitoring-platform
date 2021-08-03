@@ -10,19 +10,19 @@ import (
 	"strings"
 )
 
-type User struct {
+type UserImpl struct {
 	db     *sqlx.DB
 	logger *logging.Logger
 }
 
-func NewUser(db *sqlx.DB) *User {
-	return &User{
+func NewUserImpl(db *sqlx.DB) *UserImpl {
+	return &UserImpl{
 		db:     db,
 		logger: logging.NewLogger("user repository"),
 	}
 }
 
-func (r *User) Create(user rdto.UserCreating) (uint, error) {
+func (r *UserImpl) Create(user rdto.UserCreating) (uint, error) {
 	var id uint
 
 	query := fmt.Sprintf(
@@ -40,7 +40,7 @@ func (r *User) Create(user rdto.UserCreating) (uint, error) {
 	return id, nil
 }
 
-func (r *User) GetUserByUsername(username string) (*models.User, error) {
+func (r *UserImpl) GetUserByUsername(username string) (*models.User, error) {
 	var user models.User
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE username=$1", usersTable)
@@ -51,7 +51,7 @@ func (r *User) GetUserByUsername(username string) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *User) GetUserByID(id uint) (*models.User, error) {
+func (r *UserImpl) GetUserByID(id uint) (*models.User, error) {
 	var user models.User
 
 	query := fmt.Sprintf("SELECT * FROM %s WHERE id=$1", usersTable)
@@ -62,7 +62,7 @@ func (r *User) GetUserByID(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *User) UpdatePassword(id uint, password string) error {
+func (r *UserImpl) UpdatePassword(id uint, password string) error {
 	query := fmt.Sprintf("UPDATE %s ut SET password=$1 WHERE ut.id=$2", usersTable)
 	if _, err := r.db.Exec(query, password, id); err != nil {
 		return repository.ErrRecordNotFound
@@ -71,7 +71,7 @@ func (r *User) UpdatePassword(id uint, password string) error {
 	return nil
 }
 
-func (r *User) PatchUser(id uint, data rdto.UserPatching) error {
+func (r *UserImpl) PatchUser(id uint, data rdto.UserPatching) error {
 	setValues := make([]string, 0)
 	args := make([]interface{}, 0)
 	argID := 1
@@ -118,7 +118,7 @@ func (r *User) PatchUser(id uint, data rdto.UserPatching) error {
 	return nil
 }
 
-func (r *User) GetUsername(id uint) (*rdto.Username, error) {
+func (r *UserImpl) GetUsername(id uint) (*rdto.Username, error) {
 	var username rdto.Username
 
 	query := fmt.Sprintf(
@@ -134,7 +134,7 @@ func (r *User) GetUsername(id uint) (*rdto.Username, error) {
 	return &username, nil
 }
 
-func (r *User) GetSnils(id uint) (*rdto.Snils, error) {
+func (r *UserImpl) GetSnils(id uint) (*rdto.Snils, error) {
 	var snils rdto.Snils
 
 	query := fmt.Sprintf(
@@ -150,7 +150,7 @@ func (r *User) GetSnils(id uint) (*rdto.Snils, error) {
 	return &snils, nil
 }
 
-func (r *User) GetProfile(id uint) (*rdto.UserProfile, error) {
+func (r *UserImpl) GetProfile(id uint) (*rdto.UserProfile, error) {
 	var userProfile rdto.UserProfile
 
 	query := fmt.Sprintf(
