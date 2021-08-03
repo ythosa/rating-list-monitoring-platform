@@ -153,7 +153,7 @@ func (u *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
 	for _, directionID := range directionIDs.IDs {
 		wg.Add(1)
 		go func(id uint) {
-			d, _ := u.directionRepository.GetByID(id)
+			d, _ := u.directionRepository.GetUniversityID(id)
 
 			mu.Lock()
 			stored := false
