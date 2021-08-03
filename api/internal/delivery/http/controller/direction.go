@@ -55,7 +55,7 @@ func (u *DirectionImpl) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, directions)
 }
 
-// Get
+// GetForUser
 // @tags direction
 // @summary returns user directions
 // @accept json
@@ -64,8 +64,8 @@ func (u *DirectionImpl) GetAll(c *gin.Context) {
 // @success 200 {object} map[string][]dto.Direction
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /direction/get [get].
-func (u *DirectionImpl) Get(c *gin.Context) {
+// @router /direction/get_for_user [get].
+func (u *DirectionImpl) GetForUser(c *gin.Context) {
 	userID, err := middleware.GetUserID(c)
 	if err != nil {
 		u.logger.Error(err)
@@ -74,7 +74,7 @@ func (u *DirectionImpl) Get(c *gin.Context) {
 		return
 	}
 
-	directions, err := u.directionService.Get(userID)
+	directions, err := u.directionService.GetForUser(userID)
 	if err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
@@ -85,7 +85,7 @@ func (u *DirectionImpl) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, directions)
 }
 
-// GetWithRating
+// GetForUserWithRating
 // @tags direction
 // @summary returns user directions with user rating
 // @accept json
@@ -94,8 +94,8 @@ func (u *DirectionImpl) Get(c *gin.Context) {
 // @success 200 {object} map[string][]dto.DirectionWithRating
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /direction/get_with_rating [get].
-func (u *DirectionImpl) GetWithRating(c *gin.Context) {
+// @router /direction/get_for_user_with_rating [get].
+func (u *DirectionImpl) GetForUserWithRating(c *gin.Context) {
 	userID, err := middleware.GetUserID(c)
 	if err != nil {
 		u.logger.Error(err)
@@ -104,7 +104,7 @@ func (u *DirectionImpl) GetWithRating(c *gin.Context) {
 		return
 	}
 
-	directionsWithRating, err := u.directionService.GetWithRating(userID)
+	directionsWithRating, err := u.directionService.GetForUserWithRating(userID)
 	if err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
@@ -115,7 +115,7 @@ func (u *DirectionImpl) GetWithRating(c *gin.Context) {
 	c.JSON(http.StatusOK, directionsWithRating)
 }
 
-// Set
+// SetForUser
 // @tags direction
 // @summary set directions to user
 // @description receives direction ids and sets it to user
@@ -126,8 +126,8 @@ func (u *DirectionImpl) GetWithRating(c *gin.Context) {
 // @success 200 "success"
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /direction/set [post].
-func (u *DirectionImpl) Set(c *gin.Context) {
+// @router /direction/set_for_user [post].
+func (u *DirectionImpl) SetForUser(c *gin.Context) {
 	var payload dto.IDs
 
 	if err := c.BindJSON(&payload); err != nil {
@@ -145,7 +145,7 @@ func (u *DirectionImpl) Set(c *gin.Context) {
 		return
 	}
 
-	if err := u.directionService.Set(userID, payload); err != nil {
+	if err := u.directionService.SetForUser(userID, payload); err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
 

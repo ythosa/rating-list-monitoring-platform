@@ -23,15 +23,15 @@ func (u *UniversityImpl) GetAll() ([]rdto.University, error) {
 	return u.universityRepository.GetAll()
 }
 
-func (u *UniversityImpl) Get(userID uint) ([]rdto.University, error) {
+func (u *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
 	return u.universityRepository.GetForUser(userID)
 }
 
-func (u *UniversityImpl) Set(userID uint, universityIDs dto.IDs) error {
+func (u *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
 	err := u.universityRepository.Clear(userID)
 	if err != nil {
 		return err
 	}
 
-	return u.universityRepository.Set(userID, universityIDs)
+	return u.universityRepository.SetForUser(userID, universityIDs)
 }

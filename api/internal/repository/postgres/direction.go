@@ -81,7 +81,7 @@ func (r *DirectionImpl) GetForUser(userID uint) ([]rdto.Direction, error) {
 	return directions, err
 }
 
-func (r *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
+func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		r.logger.Error(err)

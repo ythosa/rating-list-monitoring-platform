@@ -188,51 +188,6 @@ var doc = `{
                 }
             }
         },
-        "/direction/get": {
-            "get": {
-                "security": [
-                    {
-                        "AccessTokenHeader": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "direction"
-                ],
-                "summary": "returns user directions",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/dto.Direction"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    }
-                }
-            }
-        },
         "/direction/get_all": {
             "get": {
                 "security": [
@@ -278,7 +233,52 @@ var doc = `{
                 }
             }
         },
-        "/direction/get_with_rating": {
+        "/direction/get_for_user": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "direction"
+                ],
+                "summary": "returns user directions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/dto.Direction"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/direction/get_for_user_with_rating": {
             "get": {
                 "security": [
                     {
@@ -323,7 +323,7 @@ var doc = `{
                 }
             }
         },
-        "/direction/set": {
+        "/direction/set_for_user": {
             "post": {
                 "security": [
                     {
@@ -355,48 +355,6 @@ var doc = `{
                 "responses": {
                     "200": {
                         "description": "success"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/apierrors.APIError"
-                        }
-                    }
-                }
-            }
-        },
-        "/university/get": {
-            "get": {
-                "security": [
-                    {
-                        "AccessTokenHeader": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "university"
-                ],
-                "summary": "returns user universities",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/rdto.University"
-                            }
-                        }
                     },
                     "400": {
                         "description": "Bad Request",
@@ -455,7 +413,49 @@ var doc = `{
                 }
             }
         },
-        "/university/set": {
+        "/university/get_for_user": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "returns user universities",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/rdto.University"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
+        "/university/set_for_user": {
             "post": {
                 "security": [
                     {

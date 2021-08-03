@@ -20,15 +20,15 @@ type User interface {
 
 type University interface {
 	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Set(c *gin.Context)
+	GetForUser(c *gin.Context)
+	SetForUser(c *gin.Context)
 }
 
 type Direction interface {
 	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	GetWithRating(c *gin.Context)
-	Set(c *gin.Context)
+	GetForUser(c *gin.Context)
+	GetForUserWithRating(c *gin.Context)
+	SetForUser(c *gin.Context)
 }
 
 type Controller struct {

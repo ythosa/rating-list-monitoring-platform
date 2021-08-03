@@ -50,7 +50,7 @@ func (u *DirectionImpl) GetAll() (map[string][]dto.Direction, error) {
 	return directionsUniversity, nil
 }
 
-func (u *DirectionImpl) Get(userID uint) (map[string][]dto.Direction, error) {
+func (u *DirectionImpl) GetForUser(userID uint) (map[string][]dto.Direction, error) {
 	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (u *DirectionImpl) Get(userID uint) (map[string][]dto.Direction, error) {
 	return directionsUniversity, nil
 }
 
-func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWithRating, error) {
+func (u *DirectionImpl) GetForUserWithRating(userID uint) (map[string][]dto.DirectionWithRating, error) {
 	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
 		u.logger.Error(err)
@@ -134,13 +134,13 @@ func (u *DirectionImpl) GetWithRating(userID uint) (map[string][]dto.DirectionWi
 	return directionsUniversity, nil
 }
 
-func (u *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
+func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	err := u.directionRepository.Clear(userID)
 	if err != nil {
 		return err
 	}
 
-	if err := u.directionRepository.Set(userID, directionIDs); err != nil {
+	if err := u.directionRepository.SetForUser(userID, directionIDs); err != nil {
 		return err
 	}
 
@@ -173,5 +173,5 @@ func (u *DirectionImpl) Set(userID uint, directionIDs dto.IDs) error {
 	}
 	wg.Wait()
 
-	return u.universityService.Set(userID, dto.IDs{IDs: universityIDs})
+	return u.universityService.SetForUser(userID, dto.IDs{IDs: universityIDs})
 }

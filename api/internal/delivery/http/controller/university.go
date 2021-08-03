@@ -55,7 +55,7 @@ func (u *UniversityImpl) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, universities)
 }
 
-// Get
+// GetForUser
 // @tags university
 // @summary returns user universities
 // @accept json
@@ -64,8 +64,8 @@ func (u *UniversityImpl) GetAll(c *gin.Context) {
 // @success 200 {object} []rdto.University
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /university/get [get].
-func (u *UniversityImpl) Get(c *gin.Context) {
+// @router /university/get_for_user [get].
+func (u *UniversityImpl) GetForUser(c *gin.Context) {
 	userID, err := middleware.GetUserID(c)
 	if err != nil {
 		u.logger.Error(err)
@@ -74,7 +74,7 @@ func (u *UniversityImpl) Get(c *gin.Context) {
 		return
 	}
 
-	universities, err := u.universityService.Get(userID)
+	universities, err := u.universityService.GetForUser(userID)
 	if err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
@@ -85,7 +85,7 @@ func (u *UniversityImpl) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, universities)
 }
 
-// Set
+// SetForUser
 // @tags university
 // @summary set universities to user
 // @description receives university ids and sets it to user
@@ -96,8 +96,8 @@ func (u *UniversityImpl) Get(c *gin.Context) {
 // @success 200 "success"
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
-// @router /university/set [post].
-func (u *UniversityImpl) Set(c *gin.Context) {
+// @router /university/set_for_user [post].
+func (u *UniversityImpl) SetForUser(c *gin.Context) {
 	var payload dto.IDs
 
 	if err := c.BindJSON(&payload); err != nil {
@@ -115,7 +115,7 @@ func (u *UniversityImpl) Set(c *gin.Context) {
 		return
 	}
 
-	if err := u.universityService.Set(userID, payload); err != nil {
+	if err := u.universityService.SetForUser(userID, payload); err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
 

@@ -22,19 +22,19 @@ type User interface {
 
 type University interface {
 	GetAll() ([]rdto.University, error)
-	Get(userID uint) ([]rdto.University, error)
-	Set(userID uint, universityIDs dto.IDs) error
+	GetForUser(userID uint) ([]rdto.University, error)
+	SetForUser(userID uint, universityIDs dto.IDs) error
 }
 
 type Direction interface {
 	GetAll() (map[string][]dto.Direction, error)
-	Get(userID uint) (map[string][]dto.Direction, error)
-	GetWithRating(userID uint) (map[string][]dto.DirectionWithRating, error)
-	Set(userID uint, directionIDs dto.IDs) error
+	GetForUser(userID uint) (map[string][]dto.Direction, error)
+	GetForUserWithRating(userID uint) (map[string][]dto.DirectionWithRating, error)
+	SetForUser(userID uint, directionIDs dto.IDs) error
 }
 
 type Parsing interface {
-	ParseRating(universityName string,  ratingURL string, userSnils string) (*dto.ParsingResult, error)
+	ParseRating(universityName string, ratingURL string, userSnils string) (*dto.ParsingResult, error)
 }
 
 type Service struct {

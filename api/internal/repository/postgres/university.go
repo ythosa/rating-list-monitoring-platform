@@ -51,7 +51,7 @@ func (r *UniversityImpl) GetByID(id uint) (*models.University, error) {
 	return &university, nil
 }
 
-func (r *UniversityImpl) Set(userID uint, universityIDs dto.IDs) error {
+func (r *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		r.logger.Error(err)
