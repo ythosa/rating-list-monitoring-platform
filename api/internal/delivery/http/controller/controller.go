@@ -20,6 +20,7 @@ type User interface {
 
 type University interface {
 	GetAll(c *gin.Context)
+	Get(c *gin.Context)
 	GetForUser(c *gin.Context)
 	SetForUser(c *gin.Context)
 }

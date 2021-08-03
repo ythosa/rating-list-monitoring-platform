@@ -371,6 +371,54 @@ var doc = `{
                 }
             }
         },
+        "/university/get": {
+            "get": {
+                "security": [
+                    {
+                        "AccessTokenHeader": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "university"
+                ],
+                "summary": "returns university by id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "university id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.University"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apierrors.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/university/get_all": {
             "get": {
                 "security": [
@@ -718,6 +766,23 @@ var doc = `{
             "type": "object",
             "properties": {
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.University": {
+            "type": "object",
+            "properties": {
+                "directions_page_url": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 }
             }

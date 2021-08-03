@@ -9,6 +9,7 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 	"net/http"
+	"strconv"
 )
 
 type UniversityImpl struct {
@@ -36,14 +37,6 @@ func NewUniversityImpl(validate *validator.Validate, universityService service.U
 // @failure 401 {object} apierrors.APIError
 // @router /university/get_all [get].
 func (u *UniversityImpl) GetAll(c *gin.Context) {
-	_, err := middleware.GetUserID(c)
-	if err != nil {
-		u.logger.Error(err)
-		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
-
-		return
-	}
-
 	universities, err := u.universityService.GetAll()
 	if err != nil {
 		u.logger.Error(err)
@@ -53,6 +46,37 @@ func (u *UniversityImpl) GetAll(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, universities)
+}
+
+// Get
+// @tags university
+// @summary returns university by id
+// @accept json
+// @produce json
+// @security AccessTokenHeader
+// @param id query int true "university id"
+// @success 200 {object} models.University
+// @failure 400 {object} apierrors.APIError
+// @failure 401 {object} apierrors.APIError
+// @router /university/get [get].
+func (u *UniversityImpl) Get(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.InvalidQueryIDParam)
+
+		return
+	}
+
+	university, err := u.universityService.GetByID(uint(id))
+	if err != nil {
+		u.logger.Error(err)
+		c.AbortWithStatusJSON(http.StatusBadRequest, apierrors.NewAPIError(err))
+
+		return
+	}
+
+	c.JSON(http.StatusOK, university)
 }
 
 // GetForUser

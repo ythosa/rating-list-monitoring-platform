@@ -17,4 +17,5 @@ func (e *APIError) Error() string {
 var (
 	InvalidRefreshToken        = NewAPIError(errors.New("invalid token"))
 	InvalidAuthorizationHeader = NewAPIError(errors.New("invalid authorization header"))
+	InvalidQueryIDParam        = NewAPIError(errors.New("invalid query id param"))
 )

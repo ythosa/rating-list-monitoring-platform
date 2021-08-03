@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 )
@@ -22,6 +23,7 @@ type User interface {
 
 type University interface {
 	GetAll() ([]rdto.University, error)
+	GetByID(id uint) (*models.University, error)
 	GetForUser(userID uint) ([]rdto.University, error)
 	SetForUser(userID uint, universityIDs dto.IDs) error
 }

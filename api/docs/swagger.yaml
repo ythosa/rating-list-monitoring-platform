@@ -97,6 +97,17 @@ definitions:
       username:
         type: string
     type: object
+  models.University:
+    properties:
+      directions_page_url:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
   rdto.University:
     properties:
       id:
@@ -331,6 +342,36 @@ paths:
       summary: set directions to user
       tags:
       - direction
+  /university/get:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: university id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.University'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apierrors.APIError'
+      security:
+      - AccessTokenHeader: []
+      summary: returns university by id
+      tags:
+      - university
   /university/get_all:
     get:
       consumes:
