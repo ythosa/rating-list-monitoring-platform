@@ -1,12 +1,16 @@
 package validation_test
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/validation"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/validation"
 )
 
 func TestSnils(t *testing.T) {
+	t.Parallel()
+
 	testCases := []struct {
 		name  string
 		snils string
@@ -47,6 +51,7 @@ func TestSnils(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			if tc.ok {
 				assert.NoError(t, validation.Snils(tc.snils))
 			} else {

@@ -1,8 +1,9 @@
 package authorization_test
 
 import (
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/authorization"
 	"testing"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/authorization"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/sirupsen/logrus"
@@ -10,6 +11,8 @@ import (
 )
 
 func TestServices_JWTParseToken(t *testing.T) {
+	t.Parallel()
+
 	testTokens, err := authorization.GenerateTokensFromPayload(1)
 	if err != nil {
 		logrus.Fatalf("error occurred while generating tokens: %s", err.Error())
@@ -65,6 +68,7 @@ func TestServices_JWTParseToken(t *testing.T) {
 	for _, tc := range testCases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
 			_, err := authorization.ParseToken(tc.token, tc.tokenType)
 			assert.Equal(t, tc.err, err)
 		})

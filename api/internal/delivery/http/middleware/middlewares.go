@@ -1,11 +1,13 @@
 package middleware
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/apierrors"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/authorization"
-	"net/http"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/apierrors"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/authorization"
 )
 
 const userCtx = "userID"

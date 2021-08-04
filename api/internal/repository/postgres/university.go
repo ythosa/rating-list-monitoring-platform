@@ -2,7 +2,9 @@ package postgres
 
 import (
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
+
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
@@ -67,6 +69,7 @@ func (r *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
 	for _, universityID := range universityIDs.IDs {
 		if _, err := tx.Exec(query, userID, universityID); err != nil {
 			r.logger.Error(err)
+
 			if err := tx.Rollback(); err != nil {
 				return fmt.Errorf("error while rollbacking transaction: %w", err)
 			}
@@ -77,6 +80,7 @@ func (r *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
 
 	if err := tx.Commit(); err != nil {
 		r.logger.Error(err)
+
 		if err := tx.Rollback(); err != nil {
 			return fmt.Errorf("error while rollbacking transaction: %w", err)
 		}

@@ -1,4 +1,4 @@
-module github.com/ythosa/rating-list-monitoring-platfrom-api
+module github.com/ythosa/rating-list-monitoring-platform-api
 
 go 1.15
 

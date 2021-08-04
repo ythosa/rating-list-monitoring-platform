@@ -2,16 +2,18 @@ package service
 
 import (
 	"fmt"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/authorization"
-	"golang.org/x/crypto/bcrypt"
 	"strings"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/authorization"
 )
 
 type AuthorizationImpl struct {
@@ -42,6 +44,7 @@ func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (uint, error) {
 	}
 
 	userData.Password = string(hashedPassword)
+
 	id, err := s.userRepository.Create(rdto.UserCreating(userData))
 	if err != nil {
 		s.logger.Error(err)
@@ -66,10 +69,10 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 		return nil, fmt.Errorf("error while deleting user from cache blacklist: %w", err)
 	}
 
-	var tokens = &dto.AuthorizationTokens{}
-
+	tokens := &dto.AuthorizationTokens{}
 	latestRefreshToken, gettingLatestRefreshTokenErr := s.refreshTokenCache.Get(user.ID)
 	_, parsingLatestRefreshTokenErr := authorization.ParseToken(latestRefreshToken, authorization.RefreshToken)
+
 	if gettingLatestRefreshTokenErr != nil || parsingLatestRefreshTokenErr != nil {
 		tokens, err = authorization.GenerateTokensFromPayload(user.ID)
 		if err != nil {
@@ -86,8 +89,8 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	}
 
 	tokens.RefreshToken = latestRefreshToken
-	tokens.AccessToken, err = authorization.GenerateAccessTokenFromPayload(user.ID)
-	if err != nil {
+
+	if tokens.AccessToken, err = authorization.GenerateAccessTokenFromPayload(user.ID); err != nil {
 		return nil, fmt.Errorf("error while generating token: %w", err)
 	}
 

@@ -2,9 +2,11 @@ package redis
 
 import (
 	"context"
+
 	"github.com/go-redis/redis/v8"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 )
 
 var redisCtx = context.TODO()

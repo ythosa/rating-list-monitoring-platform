@@ -2,8 +2,10 @@ package dto
 
 import (
 	"fmt"
+
 	"github.com/go-playground/validator/v10"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/pkg/validation"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/validation"
 )
 
 type SigningUp struct {

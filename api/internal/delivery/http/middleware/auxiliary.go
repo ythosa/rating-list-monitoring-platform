@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/apierrors"
 	"strings"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/apierrors"
 )
 
 const (

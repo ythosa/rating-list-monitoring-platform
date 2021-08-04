@@ -2,9 +2,10 @@ package redis
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/go-redis/redis/v8"
 	"gopkg.in/errgo.v2/fmt/errors"
-	"time"
 )
 
 type BlacklistImpl struct {

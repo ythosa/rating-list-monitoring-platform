@@ -4,14 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
-	"golang.org/x/sync/errgroup"
 	"sort"
 	"sync"
+
+	"golang.org/x/sync/errgroup"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/models"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 )
 
 type DirectionImpl struct {
@@ -83,8 +85,10 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 
 	errs, _ := errgroup.WithContext(context.TODO())
 	directionsWithRating := make([]dto.DirectionWithParsingResult, 0)
+
 	for _, d := range directions {
 		direction := d
+
 		errs.Go(func() error {
 			parsingResult, err := u.parsingService.ParseRating(
 				direction.UniversityName,
@@ -133,13 +137,16 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	)
 
 	universityIDs := make([]uint, 0)
+
 	for _, directionID := range directionIDs.IDs {
 		wg.Add(1)
+
 		go func(id uint) {
 			d, _ := u.directionRepository.GetUniversityID(id)
 
 			mu.Lock()
 			stored := false
+
 			for _, uID := range universityIDs {
 				if uID == d.UniversityID {
 					stored = true
@@ -147,6 +154,7 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 					break
 				}
 			}
+
 			if !stored {
 				universityIDs = append(universityIDs, d.UniversityID)
 			}
@@ -155,6 +163,7 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 			wg.Done()
 		}(directionID)
 	}
+
 	wg.Wait()
 
 	if err := u.universityService.SetForUser(userID, dto.IDs{IDs: universityIDs}); err != nil {
@@ -166,8 +175,10 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 
 func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
 	universityDirections := make([]dto.UniversityDirections, 0)
+
 	for _, d := range directions {
 		isExists := false
+
 		for i, ud := range universityDirections {
 			if ud.UniversityID == d.UniversityID {
 				universityDirections[i].Directions = append(
@@ -200,8 +211,10 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
 	directions []dto.DirectionWithParsingResult,
 ) []dto.UniversityDirectionsWithRating {
 	universityDirectionsWithRating := make([]dto.UniversityDirectionsWithRating, 0)
+
 	for _, d := range directions {
 		isExists := false
+
 		for i, ud := range universityDirectionsWithRating {
 			if ud.UniversityID == d.Direction.UniversityID {
 				universityDirectionsWithRating[i].Directions = append(

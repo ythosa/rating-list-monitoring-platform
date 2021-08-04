@@ -2,12 +2,13 @@ package config
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 const (

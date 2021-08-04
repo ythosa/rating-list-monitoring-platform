@@ -2,7 +2,8 @@ package main
 
 import (
 	_ "github.com/lib/pq"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/app"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/app"
 )
 
 // @title Rating List Monitoring Platform

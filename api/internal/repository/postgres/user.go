@@ -2,12 +2,14 @@ package postgres
 
 import (
 	"fmt"
-	"github.com/jmoiron/sqlx"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
 	"strings"
+
+	"github.com/jmoiron/sqlx"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/models"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 )
 
 type UserImpl struct {
@@ -31,6 +33,7 @@ func (r *UserImpl) Create(user rdto.UserCreating) (uint, error) {
 		usersTable,
 	)
 	row := r.db.QueryRow(query, user.Username, user.Password, user.FirstName, user.MiddleName, user.LastName, user.Snils)
+
 	if err := row.Scan(&id); err != nil {
 		r.logger.Error(err)
 
@@ -102,6 +105,7 @@ func (r *UserImpl) PatchUser(id uint, data rdto.UserPatching) error {
 
 	setQuery := strings.Join(setValues, ", ")
 	query := fmt.Sprintf("UPDATE %s ut SET %s WHERE ut.id=$%d", usersTable, setQuery, argID)
+
 	args = append(args, id)
 
 	result, err := r.db.Exec(query, args...)

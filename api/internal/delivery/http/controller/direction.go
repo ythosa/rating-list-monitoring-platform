@@ -1,15 +1,17 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/apierrors"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/middleware"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/apierrors"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/middleware"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
 )
 
 type DirectionImpl struct {

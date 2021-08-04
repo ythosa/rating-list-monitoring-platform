@@ -1,9 +1,9 @@
 package repository
 
 import (
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/models"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 )
 
 type User interface {

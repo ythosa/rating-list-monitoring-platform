@@ -5,17 +5,11 @@ run:
 linters:
   enable-all: true
   disable:
-    - goimports
     - gofmt
-    - wsl
     - gci
     - gochecknoglobals
     - exhaustivestruct
-    - gofumpt
-    - paralleltest
-    - gochecknoinits
     - tagliatelle
-    - misspell
     - dupl
 
 linters-settings:

@@ -2,17 +2,19 @@ package service
 
 import (
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"gopkg.in/errgo.v2/fmt/errors"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+	"gopkg.in/errgo.v2/fmt/errors"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 )
 
 type ParsingImpl struct {
@@ -36,8 +38,8 @@ func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils
 		if err != nil {
 			return nil, fmt.Errorf("error while getting rating list page: %w", err)
 		}
-
 		defer res.Body.Close()
+
 		if res.StatusCode != http.StatusOK {
 			return nil, fmt.Errorf("getting %s by HTML: %v", ratingURL, res.Status)
 		}
@@ -78,7 +80,9 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 		userPosition     uint
 		priorityOneUpper uint
 	)
+
 	isUserFound := false
+
 	ratingList.Find("tbody tr").Each(func(_ int, s *goquery.Selection) {
 		if isUserFound {
 			return
@@ -124,6 +128,7 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
 	title := ratingList.Find("p").Text()
 	budgetPlacesRe := regexp.MustCompile(`КЦП по конкурсу: (\d+)`)
+
 	budgetPlaces, err := strconv.Atoi(strings.Split(string(budgetPlacesRe.Find([]byte(title))), " ")[3])
 	if err != nil {
 		return nil, fmt.Errorf("error while parsing budget places: %w", err)
@@ -134,7 +139,9 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 		userPosition     uint
 		priorityOneUpper uint
 	)
+
 	isUserFound := false
+
 	ratingList.Find("tr").Each(func(_ int, s *goquery.Selection) {
 		if _, exists := s.Attr("id"); !exists {
 			return

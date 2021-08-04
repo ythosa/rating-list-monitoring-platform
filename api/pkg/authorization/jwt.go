@@ -3,11 +3,12 @@ package authorization
 import (
 	"errors"
 	"fmt"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 )
 
 const (

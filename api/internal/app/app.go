@@ -2,18 +2,20 @@ package app
 
 import (
 	"context"
-	"github.com/go-playground/validator/v10"
-	"github.com/sirupsen/logrus"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache/redis"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/postgres"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"
 	"os"
 	"os/signal"
 	"sort"
 	"strings"
 	"syscall"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache/redis"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/postgres"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
 )
 
 func Run() {
@@ -39,6 +41,7 @@ func Run() {
 	cfg := config.Get()
 
 	redisClient := redis.NewClient(cfg.Cache)
+
 	postgresDB, err := postgres.NewDB(cfg.DB)
 	if err != nil {
 		logrus.Fatalf("failed to initialize db: %s", err)
@@ -54,7 +57,7 @@ func Run() {
 
 	go func() {
 		if err := server.Run(); err != nil {
-			logrus.Fatalf("error occured while running the server: %s", err)
+			logrus.Fatalf("error occurred while running the server: %s", err)
 		}
 	}()
 

@@ -2,11 +2,13 @@ package postgres
 
 import (
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository/rdto"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/models"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 )
 
 type DirectionImpl struct {
@@ -92,6 +94,7 @@ func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	for _, directionID := range directionIDs.IDs {
 		if _, err := tx.Exec(query, userID, directionID); err != nil {
 			r.logger.Error(err)
+
 			if err := tx.Rollback(); err != nil {
 				return fmt.Errorf("error while rollbacking transaction: %w", err)
 			}
@@ -102,6 +105,7 @@ func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 
 	if err := tx.Commit(); err != nil {
 		r.logger.Error(err)
+
 		if err := tx.Rollback(); err != nil {
 			return fmt.Errorf("error while rollbacking transaction: %w", err)
 		}

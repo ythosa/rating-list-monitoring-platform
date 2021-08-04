@@ -3,8 +3,9 @@ package http
 import (
 	"context"
 	"fmt"
-	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"net/http"
+
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 )
 
 type Server struct {

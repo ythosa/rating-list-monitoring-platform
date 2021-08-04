@@ -1,8 +1,9 @@
 package validation
 
 import (
-	"gopkg.in/errgo.v2/fmt/errors"
 	"strconv"
+
+	"gopkg.in/errgo.v2/fmt/errors"
 )
 
 const (
@@ -16,7 +17,8 @@ func Snils(snils string) error {
 		return errors.New("last 2 nums of snils must be numeric")
 	}
 
-	sum := 0
+	var sum int
+
 	for i := 0; i < lengthWithoutCheckSum; i++ {
 		currentNumber, err := strconv.Atoi(string(snils[i]))
 		if err != nil {
