@@ -10,6 +10,10 @@
     color: white !important;
 }
 
+.sign-in-input {
+    margin-top: 1vh !important;
+}
+
 .sign-in-input div input {
     font-family: "DewiER", serif !important;
     color: white !important;
@@ -26,14 +30,14 @@ label {
 }
 
 .sign-in-button {
+    margin-top: 0.8vh !important;
     font-family: "DewiEB", serif !important
 }
 
-.sign-up-link {
-
-    font-family: "DewiEL", serif !important
+.sign-up-link-wrapper {
+    margin-top: 0.5vh !important;
 }
 
-.sign-up-link a {
-    margin-top: 10vh !important;
+.sign-up-link {
+    font-family: "DewiEL", serif !important
 }

@@ -29,7 +29,12 @@ func NewHandler(services *service.Service, validate *validator.Validate) *Handle
 
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.Default()
-	router.Use(cors.Default())
+
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{"Access-Control-Allow-Headers", "Origin", "Accept", "X-Requested-With",
+		"Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization"}
+	router.Use(cors.New(config))
 
 	api := router.Group("/api")
 	{

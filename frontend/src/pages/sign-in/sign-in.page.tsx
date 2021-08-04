@@ -69,7 +69,7 @@ export const SignInPage = () => {
                     >
                         Войти
                     </Button>
-                    <Grid container>
+                    <Grid container className="sign-up-link-wrapper">
                         <Grid item>
                             <Link href="/sign-up" variant="subtitle1" className="sign-up-link">
                                 {'Впервые? Регистрация'}

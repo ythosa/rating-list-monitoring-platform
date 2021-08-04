@@ -1,0 +1,30 @@
+.header-wrapper {
+    display: flex;
+    float: right;
+    margin-top: 2vh;
+    margin-right: 2vw;
+    flex-direction: column;
+}
+
+.header-username-profile {
+    display: flex;
+    flex-direction: row;
+}
+
+.header-username {
+    display: flex;
+    font-family: "DewiEB", serif;
+    font-size: 22px;
+    padding-top: 1vh;
+    padding-left: 0.5vw;
+}
+
+.header-nav-link {
+    color: white !important;
+    text-decoration: underline !important;
+    font-family: "DewiEL", serif !important;
+    font-size: 20px;
+    margin-top: 1vh;
+    padding-left: 3.3vw;
+    padding-top: 0.5vh;
+}

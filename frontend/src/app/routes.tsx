@@ -1,11 +1,16 @@
 import { Redirect, Route, Switch } from 'react-router-dom'
 import SignInPage from '../pages/sign-in'
 import SignUpPage from '../pages/sign-up'
+import MainPage from '../pages/main'
 
 export const useRoutes = (isAuthenticated: boolean) => {
     if (isAuthenticated) {
         return (
             <Switch>
+                <Route path="/" exact>
+                    <MainPage/>
+                </Route>
+                <Redirect to="/"/>
             </Switch>
         )
     }
