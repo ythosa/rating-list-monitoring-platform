@@ -1,0 +1,9 @@
+@font-face {
+    font-family: "DewiEB";
+    src: url("./RFDewiExpanded-Bold.woff") format('woff');
+}
+
+@font-face {
+    font-family: "DewiEL";
+    src: url("./RFDewiExpanded-Light.woff") format('woff');
+}

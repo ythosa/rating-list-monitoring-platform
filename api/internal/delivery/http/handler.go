@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	swaggerFiles "github.com/swaggo/files"
@@ -27,7 +28,8 @@ func NewHandler(services *service.Service, validate *validator.Validate) *Handle
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
-	router := gin.New()
+	router := gin.Default()
+	router.Use(cors.Default())
 
 	api := router.Group("/api")
 	{

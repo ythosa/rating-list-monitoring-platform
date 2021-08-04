@@ -1,0 +1,38 @@
+.sign-in-container {
+    margin-top: 35vh;
+    max-width: 25% !important;
+    min-width: 500px;
+}
+
+.sign-in-title {
+    font-family: "DewiEB", serif !important;
+    font-size: 4vh !important;
+    color: white !important;
+}
+
+.sign-in-input div input {
+    color: white !important;
+}
+
+label {
+    font-family: "DewiEL", serif !important;
+    font-size: 1.7vh !important;
+    color: white !important;
+}
+
+.MuiFilledInput-root {
+    background-color: #141414 !important;
+}
+
+.sign-in-button {
+    font-family: "DewiEB", serif !important
+}
+
+.sign-up-link {
+
+    font-family: "DewiEL", serif !important
+}
+
+.sign-up-link a {
+    margin-top: 10vh !important;
+}
