@@ -1,37 +1,41 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const storageName = 'userData'
 
 export const useAuth = () => {
-    const [token, setToken] = useState(null)
-    const [ready, setReady] = useState(false)
-    const [userId, setUserId] = useState(null)
+    const [ accessToken, setAccessToken ] = useState(null)
+    const [ refreshToken, setRefreshToken ] = useState(null)
+    const [ ready, setReady ] = useState(false)
 
-    const login = useCallback((jwtToken, id) => {
-        setToken(jwtToken)
-        setUserId(id)
+    const login = useCallback((accessJWT, refreshJWT) => {
+        setAccessToken(accessJWT)
+        setRefreshToken(refreshJWT)
 
         localStorage.setItem(storageName, JSON.stringify({
-            userId: id,
-            token: jwtToken
+            accessToken: accessJWT,
+            refreshToken: refreshJWT
         }))
     }, [])
 
     const logout = useCallback(() => {
-        setToken(null)
-        setUserId(null)
+        setAccessToken(null)
+        setRefreshToken(null)
 
         localStorage.removeItem(storageName)
     }, [])
 
     useEffect(() => {
-        const data = JSON.parse(<string>localStorage.getItem(storageName))
+        const storedData = localStorage.getItem(storageName)
+        if (!storedData) {
+            return
+        }
 
-        if (data && data.token) {
-            login(data.token, data.userId)
+        const data = JSON.parse(storedData)
+        if (data && data.accessToken && data.refreshToken) {
+            login(data.accessToken, data.refreshToken)
         }
         setReady(true)
-    }, [login])
+    }, [ login ])
 
-    return { login, logout, token, userId, ready }
+    return { login, logout, accessToken, refreshToken, ready }
 }

@@ -1,4 +1,4 @@
-import {createContext} from 'react'
+import { createContext } from 'react'
 
 function login(jwtToken: string, id: number) {
     return
@@ -9,8 +9,8 @@ function logout() {
 }
 
 export const AuthContext = createContext({
-    token: null,
-    userId: null,
+    accessToken: null,
+    refreshToken: null,
     login,
     logout,
     isAuthenticated: false

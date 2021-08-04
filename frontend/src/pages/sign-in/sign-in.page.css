@@ -1,16 +1,17 @@
 .sign-in-container {
-    margin-top: 35vh;
+    margin-top: 30vh;
     max-width: 25% !important;
     min-width: 500px;
 }
 
 .sign-in-title {
     font-family: "DewiEB", serif !important;
-    font-size: 4vh !important;
+    font-size: 3.8vh !important;
     color: white !important;
 }
 
 .sign-in-input div input {
+    font-family: "DewiER", serif !important;
     color: white !important;
 }
 

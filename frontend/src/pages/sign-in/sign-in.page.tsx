@@ -1,25 +1,24 @@
-import {useContext, useState} from "react"
-import {AuthContext} from "../context/auth.context"
-import {useHttp} from "../hooks/http.hook"
-import {Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@material-ui/core"
+import { useContext, useState } from 'react'
+import { AuthContext } from '../../context/auth.context'
+import { useHttp } from '../../hooks/http.hook'
+import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
 
-import "./sign-in.page.css"
+import './sign-in.page.css'
 
 export const SignInPage = () => {
     const auth = useContext(AuthContext)
-    const {loading, error, request, clearError} = useHttp()
-    const [form, setForm] = useState({
+    const { loading, error, request, clearError } = useHttp()
+    const [ form, setForm ] = useState({
         username: '', password: ''
     })
 
     const changeHandler = (event: { target: { name: any; value: any } }) => {
-        setForm({...form, [event.target.name]: event.target.value})
+        setForm({ ...form, [event.target.name]: event.target.value })
     }
 
     const loginHandler = async () => {
         try {
-            const data = await request('http://localhost:8001/api/auth/sign-in', 'POST', {...form})
-            console.log(data)
+            const data = await request('http://localhost:8001/api/auth/sign-in', 'POST', { ...form })
             auth.login(data.access_token, data.refresh_token)
         } catch (e) {
             console.log(e)
@@ -72,8 +71,8 @@ export const SignInPage = () => {
                     </Button>
                     <Grid container>
                         <Grid item>
-                            <Link href="#" variant="body2" className="sign-up-link">
-                                {"Впервые? Регистрация"}
+                            <Link href="/sign-up" variant="subtitle1" className="sign-up-link">
+                                {'Впервые? Регистрация'}
                             </Link>
                         </Grid>
                     </Grid>
