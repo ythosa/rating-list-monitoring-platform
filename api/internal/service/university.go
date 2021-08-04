@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
@@ -21,22 +22,40 @@ func NewUniversityImpl(universityRepository repository.University) *UniversityIm
 }
 
 func (u *UniversityImpl) GetAll() ([]rdto.University, error) {
-	return u.universityRepository.GetAll()
+	universities, err := u.universityRepository.GetAll()
+	if err != nil {
+		return nil, fmt.Errorf("error while getting all universities by repository: %w", err)
+	}
+
+	return universities, nil
 }
 
 func (u *UniversityImpl) GetByID(id uint) (*models.University, error) {
-	return u.universityRepository.GetByID(id)
+	university, err := u.universityRepository.GetByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("error while getting university by ID from repository: %w", err)
+	}
+
+	return university, nil
 }
 
 func (u *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
-	return u.universityRepository.GetForUser(userID)
+	universities, err := u.universityRepository.GetForUser(userID)
+	if err != nil {
+		return nil, fmt.Errorf("error while getting user universities from repository: %w", err)
+	}
+
+	return universities, nil
 }
 
 func (u *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
-	err := u.universityRepository.Clear(userID)
-	if err != nil {
-		return err
+	if err := u.universityRepository.Clear(userID); err != nil {
+		return fmt.Errorf("error while clearing user universities by repository: %w", err)
 	}
 
-	return u.universityRepository.SetForUser(userID, universityIDs)
+	if err := u.universityRepository.SetForUser(userID, universityIDs); err != nil {
+		return fmt.Errorf("error while setting universities for user from repository: %w", err)
+	}
+
+	return nil
 }

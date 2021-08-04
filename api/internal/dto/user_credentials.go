@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -10,5 +11,9 @@ type UserCredentials struct {
 }
 
 func (d *UserCredentials) Validate(validate *validator.Validate) error {
-	return validate.Struct(d)
+	if err := validate.Struct(d); err != nil {
+		return fmt.Errorf("error while validating user credentials: %w", err)
+	}
+
+	return nil
 }

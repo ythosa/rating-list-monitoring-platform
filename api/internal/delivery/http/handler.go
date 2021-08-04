@@ -5,7 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	_ "github.com/ythosa/rating-list-monitoring-platfrom-api/docs"
+	_ "github.com/ythosa/rating-list-monitoring-platfrom-api/docs" // swagger documentation
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/controller"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/delivery/http/middleware"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/service"

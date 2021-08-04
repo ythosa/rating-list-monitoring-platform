@@ -3,13 +3,12 @@ package postgres
 import (
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres" // postgres migrations driver
+	_ "github.com/golang-migrate/migrate/v4/source/file" // for migrations
 	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres database driver
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
-	"gopkg.in/errgo.v2/fmt/errors"
 )
 
 const (
@@ -21,19 +20,16 @@ const (
 )
 
 func NewDB(cfg *config.DB) (*sqlx.DB, error) {
-	db, err := sqlx.Open(
-		cfg.Driver,
-		fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
-			cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode,
-		),
+	db, err := sqlx.Open(cfg.Driver, fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s",
+		cfg.Host, cfg.Port, cfg.Username, cfg.DBName, cfg.Password, cfg.SSLMode),
 	)
 	if err != nil {
-		return nil, errors.Newf("error occurred while opening db connection: %s", err)
+		return nil, fmt.Errorf("error occurred while opening db connection: %w", err)
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return nil, errors.Newf("error occurred while pinging db: %s", err)
+		return nil, fmt.Errorf("error occurred while pinging db: %w", err)
 	}
 
 	// Create new migrate connections
@@ -43,7 +39,7 @@ func NewDB(cfg *config.DB) (*sqlx.DB, error) {
 			cfg.Driver, cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName, cfg.SSLMode),
 	)
 	if err != nil {
-		return nil, errors.Newf("failed to migrate new: %s", err)
+		return nil, fmt.Errorf("failed to migrate new: %w", err)
 	}
 
 	_ = m.Up() // Up migrations

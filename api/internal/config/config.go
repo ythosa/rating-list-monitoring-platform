@@ -1,10 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"gopkg.in/errgo.v2/fmt/errors"
 	"os"
 	"sync"
 	"time"
@@ -40,18 +40,19 @@ func Get() *Config {
 func initConfigParser() error {
 	configsFolderPath := os.Getenv(configsFolderPathEnv)
 	if configsFolderPath == "" {
-		return errors.Newf("empty configs folder path environment variable: %s", configsFolderPathEnv)
+		return fmt.Errorf("empty configs folder path environment variable: %s", configsFolderPathEnv)
 	}
 
 	configName := os.Getenv(configNameEnv)
 	if configName == "" {
-		return errors.Newf("empty config name environment variable: %s", configNameEnv)
+		return fmt.Errorf("empty config name environment variable: %s", configNameEnv)
 	}
 
 	viper.AddConfigPath(configsFolderPath)
 	viper.SetConfigName(configName)
+
 	if err := viper.ReadInConfig(); err != nil {
-		return err
+		return fmt.Errorf("error while reading config: %w", err)
 	}
 
 	return nil
@@ -60,11 +61,11 @@ func initConfigParser() error {
 func initDotEnvParser() error {
 	dotEnvFilePath := os.Getenv(dotEnvFilePathEnv)
 	if dotEnvFilePath == "" {
-		return errors.Newf("empty .env file path environment variable: %s", dotEnvFilePath)
+		return fmt.Errorf("empty .env file path environment variable: %s", dotEnvFilePath)
 	}
 
 	if err := godotenv.Load(dotEnvFilePath); err != nil {
-		return errors.Newf("error loading env variables from [%s]: %s", dotEnvFilePath, err)
+		return fmt.Errorf("error loading env variables from [%s]: %w", dotEnvFilePath, err)
 	}
 
 	return nil

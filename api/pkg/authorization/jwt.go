@@ -2,6 +2,7 @@ package authorization
 
 import (
 	"errors"
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"time"
@@ -15,8 +16,8 @@ const (
 )
 
 var (
-	InvalidTokenError     = errors.New("invalid token")
-	InvalidTokenTypeError = errors.New("invalid token type")
+	ErrInvalidToken     = errors.New("invalid token")
+	ErrInvalidTokenType = errors.New("invalid token type")
 )
 
 type TokenClaims struct {
@@ -35,7 +36,7 @@ func ParseToken(token string, tokenType int) (*TokenClaims, error) {
 	case RefreshToken:
 		signingKey = tokensCfg.RefreshToken.SigningKey
 	default:
-		return nil, InvalidTokenTypeError
+		return nil, ErrInvalidTokenType
 	}
 
 	parsedToken, err := jwt.ParseWithClaims(token, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
@@ -46,12 +47,12 @@ func ParseToken(token string, tokenType int) (*TokenClaims, error) {
 		return signingKey, nil
 	})
 	if err != nil {
-		return nil, InvalidTokenError
+		return nil, ErrInvalidToken
 	}
 
 	claims, ok := parsedToken.Claims.(*TokenClaims)
 	if !ok {
-		return nil, InvalidTokenError
+		return nil, ErrInvalidToken
 	}
 
 	return claims, nil
@@ -87,7 +88,7 @@ func GenerateAccessTokenFromPayload(userID uint) (string, error) {
 
 	token, err := tokenRaw.SignedString(cfg.SigningKey)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error while signing token: %w", err)
 	}
 
 	return token, nil
@@ -106,7 +107,7 @@ func GenerateRefreshTokenFromPayload(userID uint) (string, error) {
 
 	token, err := tokenRaw.SignedString(cfg.SigningKey)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error while signing token: %w", err)
 	}
 
 	return token, nil

@@ -34,19 +34,19 @@ func TestServices_JWTParseToken(t *testing.T) {
 			name:      "invalid token type",
 			token:     "token:)",
 			tokenType: -3,
-			err:       authorization.InvalidTokenTypeError,
+			err:       authorization.ErrInvalidTokenType,
 		},
 		{
 			name:      "invalid token",
 			token:     "token:)",
 			tokenType: authorization.RefreshToken,
-			err:       authorization.InvalidTokenError,
+			err:       authorization.ErrInvalidToken,
 		},
 		{
 			name:      "invalid token signing method",
 			token:     tokenWithInvalidMethod,
 			tokenType: authorization.RefreshToken,
-			err:       authorization.InvalidTokenError,
+			err:       authorization.ErrInvalidToken,
 		},
 		{
 			name:      "valid access token",

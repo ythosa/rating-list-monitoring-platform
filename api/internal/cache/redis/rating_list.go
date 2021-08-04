@@ -15,11 +15,20 @@ func NewRatingListImpl(rc *redis.Client) *RatingListImpl {
 }
 
 func (r *RatingListImpl) Save(url string, data string, ttl time.Duration) error {
-	return r.rc.Set(redisCtx, r.formatKey(url), data, ttl).Err()
+	if err := r.rc.Set(redisCtx, r.formatKey(url), data, ttl).Err(); err != nil {
+		return fmt.Errorf("error while caching rating list: %w", err)
+	}
+
+	return nil
 }
 
 func (r *RatingListImpl) Get(url string) (string, error) {
-	return r.rc.Get(redisCtx, r.formatKey(url)).Result()
+	ratingList, err := r.rc.Get(redisCtx, r.formatKey(url)).Result()
+	if err != nil {
+		return "", fmt.Errorf("error while getting rating list from cache: %w", err)
+	}
+
+	return ratingList, nil
 }
 
 func (r *RatingListImpl) formatKey(url string) string {

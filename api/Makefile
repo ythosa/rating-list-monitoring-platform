@@ -9,7 +9,7 @@ build:
 
 .PHONY: test
 test:
-	go test -v -race -timeout 30s ./...
+	go test -v -race -timeout 30s ./internal/... ./pkg/...
 
 .PHONY: migrate_init
 migrate_init:

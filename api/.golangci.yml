@@ -15,6 +15,8 @@ linters:
     - paralleltest
     - gochecknoinits
     - tagliatelle
+    - misspell
+    - dupl
 
 linters-settings:
   funlen:

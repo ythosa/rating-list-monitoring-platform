@@ -15,15 +15,28 @@ func NewRefreshTokenImpl(rc *redis.Client) *RefreshTokenImpl {
 }
 
 func (r *RefreshTokenImpl) Save(userID uint, token string, ttl time.Duration) error {
-	return r.rc.Set(redisCtx, r.formatKey(userID), token, ttl).Err()
+	if err := r.rc.Set(redisCtx, r.formatKey(userID), token, ttl).Err(); err != nil {
+		return fmt.Errorf("error while caching refresh token: %w", err)
+	}
+
+	return nil
 }
 
 func (r *RefreshTokenImpl) Get(userID uint) (string, error) {
-	return r.rc.Get(redisCtx, r.formatKey(userID)).Result()
+	refreshToken, err := r.rc.Get(redisCtx, r.formatKey(userID)).Result()
+	if err != nil {
+		return "", fmt.Errorf("error while getting refresh token from cache: %w", err)
+	}
+
+	return refreshToken, nil
 }
 
 func (r *RefreshTokenImpl) Delete(userID uint) error {
-	return r.rc.Del(redisCtx, r.formatKey(userID)).Err()
+	if err := r.rc.Del(redisCtx, r.formatKey(userID)).Err(); err != nil {
+		return fmt.Errorf("error while deleting user refresh token from cache: %w", err)
+	}
+
+	return nil
 }
 
 func (r *RefreshTokenImpl) formatKey(userID uint) string {

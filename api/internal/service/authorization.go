@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/cache"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
@@ -37,7 +38,7 @@ func NewAuthorizationImpl(
 func (s *AuthorizationImpl) SignUpUser(userData dto.SigningUp) (uint, error) {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userData.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("error while crypting password: %w", err)
 	}
 
 	userData.Password = string(hashedPassword)
@@ -62,7 +63,7 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	}
 
 	if err := s.blacklistCache.Delete(user.ID); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while deleting user from cache blacklist: %w", err)
 	}
 
 	var tokens = &dto.AuthorizationTokens{}
@@ -72,15 +73,13 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	if gettingLatestRefreshTokenErr != nil || parsingLatestRefreshTokenErr != nil {
 		tokens, err = authorization.GenerateTokensFromPayload(user.ID)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error while generating tokens: %w", err)
 		}
 
 		if err := s.refreshTokenCache.Save(
-			user.ID,
-			tokens.RefreshToken,
-			config.Get().Authorization.RefreshToken.TTL,
+			user.ID, tokens.RefreshToken, config.Get().Authorization.RefreshToken.TTL,
 		); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error while saving user refresh token in cache: %w", err)
 		}
 
 		return tokens, nil
@@ -89,7 +88,7 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	tokens.RefreshToken = latestRefreshToken
 	tokens.AccessToken, err = authorization.GenerateAccessTokenFromPayload(user.ID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while generating token: %w", err)
 	}
 
 	return tokens, nil
@@ -112,13 +111,13 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 
 	newlyGeneratedTokens, err := authorization.GenerateTokensFromPayload(tokenClaims.UserID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while generating tokens: %w", err)
 	}
 
 	if err := s.refreshTokenCache.Save(
 		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().Authorization.RefreshToken.TTL,
 	); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while saving refresh token in cache: %w", err)
 	}
 
 	return newlyGeneratedTokens, nil
@@ -132,11 +131,11 @@ func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
 
 	storageTimeInTheBlacklist := time.Until(time.Unix(tokenClaims.ExpiresAt, 0))
 	if err := s.blacklistCache.Save(userID, accessToken, storageTimeInTheBlacklist); err != nil {
-		return err
+		return fmt.Errorf("error while adding user to cahce blacklist: %w", err)
 	}
 
 	if err := s.refreshTokenCache.Delete(userID); err != nil {
-		return err
+		return fmt.Errorf("error while deleting user refresh token from cache: %w", err)
 	}
 
 	return nil

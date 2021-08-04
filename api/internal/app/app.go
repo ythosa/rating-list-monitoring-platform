@@ -30,6 +30,7 @@ func Run() {
 				if keys[i] == "prefix" {
 					return true
 				}
+
 				return strings.Compare(keys[i], keys[j]) == -1
 			})
 		},

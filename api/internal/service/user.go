@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/repository"
@@ -23,7 +24,7 @@ func (u *UserImpl) GetUsername(id uint) (*dto.Username, error) {
 	if err != nil {
 		u.logger.Error(err)
 
-		return nil, err
+		return nil, fmt.Errorf("error while getting user username: %w", err)
 	}
 
 	return (*dto.Username)(username), nil
@@ -34,7 +35,7 @@ func (u *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
 	if err != nil {
 		u.logger.Error(err)
 
-		return nil, err
+		return nil, fmt.Errorf("error while getting user profile: %w", err)
 	}
 
 	return (*dto.UserProfile)(userProfile), nil

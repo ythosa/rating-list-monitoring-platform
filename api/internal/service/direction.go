@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/models"
@@ -38,20 +40,25 @@ func NewDirectionImpl(
 func (u *DirectionImpl) GetAll() ([]dto.UniversityDirections, error) {
 	directions, err := u.directionRepository.GetAll()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting all directions by repository: %w", err)
 	}
 
 	return u.mapDirectionsToUniversityDirections(directions), nil
 }
 
 func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
-	return u.directionRepository.GetByID(id)
+	direction, err := u.directionRepository.GetByID(id)
+	if err != nil {
+		return nil, fmt.Errorf("error while getting direction by id by repository: %w", err)
+	}
+
+	return direction, nil
 }
 
 func (u *DirectionImpl) GetForUser(userID uint) ([]dto.UniversityDirections, error) {
 	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting user directions by repository: %w", err)
 	}
 
 	return u.mapDirectionsToUniversityDirections(directions), nil
@@ -62,14 +69,14 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 	if err != nil {
 		u.logger.Error(err)
 
-		return nil, err
+		return nil, fmt.Errorf("error while getting user directions by repository: %w", err)
 	}
 
 	userSnils, err := u.userRepository.GetSnils(userID)
 	if err != nil {
 		u.logger.Error(err)
 
-		return nil, err
+		return nil, fmt.Errorf("error while getting user snils by repository: %w", err)
 	}
 
 	var mu sync.Mutex
@@ -84,14 +91,10 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 				direction.DirectionURL,
 				userSnils.Snils,
 			)
-
-			switch err {
-			case UserNotFoundInRatingList:
+			if err != nil && errors.Is(err, ErrUserNotFoundInRatingList) {
 				parsingResult = &dto.EmptyParsingResult
-			default:
-				if err != nil {
-					return err
-				}
+			} else if err != nil {
+				return fmt.Errorf("error while parsong rating list: %w", err)
 			}
 
 			mu.Lock()
@@ -108,7 +111,7 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 	if err := errs.Wait(); err != nil {
 		u.logger.Error(err)
 
-		return nil, err
+		return nil, fmt.Errorf("error while waiting parsing rating: %w", err)
 	}
 
 	return u.mapDirectionsToUniversityDirectionsWithRating(directionsWithRating), nil
@@ -117,11 +120,11 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	err := u.directionRepository.Clear(userID)
 	if err != nil {
-		return err
+		return fmt.Errorf("error while clearing user directions by repository: %w", err)
 	}
 
 	if err := u.directionRepository.SetForUser(userID, directionIDs); err != nil {
-		return err
+		return fmt.Errorf("error while setting directions for user by repository: %w", err)
 	}
 
 	var (
@@ -140,6 +143,7 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 			for _, uID := range universityIDs {
 				if uID == d.UniversityID {
 					stored = true
+
 					break
 				}
 			}
@@ -153,7 +157,11 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	}
 	wg.Wait()
 
-	return u.universityService.SetForUser(userID, dto.IDs{IDs: universityIDs})
+	if err := u.universityService.SetForUser(userID, dto.IDs{IDs: universityIDs}); err != nil {
+		return fmt.Errorf("error while updating user universities by repository: %w", err)
+	}
+
+	return nil
 }
 
 func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
@@ -167,6 +175,7 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Di
 					dto.Direction{ID: d.DirectionID, Name: d.DirectionName},
 				)
 				isExists = true
+
 				break
 			}
 		}
@@ -200,6 +209,7 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
 					dto.NewDirectionWithRating(d),
 				)
 				isExists = true
+
 				break
 			}
 		}

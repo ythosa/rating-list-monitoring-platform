@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"fmt"
 	"github.com/ythosa/rating-list-monitoring-platfrom-api/internal/config"
 	"net/http"
 )
@@ -23,9 +24,17 @@ func NewServer(cfg *config.Server, handler http.Handler) *Server {
 }
 
 func (s *Server) Run() error {
-	return s.httpServer.ListenAndServe()
+	if err := s.httpServer.ListenAndServe(); err != nil {
+		return fmt.Errorf("error while starting server: %w", err)
+	}
+
+	return nil
 }
 
 func (s *Server) Shutdown(ctx context.Context) error {
-	return s.httpServer.Shutdown(ctx)
+	if err := s.httpServer.Shutdown(ctx); err != nil {
+		return fmt.Errorf("error while shutdowning server: %w", err)
+	}
+
+	return nil
 }

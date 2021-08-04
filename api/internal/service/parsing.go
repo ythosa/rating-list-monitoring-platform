@@ -27,35 +27,35 @@ func NewParsingImpl(cache cache.RatingList) *ParsingImpl {
 	}
 }
 
-var UserNotFoundInRatingList = errors.New("user not found in rating list")
+var ErrUserNotFoundInRatingList = errors.New("user not found in rating list")
 
 func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils string) (*dto.ParsingResult, error) {
 	ratingList, err := p.cache.Get(ratingURL)
 	if err != nil {
-		res, err := http.Get(ratingURL)
+		res, err := http.Get(ratingURL) // nolint:gosec,noctx
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error while getting rating list page: %w", err)
 		}
 
 		defer res.Body.Close()
 		if res.StatusCode != http.StatusOK {
-			return nil, errors.Newf("getting %s by HTML: %v", ratingURL, res.Status)
+			return nil, fmt.Errorf("getting %s by HTML: %v", ratingURL, res.Status)
 		}
 
 		responseBody, err := ioutil.ReadAll(res.Body)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error while reading response body: %w", err)
 		}
 
 		ratingList = string(responseBody)
 		if err := p.cache.Save(ratingURL, ratingList, config.Get().Parsing.RatingListTTL); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("error while caching rating list: %w", err)
 		}
 	}
 
 	parsedRatingList, err := goquery.NewDocumentFromReader(ioutil.NopCloser(strings.NewReader(ratingList)))
 	if err != nil {
-		return nil, errors.Newf("analise by HTML: %v", err.Error())
+		return nil, fmt.Errorf("analise by HTML error: %w", err)
 	}
 
 	switch university {
@@ -64,7 +64,7 @@ func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils
 	case "СПБГУ":
 		return p.parseSPBGU(parsedRatingList, p.formatSnils(userSnils))
 	default:
-		return nil, errors.Newf("invalid university: %s", university)
+		return nil, fmt.Errorf("invalid university: %s", university)
 	}
 }
 
@@ -95,7 +95,7 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 
 		if snils != userSnils {
 			if priority == 1 {
-				priorityOneUpper += 1
+				priorityOneUpper++
 			}
 
 			return
@@ -110,7 +110,7 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 	})
 
 	if !isUserFound {
-		return nil, UserNotFoundInRatingList
+		return nil, ErrUserNotFoundInRatingList
 	}
 
 	return &dto.ParsingResult{
@@ -126,7 +126,7 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 	budgetPlacesRe := regexp.MustCompile(`КЦП по конкурсу: (\d+)`)
 	budgetPlaces, err := strconv.Atoi(strings.Split(string(budgetPlacesRe.Find([]byte(title))), " ")[3])
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while parsing budget places: %w", err)
 	}
 
 	var (
@@ -161,12 +161,12 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 
 		p, _ := strconv.Atoi(priority)
 		if p == 1 {
-			priorityOneUpper += 1
+			priorityOneUpper++
 		}
 	})
 
 	if !isUserFound {
-		return nil, UserNotFoundInRatingList
+		return nil, ErrUserNotFoundInRatingList
 	}
 
 	return &dto.ParsingResult{

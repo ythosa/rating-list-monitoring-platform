@@ -37,8 +37,7 @@ func NewDirectionImpl(validate *validator.Validate, directionService service.Dir
 // @failure 401 {object} apierrors.APIError
 // @router /direction/ [get].
 func (u *DirectionImpl) GetAll(c *gin.Context) {
-	_, err := middleware.GetUserID(c)
-	if err != nil {
+	if _, err := middleware.GetUserID(c); err != nil {
 		u.logger.Error(err)
 		c.AbortWithStatusJSON(http.StatusUnauthorized, apierrors.NewAPIError(err))
 

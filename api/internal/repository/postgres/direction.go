@@ -30,9 +30,11 @@ func (r *DirectionImpl) GetAll() ([]rdto.Direction, error) {
 			INNER JOIN %s un on d.university_id = un.id`,
 		directionsTable, universitiesTable,
 	)
-	err := r.db.Select(&directions, query)
+	if err := r.db.Select(&directions, query); err != nil {
+		return nil, fmt.Errorf("error while getting all directions: %w", err)
+	}
 
-	return directions, err
+	return directions, nil
 }
 
 func (r *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
@@ -40,7 +42,7 @@ func (r *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
 
 	query := fmt.Sprintf(`SELECT * FROM %s d WHERE d.id = $1`, directionsTable)
 	if err := r.db.Get(&direction, query, id); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting direction by id: %w", err)
 	}
 
 	return &direction, nil
@@ -54,7 +56,7 @@ func (r *DirectionImpl) GetUniversityID(id uint) (*rdto.UniversityID, error) {
 		directionsTable, universitiesTable,
 	)
 	if err := r.db.Get(&universityID, query, id); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("error while getting university by id: %w", err)
 	}
 
 	return &universityID, nil
@@ -71,9 +73,11 @@ func (r *DirectionImpl) GetForUser(userID uint) ([]rdto.Direction, error) {
 			WHERE ud.user_id = $1`,
 		directionsTable, usersDirectionsTable, universitiesTable,
 	)
-	err := r.db.Select(&directions, query, userID)
+	if err := r.db.Select(&directions, query, userID); err != nil {
+		return nil, fmt.Errorf("error while getting user directions: %w", err)
+	}
 
-	return directions, err
+	return directions, nil
 }
 
 func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
@@ -81,23 +85,28 @@ func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	if err != nil {
 		r.logger.Error(err)
 
-		return err
+		return fmt.Errorf("error while beginning transaction: %w", err)
 	}
 
 	query := fmt.Sprintf("INSERT INTO %s (user_id, direction_id) VALUES ($1, $2)", usersDirectionsTable)
 	for _, directionID := range directionIDs.IDs {
 		if _, err := tx.Exec(query, userID, directionID); err != nil {
 			r.logger.Error(err)
-			tx.Rollback()
+			if err := tx.Rollback(); err != nil {
+				return fmt.Errorf("error while rollbacking transaction: %w", err)
+			}
 
-			return err
+			return fmt.Errorf("error while adding directions to user: %w", err)
 		}
 	}
 
 	if err := tx.Commit(); err != nil {
-		tx.Rollback()
+		r.logger.Error(err)
+		if err := tx.Rollback(); err != nil {
+			return fmt.Errorf("error while rollbacking transaction: %w", err)
+		}
 
-		return err
+		return fmt.Errorf("error while committing transaction: %w", err)
 	}
 
 	return nil
@@ -105,7 +114,9 @@ func (r *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 
 func (r *DirectionImpl) Clear(userID uint) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE user_id = $1", usersDirectionsTable)
-	_, err := r.db.Exec(query, userID)
+	if _, err := r.db.Exec(query, userID); err != nil {
+		return fmt.Errorf("error while deleting user directions: %w", err)
+	}
 
-	return err
+	return nil
 }

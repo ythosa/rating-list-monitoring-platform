@@ -16,7 +16,11 @@ func NewBlacklistImpl(rc *redis.Client) *BlacklistImpl {
 }
 
 func (b *BlacklistImpl) Save(userID uint, accessToken string, ttl time.Duration) error {
-	return b.rc.Set(redisCtx, b.formatKey(userID), accessToken, ttl).Err()
+	if err := b.rc.Set(redisCtx, b.formatKey(userID), accessToken, ttl).Err(); err != nil {
+		return fmt.Errorf("error while saving user in blacklist cache: %w", err)
+	}
+
+	return nil
 }
 
 func (b *BlacklistImpl) Get(userID uint) error {
@@ -28,7 +32,11 @@ func (b *BlacklistImpl) Get(userID uint) error {
 }
 
 func (b *BlacklistImpl) Delete(userID uint) error {
-	return b.rc.Del(redisCtx, b.formatKey(userID)).Err()
+	if err := b.rc.Del(redisCtx, b.formatKey(userID)).Err(); err != nil {
+		return fmt.Errorf("error while deleting user from blacklist cache: %w", err)
+	}
+
+	return nil
 }
 
 func (b *BlacklistImpl) formatKey(userID uint) string {
