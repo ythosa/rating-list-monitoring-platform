@@ -11,6 +11,7 @@ import (
 
 const (
 	authorizationHeader = "Authorization"
+	authorizationPrefix = "rlmp"
 	refreshTokenHeader  = "RefreshToken"
 )
 
@@ -38,6 +39,10 @@ func GetAccessTokenFromRequest(c *gin.Context) (string, error) {
 
 	headersParts := strings.Split(header, " ")
 	if len(headersParts) != headerPartsCount {
+		return "", apierrors.InvalidAuthorizationHeader
+	}
+
+	if headersParts[0] != authorizationPrefix {
 		return "", apierrors.InvalidAuthorizationHeader
 	}
 

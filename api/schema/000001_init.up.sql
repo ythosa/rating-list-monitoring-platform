@@ -27,16 +27,16 @@ CREATE TABLE directions
 
 CREATE TABLE users_universities
 (
-    id            serial                           not null unique,
-    user_id       int references users (id)        not null,
-    university_id int references universities (id) not null
+    id            serial                                             not null unique,
+    user_id       int references users (id) on delete cascade        not null,
+    university_id int references universities (id) on delete cascade not null
 );
 
 CREATE TABLE users_directions
 (
-    id           serial                         not null unique,
-    user_id      int references users (id)      not null,
-    direction_id int references directions (id) not null
+    id           serial                                           not null unique,
+    user_id      int references users (id) on delete cascade      not null,
+    direction_id int references directions (id) on delete cascade not null
 );
 
 INSERT INTO universities (name, full_name, directions_page_url)
