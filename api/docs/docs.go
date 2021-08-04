@@ -209,12 +209,9 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/dto.Direction"
-                                }
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.UniversityDirections"
                             }
                         }
                     },
@@ -254,12 +251,9 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/dto.Direction"
-                                }
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.UniversityDirections"
                             }
                         }
                     },
@@ -299,12 +293,9 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/dto.DirectionWithRating"
-                                }
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.UniversityDirectionsWithRating"
                             }
                         }
                     },
@@ -771,6 +762,40 @@ var doc = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UniversityDirections": {
+            "type": "object",
+            "properties": {
+                "directions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Direction"
+                    }
+                },
+                "university_id": {
+                    "type": "integer"
+                },
+                "university_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UniversityDirectionsWithRating": {
+            "type": "object",
+            "properties": {
+                "directions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.DirectionWithRating"
+                    }
+                },
+                "university_id": {
+                    "type": "integer"
+                },
+                "university_name": {
                     "type": "string"
                 }
             }

@@ -29,10 +29,10 @@ type University interface {
 }
 
 type Direction interface {
-	GetAll() (map[string][]dto.Direction, error)
+	GetAll() ([]dto.UniversityDirections, error)
 	GetByID(id uint) (*models.Direction, error)
-	GetForUser(userID uint) (map[string][]dto.Direction, error)
-	GetForUserWithRating(userID uint) (map[string][]dto.DirectionWithRating, error)
+	GetForUser(userID uint) ([]dto.UniversityDirections, error)
+	GetForUserWithRating(userID uint) ([]dto.UniversityDirectionsWithRating, error)
 	SetForUser(userID uint, directionIDs dto.IDs) error
 }
 

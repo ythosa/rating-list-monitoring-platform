@@ -32,7 +32,7 @@ func NewDirectionImpl(validate *validator.Validate, directionService service.Dir
 // @accept json
 // @produce json
 // @security AccessTokenHeader
-// @success 200 {object} map[string][]dto.Direction
+// @success 200 {object} []dto.UniversityDirections
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
 // @router /direction/ [get].
@@ -93,7 +93,7 @@ func (u *DirectionImpl) Get(c *gin.Context) {
 // @accept json
 // @produce json
 // @security AccessTokenHeader
-// @success 200 {object} map[string][]dto.Direction
+// @success 200 {object} []dto.UniversityDirections
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
 // @router /direction/get_for_user [get].
@@ -123,7 +123,7 @@ func (u *DirectionImpl) GetForUser(c *gin.Context) {
 // @accept json
 // @produce json
 // @security AccessTokenHeader
-// @success 200 {object} map[string][]dto.DirectionWithRating
+// @success 200 {object} []dto.UniversityDirectionsWithRating
 // @failure 400 {object} apierrors.APIError
 // @failure 401 {object} apierrors.APIError
 // @router /direction/get_for_user_with_rating [get].

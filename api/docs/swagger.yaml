@@ -69,6 +69,28 @@ definitions:
     - snils
     - username
     type: object
+  dto.UniversityDirections:
+    properties:
+      directions:
+        items:
+          $ref: '#/definitions/dto.Direction'
+        type: array
+      university_id:
+        type: integer
+      university_name:
+        type: string
+    type: object
+  dto.UniversityDirectionsWithRating:
+    properties:
+      directions:
+        items:
+          $ref: '#/definitions/dto.DirectionWithRating'
+        type: array
+      university_id:
+        type: integer
+      university_name:
+        type: string
+    type: object
   dto.UserCredentials:
     properties:
       password:
@@ -249,11 +271,9 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              items:
-                $ref: '#/definitions/dto.Direction'
-              type: array
-            type: object
+            items:
+              $ref: '#/definitions/dto.UniversityDirections'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -307,11 +327,9 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              items:
-                $ref: '#/definitions/dto.Direction'
-              type: array
-            type: object
+            items:
+              $ref: '#/definitions/dto.UniversityDirections'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -335,11 +353,9 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              items:
-                $ref: '#/definitions/dto.DirectionWithRating'
-              type: array
-            type: object
+            items:
+              $ref: '#/definitions/dto.UniversityDirectionsWithRating'
+            type: array
         "400":
           description: Bad Request
           schema:
