@@ -14,6 +14,7 @@
 .header-username {
     display: flex;
     font-family: "DewiEB", serif;
+    color: white;
     font-size: 22px;
     padding-top: 1vh;
     padding-left: 0.5vw;
@@ -27,4 +28,9 @@
     margin-top: 1vh;
     padding-left: 3.3vw;
     padding-top: 0.5vh;
+    transition: 0.1s linear;
+}
+
+.header-nav-link:hover {
+    color: #3f51b5 !important;
 }
