@@ -28,7 +28,7 @@ func (r *DirectionImpl) GetAll() ([]rdto.Direction, error) {
 
 	query := fmt.Sprintf(
 		`SELECT d.id as direction_id, d.name as direction_name, 
-					un.id as university_id, un.name as university_name FROM %s d 
+			un.id as university_id, un.name as university_name, un.full_name as university_full_name FROM %s d 
 			INNER JOIN %s un on d.university_id = un.id`,
 		directionsTable, universitiesTable,
 	)
@@ -69,7 +69,7 @@ func (r *DirectionImpl) GetForUser(userID uint) ([]rdto.Direction, error) {
 
 	query := fmt.Sprintf(
 		`SELECT d.id as direction_id, d.name as direction_name, d.url as direction_url,
-					un.id as university_id, un.name as university_name FROM %s d 
+				un.id as university_id, un.name as university_name, un.full_name as university_full_name FROM %s d 
 			INNER JOIN %s ud on d.id = ud.direction_id
 			INNER JOIN %s un on d.university_id = un.id
 			WHERE ud.user_id = $1`,

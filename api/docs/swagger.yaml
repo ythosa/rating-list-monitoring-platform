@@ -77,6 +77,8 @@ definitions:
         items:
           $ref: '#/definitions/dto.Direction'
         type: array
+      university_full_name:
+        type: string
       university_id:
         type: integer
       university_name:
@@ -88,6 +90,8 @@ definitions:
         items:
           $ref: '#/definitions/dto.DirectionWithRating'
         type: array
+      university_full_name:
+        type: string
       university_id:
         type: integer
       university_name:
@@ -145,6 +149,8 @@ definitions:
     type: object
   rdto.University:
     properties:
+      full_name:
+        type: string
       id:
         type: integer
       name:

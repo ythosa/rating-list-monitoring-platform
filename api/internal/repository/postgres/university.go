@@ -25,7 +25,7 @@ func NewUniversityImpl(db *sqlx.DB) *UniversityImpl {
 
 func (r *UniversityImpl) GetAll() ([]rdto.University, error) {
 	var universities []rdto.University
-	if err := r.db.Select(&universities, fmt.Sprintf("SELECT id, name FROM %s", universitiesTable)); err != nil {
+	if err := r.db.Select(&universities, fmt.Sprintf("SELECT id, name, full_name FROM %s", universitiesTable)); err != nil {
 		return nil, fmt.Errorf("error while getting all universities: %w", err)
 	}
 
@@ -36,7 +36,7 @@ func (r *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
 	var universities []rdto.University
 
 	query := fmt.Sprintf(
-		"SELECT un.id, un.name FROM %s un INNER JOIN %s uu on un.id = uu.university_id WHERE uu.user_id = $1",
+		"SELECT un.id, un.name, un.full_name FROM %s un INNER JOIN %s uu on un.id = uu.university_id WHERE uu.user_id = $1",
 		universitiesTable, usersUniversitiesTable,
 	)
 	if err := r.db.Select(&universities, query, userID); err != nil {

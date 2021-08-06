@@ -83,9 +83,10 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Di
 
 		if !isExists {
 			universityDirections = append(universityDirections, dto.UniversityDirections{
-				UniversityID:   d.UniversityID,
-				UniversityName: d.UniversityName,
-				Directions:     []dto.Direction{{ID: d.DirectionID, Name: d.DirectionName}},
+				UniversityID:       d.UniversityID,
+				UniversityName:     d.UniversityName,
+				UniversityFullName: d.UniversityFullName,
+				Directions:         []dto.Direction{{ID: d.DirectionID, Name: d.DirectionName}},
 			})
 		}
 	}
@@ -195,9 +196,10 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
 
 		if !isExists {
 			universityDirectionsWithRating = append(universityDirectionsWithRating, dto.UniversityDirectionsWithRating{
-				UniversityID:   d.Direction.UniversityID,
-				UniversityName: d.Direction.UniversityName,
-				Directions:     []dto.DirectionWithRating{dto.NewDirectionWithRating(d)},
+				UniversityID:       d.Direction.UniversityID,
+				UniversityName:     d.Direction.UniversityName,
+				UniversityFullName: d.Direction.UniversityFullName,
+				Directions:         []dto.DirectionWithRating{dto.NewDirectionWithRating(d)},
 			})
 		}
 	}

@@ -762,6 +762,9 @@
                         "$ref": "#/definitions/dto.Direction"
                     }
                 },
+                "university_full_name": {
+                    "type": "string"
+                },
                 "university_id": {
                     "type": "integer"
                 },
@@ -778,6 +781,9 @@
                     "items": {
                         "$ref": "#/definitions/dto.DirectionWithRating"
                     }
+                },
+                "university_full_name": {
+                    "type": "string"
                 },
                 "university_id": {
                     "type": "integer"
@@ -867,6 +873,9 @@
         "rdto.University": {
             "type": "object",
             "properties": {
+                "full_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },

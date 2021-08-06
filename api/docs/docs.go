@@ -778,6 +778,9 @@ var doc = `{
                         "$ref": "#/definitions/dto.Direction"
                     }
                 },
+                "university_full_name": {
+                    "type": "string"
+                },
                 "university_id": {
                     "type": "integer"
                 },
@@ -794,6 +797,9 @@ var doc = `{
                     "items": {
                         "$ref": "#/definitions/dto.DirectionWithRating"
                     }
+                },
+                "university_full_name": {
+                    "type": "string"
                 },
                 "university_id": {
                     "type": "integer"
@@ -883,6 +889,9 @@ var doc = `{
         "rdto.University": {
             "type": "object",
             "properties": {
+                "full_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
