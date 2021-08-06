@@ -32,6 +32,8 @@ definitions:
         type: integer
       score:
         type: integer
+      submitted_consent_upper:
+        type: integer
     type: object
   dto.IDResponse:
     properties:

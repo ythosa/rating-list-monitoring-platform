@@ -31,6 +31,11 @@ func NewParsingImpl(cache cache.RatingList) *ParsingImpl {
 
 var ErrUserNotFoundInRatingList = errors.New("user not found in rating list")
 
+const (
+	consentStatusSubmitted = "Да"
+	priorityOne            = 1
+)
+
 func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils string) (*dto.ParsingResult, error) {
 	ratingList, err := p.cache.Get(ratingURL)
 	if err != nil {
@@ -76,9 +81,10 @@ func (p *ParsingImpl) formatSnils(snils string) string {
 
 func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
 	var (
-		userScore        uint
-		userPosition     uint
-		priorityOneUpper uint
+		userScore             uint
+		userPosition          uint
+		priorityOneUpper      uint
+		submittedConsentUpper uint
 	)
 
 	isUserFound := false
@@ -94,12 +100,17 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 
 		data := strings.TrimSpace(s.Text())
 		parts := strings.Split(data, "\n")
-		snils := strings.TrimSpace(parts[1])
 		priority, _ := strconv.Atoi(strings.TrimSpace(parts[2]))
+		consentStatus := strings.TrimSpace(parts[11])
 
+		snils := strings.TrimSpace(parts[1])
 		if snils != userSnils {
-			if priority == 1 {
+			if priority == priorityOne {
 				priorityOneUpper++
+			}
+
+			if consentStatus == consentStatusSubmitted {
+				submittedConsentUpper++
 			}
 
 			return
@@ -118,10 +129,11 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 	}
 
 	return &dto.ParsingResult{
-		Position:         userPosition,
-		Score:            userScore,
-		PriorityOneUpper: priorityOneUpper,
-		BudgetPlaces:     0,
+		Position:              userPosition,
+		Score:                 userScore,
+		PriorityOneUpper:      priorityOneUpper,
+		SubmittedConsentUpper: submittedConsentUpper,
+		BudgetPlaces:          0,
 	}, nil
 }
 
@@ -135,9 +147,10 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 	}
 
 	var (
-		userScore        uint
-		userPosition     uint
-		priorityOneUpper uint
+		userScore             uint
+		userPosition          uint
+		priorityOneUpper      uint
+		submittedConsentUpper uint
 	)
 
 	isUserFound := false
@@ -152,24 +165,29 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 		}
 
 		parts := strings.Split(s.Text(), "\n")
-		pos := strings.TrimSpace(parts[1])
 		priority := strings.TrimSpace(parts[4])
-		score := strings.TrimSpace(parts[5])
+		consentStatus := strings.TrimSpace(parts[11])
+
 		snils := strings.TrimSpace(parts[2])
-		if snils == userSnils {
-			s, _ := strconv.Atoi(strings.Split(score, ",")[0])
-			userScore = uint(s)
-			p, _ := strconv.Atoi(pos)
-			userPosition = uint(p)
-			isUserFound = true
+		if snils != userSnils {
+			p, _ := strconv.Atoi(priority)
+			if p == priorityOne {
+				priorityOneUpper++
+			}
+
+			if consentStatus == consentStatusSubmitted {
+				submittedConsentUpper++
+			}
 
 			return
 		}
 
-		p, _ := strconv.Atoi(priority)
-		if p == 1 {
-			priorityOneUpper++
-		}
+		isUserFound = true
+
+		score, _ := strconv.Atoi(strings.Split(strings.TrimSpace(parts[5]), ",")[0])
+		userScore = uint(score)
+		pos, _ := strconv.Atoi(strings.TrimSpace(parts[1]))
+		userPosition = uint(pos)
 	})
 
 	if !isUserFound {
@@ -177,9 +195,10 @@ func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string)
 	}
 
 	return &dto.ParsingResult{
-		Position:         userPosition,
-		Score:            userScore,
-		PriorityOneUpper: priorityOneUpper,
-		BudgetPlaces:     uint(budgetPlaces),
+		Position:              userPosition,
+		Score:                 userScore,
+		PriorityOneUpper:      priorityOneUpper,
+		SubmittedConsentUpper: submittedConsentUpper,
+		BudgetPlaces:          uint(budgetPlaces),
 	}, nil
 }

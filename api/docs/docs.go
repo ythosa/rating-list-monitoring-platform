@@ -710,6 +710,9 @@ var doc = `{
                 },
                 "score": {
                     "type": "integer"
+                },
+                "submitted_consent_upper": {
+                    "type": "integer"
                 }
             }
         },
