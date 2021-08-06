@@ -1,5 +1,5 @@
 import Header from '../../components/header'
-import { useAsync, useFetch } from 'react-async'
+import { useAsync } from 'react-async'
 import { useContext } from 'react'
 import { AuthContext } from '../../context/auth.context'
 import DirectionWithRating from '../../components/direction-with-rating'
@@ -39,7 +39,9 @@ export const MainPage = () => {
     return (
         <div className="main-page-wrapper">
             <Header/>
-            {directionsWithRating}
+            <div className="directions-with-rating-container">
+                {directionsWithRating}
+            </div>
         </div>
     )
 }
