@@ -4,6 +4,8 @@ import { useContext } from 'react'
 import { AuthContext } from '../../context/auth.context'
 import DirectionWithRating from '../../components/direction-with-rating'
 
+import './main.page.css'
+
 // @ts-ignore
 const getDirectionsWithRating = async ({accessToken}, { signal }) => {
     const res = await fetch('http://localhost:8001/api/direction/get_for_user_with_rating', {

@@ -1,3 +1,5 @@
+import "./direction-with-rating.css"
+
 // @ts-ignore
 export const DirectionWithRating = ({ info }) => {
 
@@ -5,17 +7,17 @@ export const DirectionWithRating = ({ info }) => {
 
     return (
         <div className="direction-with-rating-wrapper">
-            <p>{info.university_name}</p>
+            <p className="direction-with-rating-wrapper-title">{info.university_full_name}</p>
+            <p className="direction-with-rating-wrapper-text">Ваш балл с учетом ИД: <b>{info.directions[0].score}</b></p>
+            <p className="direction-with-rating-wrapper-text">Конкурсные группы:</p>
             {info.directions.map((d: any) => (
-                <div>
-                    <p>{d.name}</p>
-                    <p>Место: {d.position}</p>
-                    <p>Балл: {d.score}</p>
-                    <p>Число бюджетных мест: {d.budget_places}</p>
-                    <p>П1 выше вас: {d.priority_one_upper}</p>
-                    <p>Количество согласий выше вас: {d.submitted_consent_upper}</p>
-                    <br/>
-                </div>
+                <ul className="direction-rating-ul direction-rating-text">
+                    <li>{d.name}</li>
+                    <p>Позиция в списке: <b>{d.position}</b></p>
+                    <p>Число бюджетных мест: <b>{d.budget_places}</b></p>
+                    <p>Число П1 выше вас: <b>{d.priority_one_upper}</b></p>
+                    <p>Количество поданных согласий выше вас: <b>{d.submitted_consent_upper}</b></p>
+                </ul>
             ))}
         </div>
     )
