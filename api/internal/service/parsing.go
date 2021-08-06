@@ -1,15 +1,15 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"gopkg.in/errgo.v2/fmt/errors"
+	"github.com/valyala/fasthttp"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
@@ -18,12 +18,19 @@ import (
 )
 
 type ParsingImpl struct {
+	client fasthttp.Client
 	cache  cache.RatingList
 	logger *logging.Logger
 }
 
 func NewParsingImpl(cache cache.RatingList) *ParsingImpl {
 	return &ParsingImpl{
+		client: fasthttp.Client{
+			ReadTimeout:         config.Get().Server.ReadTimeout,
+			MaxConnsPerHost:     config.Get().Parsing.MaxConnsPerHost,
+			ReadBufferSize:      config.Get().Parsing.ReadBufferSize,
+			MaxResponseBodySize: config.Get().Parsing.MaxResponseBodySize,
+		},
 		cache:  cache,
 		logger: logging.NewLogger("parsing service"),
 	}
@@ -39,22 +46,18 @@ const (
 func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils string) (*dto.ParsingResult, error) {
 	ratingList, err := p.cache.Get(ratingURL)
 	if err != nil {
-		res, err := http.Get(ratingURL) // nolint:gosec,noctx
-		if err != nil {
+		res, req := fasthttp.AcquireResponse(), fasthttp.AcquireRequest()
+		req.SetRequestURI(ratingURL)
+
+		if err := p.client.Do(req, res); err != nil {
 			return nil, fmt.Errorf("error while getting rating list page: %w", err)
 		}
-		defer res.Body.Close()
 
-		if res.StatusCode != http.StatusOK {
-			return nil, fmt.Errorf("getting %s by HTML: %v", ratingURL, res.Status)
+		if res.StatusCode() != fasthttp.StatusOK {
+			return nil, fmt.Errorf("getting %s by HTML: %v", ratingURL, res.StatusCode())
 		}
 
-		responseBody, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error while reading response body: %w", err)
-		}
-
-		ratingList = string(responseBody)
+		ratingList = string(res.Body())
 		if err := p.cache.Save(ratingURL, ratingList, config.Get().Parsing.RatingListTTL); err != nil {
 			return nil, fmt.Errorf("error while caching rating list: %w", err)
 		}

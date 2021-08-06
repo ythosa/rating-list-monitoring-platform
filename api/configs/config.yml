@@ -28,3 +28,7 @@ auth:
 
 parsing:
   rating_list_ttl: 120
+  read_timeout: 10
+  read_buffer_size: 6291456
+  max_response_body_size: 16777216
+  max_conns_per_host: 10

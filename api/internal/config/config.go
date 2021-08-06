@@ -101,8 +101,8 @@ func newServer() *Server {
 	return &Server{
 		Port:           viper.GetString("server.port"),
 		MaxHeaderBytes: viper.GetInt("server.max_header_bytes"),
-		ReadTimeout:    time.Duration(viper.GetInt("server.read_timeout")) * time.Second,
-		WriteTimeout:   time.Duration(viper.GetInt("server.write_timeout")) * time.Second,
+		ReadTimeout:    viper.GetDuration("server.read_timeout") * time.Second,
+		WriteTimeout:   viper.GetDuration("server.write_timeout") * time.Second,
 	}
 }
 
@@ -157,22 +157,30 @@ type Authorization struct {
 func newAuth() *Authorization {
 	return &Authorization{
 		AccessToken: JWTToken{
-			TTL:        time.Minute * time.Duration(viper.GetInt("auth.access_token.ttl")),
+			TTL:        time.Minute * viper.GetDuration("auth.access_token.ttl"),
 			SigningKey: []byte(viper.GetString("auth.access_token.signing_key")),
 		},
 		RefreshToken: JWTToken{
-			TTL:        time.Minute * time.Duration(viper.GetInt("auth.refresh_token.ttl")),
+			TTL:        time.Minute * viper.GetDuration("auth.refresh_token.ttl"),
 			SigningKey: []byte(viper.GetString("auth.refresh_token.signing_key")),
 		},
 	}
 }
 
 type Parsing struct {
-	RatingListTTL time.Duration
+	RatingListTTL       time.Duration
+	ReadTimeout         time.Duration
+	ReadBufferSize      int
+	MaxResponseBodySize int
+	MaxConnsPerHost     int
 }
 
 func newParsing() *Parsing {
 	return &Parsing{
-		RatingListTTL: time.Minute * time.Duration(viper.GetInt("parsing.rating_list_ttl")),
+		RatingListTTL:       time.Minute * viper.GetDuration("parsing.rating_list_ttl"),
+		ReadTimeout:         viper.GetDuration("parsing.read_timeout") * time.Second,
+		ReadBufferSize:      viper.GetInt("parsing.read_buffer_size"),
+		MaxResponseBodySize: viper.GetInt("parsing.max_response_body_size"),
+		MaxConnsPerHost:     viper.GetInt("parsing.max_conns_per_host"),
 	}
 }
