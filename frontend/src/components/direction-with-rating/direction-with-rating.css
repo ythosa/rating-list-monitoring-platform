@@ -10,9 +10,10 @@
 }
 
 .direction-with-rating-wrapper-title {
+    text-transform: uppercase;
     font-family: "DewiEB", serif;
     font-size: 1.35em;
-    margin-bottom: 1.1em;
+    margin-bottom: 0.8em;
 }
 
 .direction-with-rating-wrapper-text {
