@@ -1,13 +1,10 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"sort"
 	"sync"
-
-	"golang.org/x/sync/errgroup"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
@@ -39,15 +36,6 @@ func NewDirectionImpl(
 	}
 }
 
-func (u *DirectionImpl) GetAll() ([]dto.UniversityDirections, error) {
-	directions, err := u.directionRepository.GetAll()
-	if err != nil {
-		return nil, fmt.Errorf("error while getting all directions by repository: %w", err)
-	}
-
-	return u.mapDirectionsToUniversityDirections(directions), nil
-}
-
 func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
 	direction, err := u.directionRepository.GetByID(id)
 	if err != nil {
@@ -57,6 +45,15 @@ func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
 	return direction, nil
 }
 
+func (u *DirectionImpl) GetAll() ([]dto.UniversityDirections, error) {
+	directions, err := u.directionRepository.GetAll()
+	if err != nil {
+		return nil, fmt.Errorf("error while getting all directions by repository: %w", err)
+	}
+
+	return u.mapDirectionsToUniversityDirections(directions), nil
+}
+
 func (u *DirectionImpl) GetForUser(userID uint) ([]dto.UniversityDirections, error) {
 	directions, err := u.directionRepository.GetForUser(userID)
 	if err != nil {
@@ -64,6 +61,54 @@ func (u *DirectionImpl) GetForUser(userID uint) ([]dto.UniversityDirections, err
 	}
 
 	return u.mapDirectionsToUniversityDirections(directions), nil
+}
+
+func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
+	universityDirections := make([]dto.UniversityDirections, 0)
+
+	for _, d := range directions {
+		isExists := false
+
+		for i, ud := range universityDirections {
+			if ud.UniversityID == d.UniversityID {
+				universityDirections[i].Directions = append(
+					universityDirections[i].Directions,
+					dto.Direction{ID: d.DirectionID, Name: d.DirectionName},
+				)
+				isExists = true
+
+				break
+			}
+		}
+
+		if !isExists {
+			universityDirections = append(universityDirections, dto.UniversityDirections{
+				UniversityID:   d.UniversityID,
+				UniversityName: d.UniversityName,
+				Directions:     []dto.Direction{{ID: d.DirectionID, Name: d.DirectionName}},
+			})
+		}
+	}
+
+	sort.SliceStable(universityDirections, func(i, j int) bool {
+		return universityDirections[i].UniversityID < universityDirections[j].UniversityID
+	})
+
+	return universityDirections
+}
+
+type parsingDirectionResults struct {
+	directionsWithRating chan dto.DirectionWithParsingResult
+	errors               chan error
+	wg                   *sync.WaitGroup
+}
+
+func newParsingDirectionResults(directionsCount int) *parsingDirectionResults {
+	return &parsingDirectionResults{
+		directionsWithRating: make(chan dto.DirectionWithParsingResult, directionsCount),
+		errors:               make(chan error, directionsCount),
+		wg:                   &sync.WaitGroup{},
+	}
 }
 
 func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirectionsWithRating, error) {
@@ -81,44 +126,87 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 		return nil, fmt.Errorf("error while getting user snils by repository: %w", err)
 	}
 
-	var mu sync.Mutex
-
-	errs, _ := errgroup.WithContext(context.TODO())
-	directionsWithRating := make([]dto.DirectionWithParsingResult, 0)
-
+	results := newParsingDirectionResults(len(directions))
 	for _, d := range directions {
-		direction := d
+		results.wg.Add(1)
 
-		errs.Go(func() error {
-			parsingResult, err := u.parsingService.ParseRating(
-				direction.UniversityName,
-				direction.DirectionURL,
-				userSnils.Snils,
-			)
-			if err != nil && errors.Is(err, ErrUserNotFoundInRatingList) {
-				parsingResult = &dto.EmptyParsingResult
-			} else if err != nil {
-				return fmt.Errorf("error while parsong rating list: %w", err)
-			}
-
-			mu.Lock()
-			directionsWithRating = append(directionsWithRating, dto.DirectionWithParsingResult{
-				Direction:     direction,
-				ParsingResult: *parsingResult,
-			})
-			mu.Unlock()
-
-			return nil
-		})
+		go u.parseDirectionRating(results, d, userSnils.Snils)
 	}
 
-	if err := errs.Wait(); err != nil {
-		u.logger.Error(err)
+	results.wg.Wait()
 
-		return nil, fmt.Errorf("error while waiting parsing rating: %w", err)
+	if len(results.errors) != 0 {
+		return nil, fmt.Errorf("error while waiting parsing rating: %w", <-results.errors)
+	}
+
+	directionsWithRating := make([]dto.DirectionWithParsingResult, len(directions))
+	for i := 0; i < len(directions); i++ {
+		directionsWithRating[i] = <-results.directionsWithRating
 	}
 
 	return u.mapDirectionsToUniversityDirectionsWithRating(directionsWithRating), nil
+}
+
+func (u *DirectionImpl) parseDirectionRating(
+	results *parsingDirectionResults,
+	direction rdto.Direction,
+	userSnils string,
+) {
+	defer results.wg.Done()
+
+	parsingResult, err := u.parsingService.ParseRating(
+		direction.UniversityName,
+		direction.DirectionURL,
+		userSnils,
+	)
+	if err != nil && errors.Is(err, ErrUserNotFoundInRatingList) {
+		parsingResult = &dto.EmptyParsingResult
+	} else if err != nil {
+		results.errors <- fmt.Errorf("error while parsong rating list: %w", err)
+
+		return
+	}
+
+	results.directionsWithRating <- dto.DirectionWithParsingResult{
+		Direction:     direction,
+		ParsingResult: *parsingResult,
+	}
+}
+
+func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
+	directions []dto.DirectionWithParsingResult,
+) []dto.UniversityDirectionsWithRating {
+	universityDirectionsWithRating := make([]dto.UniversityDirectionsWithRating, 0)
+
+	for _, d := range directions {
+		isExists := false
+
+		for i, ud := range universityDirectionsWithRating {
+			if ud.UniversityID == d.Direction.UniversityID {
+				universityDirectionsWithRating[i].Directions = append(
+					universityDirectionsWithRating[i].Directions,
+					dto.NewDirectionWithRating(d),
+				)
+				isExists = true
+
+				break
+			}
+		}
+
+		if !isExists {
+			universityDirectionsWithRating = append(universityDirectionsWithRating, dto.UniversityDirectionsWithRating{
+				UniversityID:   d.Direction.UniversityID,
+				UniversityName: d.Direction.UniversityName,
+				Directions:     []dto.DirectionWithRating{dto.NewDirectionWithRating(d)},
+			})
+		}
+	}
+
+	sort.SliceStable(universityDirectionsWithRating, func(i, j int) bool {
+		return universityDirectionsWithRating[i].UniversityID < universityDirectionsWithRating[j].UniversityID
+	})
+
+	return universityDirectionsWithRating
 }
 
 func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
@@ -171,74 +259,4 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	}
 
 	return nil
-}
-
-func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
-	universityDirections := make([]dto.UniversityDirections, 0)
-
-	for _, d := range directions {
-		isExists := false
-
-		for i, ud := range universityDirections {
-			if ud.UniversityID == d.UniversityID {
-				universityDirections[i].Directions = append(
-					universityDirections[i].Directions,
-					dto.Direction{ID: d.DirectionID, Name: d.DirectionName},
-				)
-				isExists = true
-
-				break
-			}
-		}
-
-		if !isExists {
-			universityDirections = append(universityDirections, dto.UniversityDirections{
-				UniversityID:   d.UniversityID,
-				UniversityName: d.UniversityName,
-				Directions:     []dto.Direction{{ID: d.DirectionID, Name: d.DirectionName}},
-			})
-		}
-	}
-
-	sort.SliceStable(universityDirections, func(i, j int) bool {
-		return universityDirections[i].UniversityID < universityDirections[j].UniversityID
-	})
-
-	return universityDirections
-}
-
-func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
-	directions []dto.DirectionWithParsingResult,
-) []dto.UniversityDirectionsWithRating {
-	universityDirectionsWithRating := make([]dto.UniversityDirectionsWithRating, 0)
-
-	for _, d := range directions {
-		isExists := false
-
-		for i, ud := range universityDirectionsWithRating {
-			if ud.UniversityID == d.Direction.UniversityID {
-				universityDirectionsWithRating[i].Directions = append(
-					universityDirectionsWithRating[i].Directions,
-					dto.NewDirectionWithRating(d),
-				)
-				isExists = true
-
-				break
-			}
-		}
-
-		if !isExists {
-			universityDirectionsWithRating = append(universityDirectionsWithRating, dto.UniversityDirectionsWithRating{
-				UniversityID:   d.Direction.UniversityID,
-				UniversityName: d.Direction.UniversityName,
-				Directions:     []dto.DirectionWithRating{dto.NewDirectionWithRating(d)},
-			})
-		}
-	}
-
-	sort.SliceStable(universityDirectionsWithRating, func(i, j int) bool {
-		return universityDirectionsWithRating[i].UniversityID < universityDirectionsWithRating[j].UniversityID
-	})
-
-	return universityDirectionsWithRating
 }
