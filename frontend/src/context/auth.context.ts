@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-function login(jwtToken: string, id: number) {
+function login(accessToken: string, refreshToken: string) {
     return
 }
 
@@ -8,10 +8,20 @@ function logout() {
     return
 }
 
-export const AuthContext = createContext({
-    accessToken: null,
-    refreshToken: null,
+export class AuthContextType {
+    constructor(
+        public accessToken: string | null,
+        public refreshToken: string | null,
+        public login: (at: string, rt: string) => void,
+        public logout: () => void,
+        public isAuthenticated: boolean,
+    ) {}
+}
+
+export const AuthContext = createContext<AuthContextType>({
+    accessToken: '',
+    refreshToken: '',
     login,
     logout,
-    isAuthenticated: false
+    isAuthenticated: false,
 })

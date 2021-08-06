@@ -6,13 +6,13 @@ import './app.css'
 import { useRoutes } from './routes'
 
 const App = () => {
-    const { login, logout, accessToken, refreshToken, ready } = useAuth()
+    const { login, logout, accessToken, refreshToken } = useAuth()
     const isAuthenticated = !!accessToken
     const routes = useRoutes(isAuthenticated)
 
     return (
         <AuthContext.Provider value={{
-            login, logout, accessToken, refreshToken, isAuthenticated
+            login, logout, accessToken, refreshToken, isAuthenticated,
         }}>
             <Router>
                 <div className="container">{routes}</div>

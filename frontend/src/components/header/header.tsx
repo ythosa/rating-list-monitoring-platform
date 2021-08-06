@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { AuthContext } from '../../context/auth.context'
+import { AuthContext, AuthContextType } from '../../context/auth.context'
 import { useFetch } from 'react-async'
 
 import './header.css'
@@ -10,22 +10,22 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         large: {
             width: theme.spacing(6),
-            height: theme.spacing(6)
-        }
-    })
+            height: theme.spacing(6),
+        },
+    }),
 )
 
 export const Header = () => {
     const classes = useStyles()
     const preventDefault = (event: React.SyntheticEvent) => event.preventDefault()
-    const auth = useContext(AuthContext)
+    const authContext = useContext<AuthContextType>(AuthContext)
 
     const { data, error } = useFetch('http://localhost:8001/api/user/get_username', {
-        headers: { accept: 'application/json', Authorization: `rlmp ${auth.accessToken}` },
-        method: 'GET'
+        headers: { accept: 'application/json', Authorization: `rlmp ${authContext.accessToken!!}` },
+        method: 'GET',
     })
 
-    if (error) auth.logout()
+    if (error) authContext.logout()
 
     const username = (data as { username: string })?.username
 
@@ -37,7 +37,7 @@ export const Header = () => {
             </div>
             <Link href="#" onClick={preventDefault} className="header-nav-link">ВУЗЫ</Link>
             <Link href="#" onClick={preventDefault} className="header-nav-link">Программы</Link>
-            <Link href="#" onClick={auth.logout} className="header-nav-link">Выйти</Link>
+            <Link href="#" onClick={authContext.logout} className="header-nav-link">Выйти</Link>
         </div>
     )
 }

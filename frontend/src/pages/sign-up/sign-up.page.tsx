@@ -1,16 +1,15 @@
-import { useContext, useState } from 'react'
-import { AuthContext } from '../../context/auth.context'
-import { useHttp } from '../../hooks/http.hook'
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
 import './sign-up.page.css'
+import CreatingAccountData from '../../services/dto/creating-accout-data'
+import Authorization from '../../services/authorization'
 
 export const SignUpPage = () => {
-    const auth = useContext(AuthContext)
-    const { loading, error, request, clearError } = useHttp()
-    const [ form, setForm ] = useState({
-        username: '', password: '', firstName: '', middleName: '', lastName: '', snils: ''
+    const authService = new Authorization()
+    const [ form, setForm ] = useState<CreatingAccountData>({
+        username: '', password: '', firstName: '', middleName: '', lastName: '', snils: '',
     })
     const history = useHistory()
 
@@ -20,15 +19,7 @@ export const SignUpPage = () => {
 
     const registerHandler = async () => {
         try {
-            const data = await request('http://localhost:8001/api/auth/sign-up', 'POST', {
-                'username': form.username,
-                'password': form.password,
-                'first_name': form.firstName,
-                'middle_name': form.middleName,
-                'last_name': form.lastName,
-                'snils': form.snils
-            })
-            console.log(data)
+            await authService.signUp(form)
             history.push('/sign-in')
         } catch (e) {
             console.log(e)

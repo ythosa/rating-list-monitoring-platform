@@ -1,22 +1,23 @@
-import "./direction-with-rating.css"
+import UniversityDirections from '../../services/dto/university-directions'
+import DirectionWithRatingDTO from '../../services/dto/direction-with-rating'
 
-// @ts-ignore
-export const DirectionWithRating = ({ info }) => {
+import './direction-with-rating.css'
 
-    console.log(info)
-
+export const DirectionWithRating = ({ info }: { info: UniversityDirections }) => {
     return (
         <div className="direction-with-rating-wrapper">
-            <p className="direction-with-rating-wrapper-title">{info.university_full_name}</p>
-            <p className="direction-with-rating-wrapper-text">Ваш балл с учетом ИД: <b>{info.directions[0].score}</b></p>
+            <p className="direction-with-rating-wrapper-title">{info.fullName}</p>
+            <p className="direction-with-rating-wrapper-text">
+                Ваш балл с учетом ИД: <b>{info.directions[0].score}</b>
+            </p>
             <p className="direction-with-rating-wrapper-text">Конкурсные группы:</p>
-            {info.directions.map((d: any) => (
+            {info.directions.map((d: DirectionWithRatingDTO) => (
                 <ul className="direction-rating-ul direction-rating-text">
                     <li>{d.name}</li>
                     <p>Позиция в списке: <b>{d.position}</b></p>
-                    <p>Число бюджетных мест: <b>{d.budget_places}</b></p>
-                    <p>Число П1 выше вас: <b>{d.priority_one_upper}</b></p>
-                    <p>Количество поданных согласий выше вас: <b>{d.submitted_consent_upper}</b></p>
+                    <p>Число бюджетных мест: <b>{d.budgetPlaces}</b></p>
+                    <p>Число П1 выше вас: <b>{d.priorityOneUpper}</b></p>
+                    <p>Количество поданных согласий выше вас: <b>{d.submittedConsentUpper}</b></p>
                 </ul>
             ))}
         </div>

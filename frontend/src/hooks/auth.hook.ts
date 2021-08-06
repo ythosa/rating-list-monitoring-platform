@@ -13,7 +13,7 @@ export const useAuth = () => {
 
         localStorage.setItem(storageName, JSON.stringify({
             accessToken: accessJWT,
-            refreshToken: refreshJWT
+            refreshToken: refreshJWT,
         }))
     }, [])
 

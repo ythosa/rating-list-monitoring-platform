@@ -1,15 +1,16 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/auth.context'
-import { useHttp } from '../../hooks/http.hook'
 import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
 
 import './sign-in.page.css'
+import Authorization from '../../services/authorization'
+import UserCredentials from '../../services/dto/user-credentials'
 
 export const SignInPage = () => {
-    const auth = useContext(AuthContext)
-    const { loading, error, request, clearError } = useHttp()
-    const [ form, setForm ] = useState({
-        username: '', password: ''
+    const authContext = useContext(AuthContext)
+    const authService = new Authorization()
+    const [ form, setForm ] = useState<UserCredentials>({
+        username: '', password: '',
     })
 
     const changeHandler = (event: { target: { name: any; value: any } }) => {
@@ -18,8 +19,8 @@ export const SignInPage = () => {
 
     const loginHandler = async () => {
         try {
-            const data = await request('http://localhost:8001/api/auth/sign-in', 'POST', { ...form })
-            auth.login(data.access_token, data.refresh_token)
+            const { accessToken, refreshToken } = await authService.signIn(form)
+            authContext.login(accessToken, refreshToken)
         } catch (e) {
             console.log(e)
         }
