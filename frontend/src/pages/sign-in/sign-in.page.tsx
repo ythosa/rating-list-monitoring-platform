@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/auth.context'
 import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import AuthorizationService from '../../services/authorization-service'
+import UserCredentialsDTO from '../../services/dto/user-credentials.dto'
 
 import './sign-in.page.css'
-import Authorization from '../../services/authorization'
-import UserCredentials from '../../services/dto/user-credentials'
 
 export const SignInPage = () => {
     const authContext = useContext(AuthContext)
-    const authService = new Authorization()
-    const [ form, setForm ] = useState<UserCredentials>({
+    const authService = new AuthorizationService()
+    const [ form, setForm ] = useState<UserCredentialsDTO>({
         username: '', password: '',
     })
 

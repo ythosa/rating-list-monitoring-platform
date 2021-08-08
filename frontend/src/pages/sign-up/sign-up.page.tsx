@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-
+import CreatingAccountDataDTO from '../../services/dto/creating-accout-data.dto'
+import AuthorizationService from '../../services/authorization-service'
 import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+
 import './sign-up.page.css'
-import CreatingAccountData from '../../services/dto/creating-accout-data'
-import Authorization from '../../services/authorization'
 
 export const SignUpPage = () => {
-    const authService = new Authorization()
-    const [ form, setForm ] = useState<CreatingAccountData>({
+    const authService = new AuthorizationService()
+    const [ form, setForm ] = useState<CreatingAccountDataDTO>({
         username: '', password: '', firstName: '', middleName: '', lastName: '', snils: '',
     })
     const history = useHistory()

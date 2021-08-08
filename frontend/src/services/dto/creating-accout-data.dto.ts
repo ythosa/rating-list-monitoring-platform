@@ -1,4 +1,4 @@
-export default class CreatingAccountData {
+export default class CreatingAccountDataDTO {
     constructor(
         readonly username: string,
         readonly password: string,

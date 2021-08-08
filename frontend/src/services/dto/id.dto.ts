@@ -1,3 +1,3 @@
-export default class ID {
+export default class IdDTO {
     constructor(readonly id: number) {}
 }

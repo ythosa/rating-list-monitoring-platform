@@ -1,6 +1,6 @@
-import DirectionWithRatingDTO from './direction-with-rating'
+import DirectionWithRatingDTO from './direction-with-rating.dto'
 
-export default class UniversityDirections {
+export default class UniversityDirectionsDTO {
     constructor(
         readonly id: number,
         readonly name: string,

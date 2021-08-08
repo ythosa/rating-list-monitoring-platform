@@ -1,9 +1,9 @@
-import UniversityDirections from '../../services/dto/university-directions'
-import DirectionWithRatingDTO from '../../services/dto/direction-with-rating'
+import UniversityDirectionsDTO from '../../services/dto/university-directions.dto'
+import DirectionWithRatingDTO from '../../services/dto/direction-with-rating.dto'
 
 import './direction-with-rating.css'
 
-export const DirectionWithRating = ({ info }: { info: UniversityDirections }) => {
+export const DirectionWithRating = ({ info }: { info: UniversityDirectionsDTO }) => {
     return (
         <div className="direction-with-rating-wrapper">
             <p className="direction-with-rating-wrapper-title">{info.fullName}</p>
