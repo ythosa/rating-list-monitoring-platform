@@ -12,7 +12,11 @@ export default class API {
                 headers: { accept: 'application/json', ...headers },
             },
         )
-        if (!res.ok) throw Error(`could not fetch ${url}, received status: ${res.statusText}`)
+        
+        if (!res.ok) {
+            const error = await res.json()
+            throw Error(error.message)
+        }
 
         return await res.json()
     }

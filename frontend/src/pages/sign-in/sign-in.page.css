@@ -41,3 +41,11 @@ label {
 .sign-up-link {
     font-family: "DewiEL", serif !important
 }
+
+.alert {
+    margin-top: 1.2vh !important;
+    font-family: "DewiER", serif !important;
+    font-size: 14px !important;
+    padding-top: 0.15vh !important;
+    padding-bottom: 0.15vh !important;
+}

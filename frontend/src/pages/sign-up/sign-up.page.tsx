@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import CreatingAccountDataDTO from '../../services/dto/creating-accout-data.dto'
 import AuthorizationService from '../../services/authorization-service'
-import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import { Button, Collapse, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
 
 import './sign-up.page.css'
+import Alert from '@material-ui/lab/Alert'
 
 export const SignUpPage = () => {
     const authService = new AuthorizationService()
     const [ form, setForm ] = useState<CreatingAccountDataDTO>({
         username: '', password: '', firstName: '', middleName: '', lastName: '', snils: '',
     })
+    const [ error, setError ] = useState<string>('')
     const history = useHistory()
 
     const changeHandler = (event: { target: { name: any; value: any } }) => {
@@ -22,9 +24,15 @@ export const SignUpPage = () => {
             await authService.signUp(form)
             history.push('/sign-in')
         } catch (e) {
+            setError(e.message)
             console.log(e)
         }
     }
+
+    const errorAlert = error ?
+        <Alert className="alert" severity="error" variant="filled" onClose={() => {setError('')}}>
+            {error}
+        </Alert> : null
 
     return (
         <Container component="main" maxWidth="xs" className="sign-up-container">
@@ -118,6 +126,9 @@ export const SignUpPage = () => {
                     >
                         Зарегистрироваться
                     </Button>
+                    <Collapse in={!!error}>
+                        {errorAlert}
+                    </Collapse>
                     <Grid container>
                         <Grid item>
                             <Link href="/sign-in" variant="subtitle1" className="sign-up-link">

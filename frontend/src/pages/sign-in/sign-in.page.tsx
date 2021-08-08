@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/auth.context'
-import { Button, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import { Button, Collapse, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 import AuthorizationService from '../../services/authorization-service'
 import UserCredentialsDTO from '../../services/dto/user-credentials.dto'
 
@@ -12,6 +13,7 @@ export const SignInPage = () => {
     const [ form, setForm ] = useState<UserCredentialsDTO>({
         username: '', password: '',
     })
+    const [ error, setError ] = useState<string>('')
 
     const changeHandler = (event: { target: { name: any; value: any } }) => {
         setForm({ ...form, [event.target.name]: event.target.value })
@@ -22,9 +24,15 @@ export const SignInPage = () => {
             const { accessToken, refreshToken } = await authService.signIn(form)
             authContext.login(accessToken, refreshToken)
         } catch (e) {
+            setError(e.message)
             console.log(e)
         }
     }
+
+    const errorAlert = error ?
+        <Alert className="alert" severity="error" variant="filled" onClose={() => {setError('')}}>
+            {error}
+        </Alert> : null
 
     return (
         <Container component="main" maxWidth="xs" className="sign-in-container">
@@ -70,6 +78,9 @@ export const SignInPage = () => {
                     >
                         Войти
                     </Button>
+                    <Collapse in={!!error}>
+                        {errorAlert}
+                    </Collapse>
                     <Grid container className="sign-up-link-wrapper">
                         <Grid item>
                             <Link href="/sign-up" variant="subtitle1" className="sign-up-link">
