@@ -6,6 +6,7 @@ import DirectionService from '../../services/direction-service'
 import UniversityDirectionsDTO from '../../services/dto/university-directions.dto'
 
 import './main.page.css'
+import Loader from '../../components/loader'
 
 export const MainPage = () => {
     const authContext = useContext(AuthContext)
@@ -23,7 +24,7 @@ export const MainPage = () => {
         })
     }, [ authContext ])
 
-    const loadingBanner = loading ? <span>Loading...</span> : null
+    const loadingBanner = loading ? <Loader/> : null
     const content = !loading ? universities?.map(u => <DirectionWithRating info={u}/>) : null
 
     return (

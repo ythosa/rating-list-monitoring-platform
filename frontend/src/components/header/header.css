@@ -1,9 +1,9 @@
 .header-wrapper {
+    position: fixed;
     display: flex;
-    float: right;
     margin-top: 2vh;
-    margin-right: 2vw;
     flex-direction: column;
+    margin-left: 85%;
 }
 
 .header-username-profile {

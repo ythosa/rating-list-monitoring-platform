@@ -1,3 +1,7 @@
 .directions-with-rating-container {
     padding-top: 5.5vh;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
 }

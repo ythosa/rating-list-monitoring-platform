@@ -3,6 +3,7 @@ import { AuthContext, AuthContextType } from '../../context/auth.context'
 import { Avatar, createStyles, Link, makeStyles, Theme } from '@material-ui/core'
 import profileIcon from './profile.png'
 import UserService from '../../services/user-service'
+import Loader from '../loader'
 
 import './header.css'
 
@@ -36,7 +37,7 @@ export const Header = () => {
             })
     }, [ authContext ])
 
-    const loadingBanner = loading ? <span>Loading...</span> : null
+    const loadingBanner = loading ? <Loader/> : null
     const content = !loading ? (
         <React.Fragment>
             <div className="header-username-profile">
