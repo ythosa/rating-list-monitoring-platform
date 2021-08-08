@@ -95,6 +95,12 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Di
 		return universityDirections[i].UniversityID < universityDirections[j].UniversityID
 	})
 
+	for _, ud := range universityDirections {
+		sort.SliceStable(ud.Directions, func(i, j int) bool {
+			return ud.Directions[i].ID < ud.Directions[j].ID
+		})
+	}
+
 	return universityDirections
 }
 
@@ -207,6 +213,12 @@ func (u *DirectionImpl) mapDirectionsToUniversityDirectionsWithRating(
 	sort.SliceStable(universityDirectionsWithRating, func(i, j int) bool {
 		return universityDirectionsWithRating[i].UniversityID < universityDirectionsWithRating[j].UniversityID
 	})
+
+	for _, ud := range universityDirectionsWithRating {
+		sort.SliceStable(ud.Directions, func(i, j int) bool {
+			return ud.Directions[i].ID < ud.Directions[j].ID
+		})
+	}
 
 	return universityDirectionsWithRating
 }
