@@ -33,8 +33,7 @@ func NewAuthorizationImpl(
 		userRepository:    userRepository,
 		refreshTokenCache: refreshTokenCache,
 		blacklistCache:    blacklistCache,
-
-		logger: logging.NewLogger("authorization service"),
+		logger:            logging.NewLogger("authorization service"),
 	}
 }
 
@@ -70,37 +69,24 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 		return nil, fmt.Errorf("error while deleting user from cache blacklist: %w", err)
 	}
 
-	tokens := &dto.AuthorizationTokens{}
 	latestRefreshToken, errGettingLatestRefreshToken := s.refreshTokenCache.Get(user.ID)
 	_, errParsingLatestRefreshToken := authorization.ParseToken(
 		latestRefreshToken, config.Get().AuthTokens.RefreshToken,
 	)
 
 	if errGettingLatestRefreshToken != nil || errParsingLatestRefreshToken != nil {
-		generatedTokens, err := authorization.GenerateTokensFromPayload(user.ID, config.Get().AuthTokens)
-		if err != nil {
-			return nil, fmt.Errorf("error while generating tokens: %w", err)
-		}
-
-		tokens = (*dto.AuthorizationTokens)(generatedTokens)
-		if err := s.refreshTokenCache.Save(
-			user.ID, tokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
-		); err != nil {
-			return nil, fmt.Errorf("error while saving user refresh token in cache: %w", err)
-		}
-
-		return tokens, nil
+		return s.generateTokensAndSaveRefreshToken(user.ID)
 	}
 
-	tokens.RefreshToken = latestRefreshToken
-
-	if tokens.AccessToken, err = authorization.GenerateTokenFromPayload(
-		user.ID, config.Get().AuthTokens.AccessToken,
-	); err != nil {
+	accessToken, err := authorization.GenerateTokenFromPayload(user.ID, config.Get().AuthTokens.AccessToken)
+	if err != nil {
 		return nil, fmt.Errorf("error while generating token: %w", err)
 	}
 
-	return tokens, nil
+	return &dto.AuthorizationTokens{
+		RefreshToken: latestRefreshToken,
+		AccessToken:  accessToken,
+	}, nil
 }
 
 func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, error) {
@@ -118,18 +104,22 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 		return nil, InvalidTokenError
 	}
 
-	newlyGeneratedTokens, err := authorization.GenerateTokensFromPayload(tokenClaims.UserID, config.Get().AuthTokens)
+	return s.generateTokensAndSaveRefreshToken(tokenClaims.UserID)
+}
+
+func (s *AuthorizationImpl) generateTokensAndSaveRefreshToken(userID uint) (*dto.AuthorizationTokens, error) {
+	tokens, err := authorization.GenerateTokensFromPayload(userID, config.Get().AuthTokens)
 	if err != nil {
 		return nil, fmt.Errorf("error while generating tokens: %w", err)
 	}
 
 	if err := s.refreshTokenCache.Save(
-		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
+		userID, tokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
 	); err != nil {
 		return nil, fmt.Errorf("error while saving refresh token in cache: %w", err)
 	}
 
-	return (*dto.AuthorizationTokens)(newlyGeneratedTokens), nil
+	return (*dto.AuthorizationTokens)(tokens), nil
 }
 
 func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
@@ -151,9 +141,5 @@ func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
 }
 
 func (s *AuthorizationImpl) IsUserLogout(userID uint) bool {
-	if err := s.blacklistCache.Get(userID); err != nil {
-		return true
-	}
-
-	return false
+	return s.blacklistCache.Get(userID) != nil
 }
