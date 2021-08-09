@@ -135,12 +135,10 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 	results := newParsingDirectionResults(len(directions))
 	for _, d := range directions {
 		results.wg.Add(1)
-
 		go u.parseDirectionRating(results, d, userSnils.Snils)
 	}
 
 	results.wg.Wait()
-
 	if len(results.errors) != 0 {
 		return nil, fmt.Errorf("error while waiting parsing rating: %w", <-results.errors)
 	}
@@ -220,8 +218,7 @@ func sortUniversityDirectionsWithRating(universityDirections []dto.UniversityDir
 }
 
 func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
-	err := u.directionRepository.Clear(userID)
-	if err != nil {
+	if err := u.directionRepository.Clear(userID); err != nil {
 		return fmt.Errorf("error while clearing user directions by repository: %w", err)
 	}
 
@@ -257,7 +254,6 @@ func (u *DirectionImpl) getUniversityIDsOfDirections(directionIDs []uint) []uint
 	wg.Wait()
 
 	universityIDs := make([]uint, 0)
-
 	universityIDsMap.Range(func(key, _ interface{}) bool {
 		universityIDs = append(universityIDs, key.(uint))
 
