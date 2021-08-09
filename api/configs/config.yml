@@ -1,8 +1,8 @@
 server:
   port: "8001"
   max_header_bytes: 1048576
-  read_timeout: 10
-  write_timeout: 10
+  read_timeout: "10s"
+  write_timeout: "10s"
 
 db:
   driver: "postgres"
@@ -20,15 +20,15 @@ cache:
 
 auth:
   access_token:
-    ttl: 60
+    ttl: "60m"
     signing_key: "81hJ!*@#Y&12yN#UI!Yjfklsjdf"
   refresh_token:
-    ttl: 43200
+    ttl: "43200m"
     signing_key: "410fj12fjhsdfjksaj(UY^JIJ98adsuJIKDiHA&*"
 
 parsing:
-  rating_list_ttl: 120
-  read_timeout: 10
+  rating_list_ttl: "120m"
+  read_timeout: "10s"
   read_buffer_size: 6291456
   max_response_body_size: 16777216
   max_conns_per_host: 10

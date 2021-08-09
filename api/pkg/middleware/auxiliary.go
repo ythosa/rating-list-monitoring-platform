@@ -4,14 +4,14 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/gin-gonic/gin"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/apierrors"
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/apierrors"
+	"github.com/gin-gonic/gin"
 )
 
 const (
-	authorizationHeader = "Authorization"
-	authorizationPrefix = "rlmp"
+	authorizationHeader = "AuthTokens"
+	authorizationPrefix = "Bearer"
 	refreshTokenHeader  = "RefreshToken"
 )
 

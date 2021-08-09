@@ -3,11 +3,12 @@ package controller
 import (
 	"net/http"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/apierrors"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/middleware"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/apierrors"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/middleware"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
 )

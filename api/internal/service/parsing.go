@@ -8,11 +8,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/valyala/fasthttp"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 )

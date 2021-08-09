@@ -904,7 +904,7 @@ var doc = `{
     "securityDefinitions": {
         "AccessTokenHeader": {
             "type": "apiKey",
-            "name": "Authorization",
+            "name": "AuthTokens",
             "in": "header"
         }
     }

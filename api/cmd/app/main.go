@@ -14,7 +14,7 @@ import (
 
 // @securityDefinitions.apiKey AccessTokenHeader
 // @in header
-// @name Authorization
+// @name AuthTokens
 
 func main() {
 	app.Run()

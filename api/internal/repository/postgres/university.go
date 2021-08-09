@@ -25,7 +25,9 @@ func NewUniversityImpl(db *sqlx.DB) *UniversityImpl {
 
 func (r *UniversityImpl) GetAll() ([]rdto.University, error) {
 	var universities []rdto.University
-	if err := r.db.Select(&universities, fmt.Sprintf("SELECT id, name, full_name FROM %s", universitiesTable)); err != nil {
+	if err := r.db.Select(
+		&universities, fmt.Sprintf("SELECT id, name, full_name FROM %s", universitiesTable),
+	); err != nil {
 		return nil, fmt.Errorf("error while getting all universities: %w", err)
 	}
 

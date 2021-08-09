@@ -5,10 +5,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
+
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
@@ -70,17 +71,19 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	}
 
 	tokens := &dto.AuthorizationTokens{}
-	latestRefreshToken, gettingLatestRefreshTokenErr := s.refreshTokenCache.Get(user.ID)
-	_, parsingLatestRefreshTokenErr := authorization.ParseToken(latestRefreshToken, authorization.RefreshToken)
+	latestRefreshToken, errGettingLatestRefreshToken := s.refreshTokenCache.Get(user.ID)
+	_, errParsingLatestRefreshToken := authorization.ParseToken(
+		latestRefreshToken, config.Get().AuthTokens.RefreshToken,
+	)
 
-	if gettingLatestRefreshTokenErr != nil || parsingLatestRefreshTokenErr != nil {
-		tokens, err = authorization.GenerateTokensFromPayload(user.ID)
+	if errGettingLatestRefreshToken != nil || errParsingLatestRefreshToken != nil {
+		tokens, err = authorization.GenerateTokensFromPayload(user.ID, config.Get().AuthTokens)
 		if err != nil {
 			return nil, fmt.Errorf("error while generating tokens: %w", err)
 		}
 
 		if err := s.refreshTokenCache.Save(
-			user.ID, tokens.RefreshToken, config.Get().Authorization.RefreshToken.TTL,
+			user.ID, tokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
 		); err != nil {
 			return nil, fmt.Errorf("error while saving user refresh token in cache: %w", err)
 		}
@@ -90,7 +93,9 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 
 	tokens.RefreshToken = latestRefreshToken
 
-	if tokens.AccessToken, err = authorization.GenerateAccessTokenFromPayload(user.ID); err != nil {
+	if tokens.AccessToken, err = authorization.GenerateTokenFromPayload(
+		user.ID, config.Get().AuthTokens.AccessToken,
+	); err != nil {
 		return nil, fmt.Errorf("error while generating token: %w", err)
 	}
 
@@ -98,7 +103,7 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 }
 
 func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.AuthorizationTokens, error) {
-	tokenClaims, err := authorization.ParseToken(refreshToken, authorization.RefreshToken)
+	tokenClaims, err := authorization.ParseToken(refreshToken, config.Get().AuthTokens.RefreshToken)
 	if err != nil {
 		return nil, InvalidTokenError
 	}
@@ -112,13 +117,13 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 		return nil, InvalidTokenError
 	}
 
-	newlyGeneratedTokens, err := authorization.GenerateTokensFromPayload(tokenClaims.UserID)
+	newlyGeneratedTokens, err := authorization.GenerateTokensFromPayload(tokenClaims.UserID, config.Get().AuthTokens)
 	if err != nil {
 		return nil, fmt.Errorf("error while generating tokens: %w", err)
 	}
 
 	if err := s.refreshTokenCache.Save(
-		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().Authorization.RefreshToken.TTL,
+		tokenClaims.UserID, newlyGeneratedTokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
 	); err != nil {
 		return nil, fmt.Errorf("error while saving refresh token in cache: %w", err)
 	}
@@ -127,7 +132,7 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 }
 
 func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
-	tokenClaims, err := authorization.ParseToken(accessToken, authorization.AccessToken)
+	tokenClaims, err := authorization.ParseToken(accessToken, config.Get().AuthTokens.AccessToken)
 	if err != nil {
 		return InvalidTokenError
 	}

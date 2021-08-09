@@ -17,6 +17,24 @@ const (
 	dotEnvFilePathEnv    = "RLMP_DOTENV_PATH"
 )
 
+type Config struct {
+	Server     *Server
+	DB         *DB
+	Cache      *Cache
+	AuthTokens *AuthTokens
+	Parsing    *Parsing
+}
+
+func newConfig() *Config {
+	return &Config{
+		Server:     newServer(),
+		DB:         newDB(),
+		Cache:      newCache(),
+		AuthTokens: newAuthTokens(),
+		Parsing:    newParsing(),
+	}
+}
+
 func Get() *Config {
 	var (
 		once sync.Once
@@ -72,24 +90,6 @@ func initDotEnvParser() error {
 	return nil
 }
 
-type Config struct {
-	Server        *Server
-	DB            *DB
-	Cache         *Cache
-	Authorization *Authorization
-	Parsing       *Parsing
-}
-
-func newConfig() *Config {
-	return &Config{
-		Server:        newServer(),
-		DB:            newDB(),
-		Cache:         newCache(),
-		Authorization: newAuth(),
-		Parsing:       newParsing(),
-	}
-}
-
 type Server struct {
 	Port           string
 	MaxHeaderBytes int
@@ -101,8 +101,8 @@ func newServer() *Server {
 	return &Server{
 		Port:           viper.GetString("server.port"),
 		MaxHeaderBytes: viper.GetInt("server.max_header_bytes"),
-		ReadTimeout:    viper.GetDuration("server.read_timeout") * time.Second,
-		WriteTimeout:   viper.GetDuration("server.write_timeout") * time.Second,
+		ReadTimeout:    viper.GetDuration("server.read_timeout"),
+		WriteTimeout:   viper.GetDuration("server.write_timeout"),
 	}
 }
 
@@ -149,19 +149,19 @@ type JWTToken struct {
 	SigningKey []byte
 }
 
-type Authorization struct {
+type AuthTokens struct {
 	AccessToken  JWTToken
 	RefreshToken JWTToken
 }
 
-func newAuth() *Authorization {
-	return &Authorization{
+func newAuthTokens() *AuthTokens {
+	return &AuthTokens{
 		AccessToken: JWTToken{
-			TTL:        time.Minute * viper.GetDuration("auth.access_token.ttl"),
+			TTL:        viper.GetDuration("auth.access_token.ttl"),
 			SigningKey: []byte(viper.GetString("auth.access_token.signing_key")),
 		},
 		RefreshToken: JWTToken{
-			TTL:        time.Minute * viper.GetDuration("auth.refresh_token.ttl"),
+			TTL:        viper.GetDuration("auth.refresh_token.ttl"),
 			SigningKey: []byte(viper.GetString("auth.refresh_token.signing_key")),
 		},
 	}
@@ -177,8 +177,8 @@ type Parsing struct {
 
 func newParsing() *Parsing {
 	return &Parsing{
-		RatingListTTL:       time.Minute * viper.GetDuration("parsing.rating_list_ttl"),
-		ReadTimeout:         viper.GetDuration("parsing.read_timeout") * time.Second,
+		RatingListTTL:       viper.GetDuration("parsing.rating_list_ttl"),
+		ReadTimeout:         viper.GetDuration("parsing.read_timeout"),
 		ReadBufferSize:      viper.GetInt("parsing.read_buffer_size"),
 		MaxResponseBodySize: viper.GetInt("parsing.max_response_body_size"),
 		MaxConnsPerHost:     viper.GetInt("parsing.max_conns_per_host"),

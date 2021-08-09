@@ -8,11 +8,12 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache/redis"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/postgres"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"

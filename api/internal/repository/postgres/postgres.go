@@ -3,13 +3,14 @@ package postgres
 import (
 	"fmt"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
+
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres" // postgres migrations driver
 	_ "github.com/golang-migrate/migrate/v4/source/file"       // for migrations
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres database driver
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
 )
 

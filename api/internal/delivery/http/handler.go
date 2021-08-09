@@ -7,9 +7,10 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/middleware"
+
 	_ "github.com/ythosa/rating-list-monitoring-platform-api/docs" // swagger documentation
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/controller"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/middleware"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
 )
 
@@ -40,7 +41,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		"Content-Type",
 		"Access-Control-Request-Method",
 		"Access-Control-Request-Headers",
-		"Authorization",
+		"AuthTokens",
 	}
 	router.Use(cors.New(config))
 

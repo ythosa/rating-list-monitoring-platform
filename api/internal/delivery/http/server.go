@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
 )
 
 type Server struct {
