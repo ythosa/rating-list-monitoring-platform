@@ -8,18 +8,18 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
 
 	"github.com/dgrijalva/jwt-go"
-
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 )
 
-var (
-	ErrInvalidToken     = errors.New("invalid token")
-	ErrInvalidTokenType = errors.New("invalid token type")
-)
+var ErrInvalidToken = errors.New("invalid token")
+
+type JWTTokens struct {
+	AccessToken  string
+	RefreshToken string
+}
 
 type TokenClaims struct {
 	jwt.StandardClaims
-	UserID uint `json:"user_id"`
+	UserID uint
 }
 
 func ParseToken(token string, tokenCfg config.JWTToken) (*TokenClaims, error) {
@@ -42,7 +42,7 @@ func ParseToken(token string, tokenCfg config.JWTToken) (*TokenClaims, error) {
 	return claims, nil
 }
 
-func GenerateTokensFromPayload(userID uint, tokensConfig *config.AuthTokens) (*dto.AuthorizationTokens, error) {
+func GenerateTokensFromPayload(userID uint, tokensConfig *config.AuthTokens) (*JWTTokens, error) {
 	accessToken, err := GenerateTokenFromPayload(userID, tokensConfig.AccessToken)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func GenerateTokensFromPayload(userID uint, tokensConfig *config.AuthTokens) (*d
 		return nil, err
 	}
 
-	return &dto.AuthorizationTokens{
+	return &JWTTokens{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

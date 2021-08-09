@@ -77,11 +77,12 @@ func (s *AuthorizationImpl) GenerateTokens(userCredentials dto.UserCredentials) 
 	)
 
 	if errGettingLatestRefreshToken != nil || errParsingLatestRefreshToken != nil {
-		tokens, err = authorization.GenerateTokensFromPayload(user.ID, config.Get().AuthTokens)
+		generatedTokens, err := authorization.GenerateTokensFromPayload(user.ID, config.Get().AuthTokens)
 		if err != nil {
 			return nil, fmt.Errorf("error while generating tokens: %w", err)
 		}
 
+		tokens = (*dto.AuthorizationTokens)(generatedTokens)
 		if err := s.refreshTokenCache.Save(
 			user.ID, tokens.RefreshToken, config.Get().AuthTokens.RefreshToken.TTL,
 		); err != nil {
@@ -128,7 +129,7 @@ func (s *AuthorizationImpl) RefreshTokens(refreshToken string) (*dto.Authorizati
 		return nil, fmt.Errorf("error while saving refresh token in cache: %w", err)
 	}
 
-	return newlyGeneratedTokens, nil
+	return (*dto.AuthorizationTokens)(newlyGeneratedTokens), nil
 }
 
 func (s *AuthorizationImpl) LogoutUser(userID uint, accessToken string) error {
