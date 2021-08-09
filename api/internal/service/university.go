@@ -22,13 +22,13 @@ func NewUniversityImpl(universityRepository repository.University) *UniversityIm
 	}
 }
 
-func (s *UniversityImpl) GetAll() ([]rdto.University, error) {
+func (s *UniversityImpl) GetAll() ([]dto.University, error) {
 	universities, err := s.universityRepository.GetAll()
 	if err != nil {
 		return nil, fmt.Errorf("error while getting all universities by repository: %w", err)
 	}
 
-	return universities, nil
+	return mapRepositoryUniversitiesResultToDTOs(universities), nil
 }
 
 func (s *UniversityImpl) GetByID(id uint) (*models.University, error) {
@@ -40,13 +40,26 @@ func (s *UniversityImpl) GetByID(id uint) (*models.University, error) {
 	return university, nil
 }
 
-func (s *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
+func (s *UniversityImpl) GetForUser(userID uint) ([]dto.University, error) {
 	universities, err := s.universityRepository.GetForUser(userID)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting user universities from repository: %w", err)
 	}
 
-	return universities, nil
+	return mapRepositoryUniversitiesResultToDTOs(universities), nil
+}
+
+func mapRepositoryUniversitiesResultToDTOs(universities []rdto.University) []dto.University {
+	result := make([]dto.University, 0)
+	for _, u := range universities {
+		result = append(result, dto.University{
+			ID:       u.ID,
+			Name:     u.Name,
+			FullName: u.FullName,
+		})
+	}
+
+	return result
 }
 
 func (s *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {

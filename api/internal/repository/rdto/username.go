@@ -1,5 +1,5 @@
 package rdto
 
 type Username struct {
-	Username string `json:"username" db:"username"`
+	Username string `db:"username"`
 }

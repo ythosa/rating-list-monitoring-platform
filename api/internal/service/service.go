@@ -5,7 +5,6 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/models"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 )
 
 type Authorization interface {
@@ -26,9 +25,9 @@ type Parsing interface {
 }
 
 type University interface {
-	GetAll() ([]rdto.University, error)
+	GetAll() ([]dto.University, error)
 	GetByID(id uint) (*models.University, error)
-	GetForUser(userID uint) ([]rdto.University, error)
+	GetForUser(userID uint) ([]dto.University, error)
 	SetForUser(userID uint, universityIDs dto.IDs) error
 }
 
