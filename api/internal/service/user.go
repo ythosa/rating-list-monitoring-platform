@@ -20,10 +20,10 @@ func NewUserImpl(userRepository repository.User) *UserImpl {
 	}
 }
 
-func (u *UserImpl) GetUsername(id uint) (*dto.Username, error) {
-	username, err := u.userRepository.GetUsername(id)
+func (s *UserImpl) GetUsername(id uint) (*dto.Username, error) {
+	username, err := s.userRepository.GetUsername(id)
 	if err != nil {
-		u.logger.Error(err)
+		s.logger.Error(err)
 
 		return nil, fmt.Errorf("error while getting user username: %w", err)
 	}
@@ -31,10 +31,10 @@ func (u *UserImpl) GetUsername(id uint) (*dto.Username, error) {
 	return (*dto.Username)(username), nil
 }
 
-func (u *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
-	userProfile, err := u.userRepository.GetProfile(id)
+func (s *UserImpl) GetProfile(id uint) (*dto.UserProfile, error) {
+	userProfile, err := s.userRepository.GetProfile(id)
 	if err != nil {
-		u.logger.Error(err)
+		s.logger.Error(err)
 
 		return nil, fmt.Errorf("error while getting user profile: %w", err)
 	}

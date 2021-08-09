@@ -21,6 +21,10 @@ type User interface {
 	GetProfile(id uint) (*dto.UserProfile, error)
 }
 
+type Parsing interface {
+	ParseRating(universityName string, ratingURL string, userSnils string) (*dto.ParsingResult, error)
+}
+
 type University interface {
 	GetAll() ([]rdto.University, error)
 	GetByID(id uint) (*models.University, error)
@@ -36,16 +40,12 @@ type Direction interface {
 	SetForUser(userID uint, directionIDs dto.IDs) error
 }
 
-type Parsing interface {
-	ParseRating(universityName string, ratingURL string, userSnils string) (*dto.ParsingResult, error)
-}
-
 type Service struct {
 	Authorization
 	User
+	Parsing
 	University
 	Direction
-	Parsing
 }
 
 func New(repository *repository.Repository, cache *cache.Cache) *Service {
@@ -58,6 +58,7 @@ func New(repository *repository.Repository, cache *cache.Cache) *Service {
 	return &Service{
 		Authorization: authorizationService,
 		User:          userService,
+		Parsing:       parsingService,
 		University:    universityService,
 		Direction:     directionService,
 	}

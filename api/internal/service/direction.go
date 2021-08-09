@@ -36,8 +36,8 @@ func NewDirectionImpl(
 	}
 }
 
-func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
-	direction, err := u.directionRepository.GetByID(id)
+func (s *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
+	direction, err := s.directionRepository.GetByID(id)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting direction by id by repository: %w", err)
 	}
@@ -45,28 +45,28 @@ func (u *DirectionImpl) GetByID(id uint) (*models.Direction, error) {
 	return direction, nil
 }
 
-func (u *DirectionImpl) GetAll() ([]dto.UniversityDirections, error) {
-	directions, err := u.directionRepository.GetAll()
+func (s *DirectionImpl) GetAll() ([]dto.UniversityDirections, error) {
+	directions, err := s.directionRepository.GetAll()
 	if err != nil {
 		return nil, fmt.Errorf("error while getting all directions by repository: %w", err)
 	}
 
-	return u.mapDirectionsToUniversityDirections(directions), nil
+	return s.mapDirectionsToUniversityDirections(directions), nil
 }
 
-func (u *DirectionImpl) GetForUser(userID uint) ([]dto.UniversityDirections, error) {
-	directions, err := u.directionRepository.GetForUser(userID)
+func (s *DirectionImpl) GetForUser(userID uint) ([]dto.UniversityDirections, error) {
+	directions, err := s.directionRepository.GetForUser(userID)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting user directions by repository: %w", err)
 	}
 
-	universityDirections := u.mapDirectionsToUniversityDirections(directions)
+	universityDirections := s.mapDirectionsToUniversityDirections(directions)
 	sortUniversityDirections(universityDirections)
 
 	return universityDirections, nil
 }
 
-func (u *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
+func (s *DirectionImpl) mapDirectionsToUniversityDirections(directions []rdto.Direction) []dto.UniversityDirections {
 	ud := make(map[uint]*dto.UniversityDirections)
 
 	for _, d := range directions {
@@ -117,17 +117,17 @@ func newParsingDirectionResults(directionsCount int) *parsingDirectionResults {
 	}
 }
 
-func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirectionsWithRating, error) {
-	directions, err := u.directionRepository.GetForUser(userID)
+func (s *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirectionsWithRating, error) {
+	directions, err := s.directionRepository.GetForUser(userID)
 	if err != nil {
-		u.logger.Error(err)
+		s.logger.Error(err)
 
 		return nil, fmt.Errorf("error while getting user directions by repository: %w", err)
 	}
 
-	userSnils, err := u.userRepository.GetSnils(userID)
+	userSnils, err := s.userRepository.GetSnils(userID)
 	if err != nil {
-		u.logger.Error(err)
+		s.logger.Error(err)
 
 		return nil, fmt.Errorf("error while getting user snils by repository: %w", err)
 	}
@@ -135,7 +135,7 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 	results := newParsingDirectionResults(len(directions))
 	for _, d := range directions {
 		results.wg.Add(1)
-		go u.parseDirectionRating(results, d, userSnils.Snils)
+		go s.parseDirectionRating(results, d, userSnils.Snils)
 	}
 
 	results.wg.Wait()
@@ -148,20 +148,20 @@ func (u *DirectionImpl) GetForUserWithRating(userID uint) ([]dto.UniversityDirec
 		directionsWithRating[i] = <-results.directionsWithRating
 	}
 
-	universityDirectionsWithRating := u.mapRatingDirectionsToUniversityDirections(directionsWithRating)
+	universityDirectionsWithRating := s.mapRatingDirectionsToUniversityDirections(directionsWithRating)
 	sortUniversityDirectionsWithRating(universityDirectionsWithRating)
 
 	return universityDirectionsWithRating, nil
 }
 
-func (u *DirectionImpl) parseDirectionRating(
+func (s *DirectionImpl) parseDirectionRating(
 	results *parsingDirectionResults,
 	direction rdto.Direction,
 	userSnils string,
 ) {
 	defer results.wg.Done()
 
-	parsingResult, err := u.parsingService.ParseRating(
+	parsingResult, err := s.parsingService.ParseRating(
 		direction.UniversityName,
 		direction.DirectionURL,
 		userSnils,
@@ -180,7 +180,7 @@ func (u *DirectionImpl) parseDirectionRating(
 	}
 }
 
-func (u *DirectionImpl) mapRatingDirectionsToUniversityDirections(
+func (s *DirectionImpl) mapRatingDirectionsToUniversityDirections(
 	directions []dto.DirectionWithParsingResult,
 ) []dto.UniversityDirectionsWithRating {
 	ud := make(map[uint]*dto.UniversityDirectionsWithRating)
@@ -217,17 +217,17 @@ func sortUniversityDirectionsWithRating(universityDirections []dto.UniversityDir
 	}
 }
 
-func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
-	if err := u.directionRepository.Clear(userID); err != nil {
+func (s *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
+	if err := s.directionRepository.Clear(userID); err != nil {
 		return fmt.Errorf("error while clearing user directions by repository: %w", err)
 	}
 
-	if err := u.directionRepository.SetForUser(userID, directionIDs); err != nil {
+	if err := s.directionRepository.SetForUser(userID, directionIDs); err != nil {
 		return fmt.Errorf("error while setting directions for user by repository: %w", err)
 	}
 
-	if err := u.universityService.SetForUser(
-		userID, dto.IDs{IDs: u.getUniversityIDsOfDirections(directionIDs.IDs)},
+	if err := s.universityService.SetForUser(
+		userID, dto.IDs{IDs: s.getUniversityIDsOfDirections(directionIDs.IDs)},
 	); err != nil {
 		return fmt.Errorf("error while updating user universities by repository: %w", err)
 	}
@@ -235,7 +235,7 @@ func (u *DirectionImpl) SetForUser(userID uint, directionIDs dto.IDs) error {
 	return nil
 }
 
-func (u *DirectionImpl) getUniversityIDsOfDirections(directionIDs []uint) []uint {
+func (s *DirectionImpl) getUniversityIDsOfDirections(directionIDs []uint) []uint {
 	var (
 		universityIDsMap sync.Map
 		wg               sync.WaitGroup
@@ -245,7 +245,7 @@ func (u *DirectionImpl) getUniversityIDsOfDirections(directionIDs []uint) []uint
 		wg.Add(1)
 
 		go func(id uint) {
-			d, _ := u.directionRepository.GetUniversityID(id)
+			d, _ := s.directionRepository.GetUniversityID(id)
 			universityIDsMap.Store(d.UniversityID, true)
 			wg.Done()
 		}(directionID)

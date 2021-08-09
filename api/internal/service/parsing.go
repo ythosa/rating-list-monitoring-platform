@@ -44,13 +44,13 @@ const (
 	priorityOne            = 1
 )
 
-func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils string) (*dto.ParsingResult, error) {
-	ratingList, err := p.cache.Get(ratingURL)
+func (s *ParsingImpl) ParseRating(university string, ratingURL string, userSnils string) (*dto.ParsingResult, error) {
+	ratingList, err := s.cache.Get(ratingURL)
 	if err != nil {
 		res, req := fasthttp.AcquireResponse(), fasthttp.AcquireRequest()
 		req.SetRequestURI(ratingURL)
 
-		if err := p.client.Do(req, res); err != nil {
+		if err := s.client.Do(req, res); err != nil {
 			return nil, fmt.Errorf("error while getting rating list page: %w", err)
 		}
 
@@ -59,7 +59,7 @@ func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils
 		}
 
 		ratingList = string(res.Body())
-		if err := p.cache.Save(ratingURL, ratingList, config.Get().Parsing.RatingListTTL); err != nil {
+		if err := s.cache.Save(ratingURL, ratingList, config.Get().Parsing.RatingListTTL); err != nil {
 			return nil, fmt.Errorf("error while caching rating list: %w", err)
 		}
 	}
@@ -71,19 +71,19 @@ func (p *ParsingImpl) ParseRating(university string, ratingURL string, userSnils
 
 	switch university {
 	case "ЛЭТИ":
-		return p.parseLETI(parsedRatingList, p.formatSnils(userSnils))
+		return s.parseLETI(parsedRatingList, s.formatSnils(userSnils))
 	case "СПБГУ":
-		return p.parseSPBGU(parsedRatingList, p.formatSnils(userSnils))
+		return s.parseSPBGU(parsedRatingList, s.formatSnils(userSnils))
 	default:
 		return nil, fmt.Errorf("invalid university: %s", university)
 	}
 }
 
-func (p *ParsingImpl) formatSnils(snils string) string {
+func (s *ParsingImpl) formatSnils(snils string) string {
 	return fmt.Sprintf("%s-%s-%s %s", snils[:3], snils[3:6], snils[6:9], snils[9:11])
 }
 
-func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
+func (s *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
 	var (
 		userScore             uint
 		userPosition          uint
@@ -141,7 +141,7 @@ func (p *ParsingImpl) parseLETI(ratingList *goquery.Document, userSnils string) 
 	}, nil
 }
 
-func (p *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
+func (s *ParsingImpl) parseSPBGU(ratingList *goquery.Document, userSnils string) (*dto.ParsingResult, error) {
 	title := ratingList.Find("p").Text()
 	budgetPlacesRe := regexp.MustCompile(`КЦП по конкурсу: (\d+)`)
 

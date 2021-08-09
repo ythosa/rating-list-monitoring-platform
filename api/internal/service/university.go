@@ -22,8 +22,8 @@ func NewUniversityImpl(universityRepository repository.University) *UniversityIm
 	}
 }
 
-func (u *UniversityImpl) GetAll() ([]rdto.University, error) {
-	universities, err := u.universityRepository.GetAll()
+func (s *UniversityImpl) GetAll() ([]rdto.University, error) {
+	universities, err := s.universityRepository.GetAll()
 	if err != nil {
 		return nil, fmt.Errorf("error while getting all universities by repository: %w", err)
 	}
@@ -31,8 +31,8 @@ func (u *UniversityImpl) GetAll() ([]rdto.University, error) {
 	return universities, nil
 }
 
-func (u *UniversityImpl) GetByID(id uint) (*models.University, error) {
-	university, err := u.universityRepository.GetByID(id)
+func (s *UniversityImpl) GetByID(id uint) (*models.University, error) {
+	university, err := s.universityRepository.GetByID(id)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting university by ID from repository: %w", err)
 	}
@@ -40,8 +40,8 @@ func (u *UniversityImpl) GetByID(id uint) (*models.University, error) {
 	return university, nil
 }
 
-func (u *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
-	universities, err := u.universityRepository.GetForUser(userID)
+func (s *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
+	universities, err := s.universityRepository.GetForUser(userID)
 	if err != nil {
 		return nil, fmt.Errorf("error while getting user universities from repository: %w", err)
 	}
@@ -49,12 +49,12 @@ func (u *UniversityImpl) GetForUser(userID uint) ([]rdto.University, error) {
 	return universities, nil
 }
 
-func (u *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
-	if err := u.universityRepository.Clear(userID); err != nil {
+func (s *UniversityImpl) SetForUser(userID uint, universityIDs dto.IDs) error {
+	if err := s.universityRepository.Clear(userID); err != nil {
 		return fmt.Errorf("error while clearing user universities by repository: %w", err)
 	}
 
-	if err := u.universityRepository.SetForUser(userID, universityIDs); err != nil {
+	if err := s.universityRepository.SetForUser(userID, universityIDs); err != nil {
 		return fmt.Errorf("error while setting universities for user from repository: %w", err)
 	}
 
