@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/logging"
 
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/rdto"
 	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/authorization"

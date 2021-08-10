@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/logging"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/logging"
 )
 
 type UserImpl struct {
