@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	authorizationHeader = "AuthTokens"
+	authorizationHeader = "Authorization"
 	authorizationPrefix = "Bearer"
 	refreshTokenHeader  = "RefreshToken"
 )

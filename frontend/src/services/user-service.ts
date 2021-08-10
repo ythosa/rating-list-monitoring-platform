@@ -10,7 +10,7 @@ export default class UserService extends API {
 
     getUsername = async (): Promise<string> => {
         const data = await this.getResource('/user/get_username', 'GET', null, {
-            Authorization: `rlmp ${this.accessToken}`,
+            ...this.getAuthorizationHeader(this.accessToken),
         })
 
         return data.username

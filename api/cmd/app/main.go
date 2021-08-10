@@ -22,7 +22,7 @@ import (
 
 // @securityDefinitions.apiKey AccessTokenHeader
 // @in header
-// @name AuthTokens
+// @name Authorization
 
 func main() {
 	configureLogger()

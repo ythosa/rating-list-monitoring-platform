@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import CreatingAccountDataDTO from '../../services/dto/creating-accout-data.dto'
 import AuthorizationService from '../../services/authorization-service'
+import Alert from '@material-ui/lab/Alert'
 import { Button, Collapse, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
 
 import './sign-up.page.css'
-import Alert from '@material-ui/lab/Alert'
 
 export const SignUpPage = () => {
     const authService = new AuthorizationService()

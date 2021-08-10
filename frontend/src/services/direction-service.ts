@@ -13,7 +13,7 @@ export default class DirectionService extends API {
     getForUserWithRating = async () => {
         const data = await this.getResource(
             '/direction/get_for_user_with_rating', 'GET', null, {
-                Authorization: `rlmp ${this.accessToken}`,
+                ...this.getAuthorizationHeader(this.accessToken),
             },
         )
 
