@@ -4,14 +4,14 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-
-	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/middleware"
 
 	_ "github.com/ythosa/rating-list-monitoring-platform-api/docs" // swagger documentation
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/controllers"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
+	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/middleware"
 )
 
 type Handler struct {
@@ -31,19 +31,10 @@ func NewHandler(services *services.Service, validate *validator.Validate) *Handl
 func (h *Handler) InitRoutes() *gin.Engine {
 	router := gin.Default()
 
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowHeaders = []string{
-		"Access-Control-Allow-Headers",
-		"Origin",
-		"Accept",
-		"X-Requested-With",
-		"Content-Type",
-		"Access-Control-Request-Method",
-		"Access-Control-Request-Headers",
-		"AuthTokens",
-	}
-	router.Use(cors.New(config))
+	router.Use(getCORSConfig())
+	router.Use(middleware.NewMetricsMiddleware("/metrics").Metrics())
+
+	router.GET("/metrics", prometheusHandler())
 
 	api := router.Group("/api")
 	{
@@ -85,4 +76,29 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	}
 
 	return router
+}
+
+func getCORSConfig() gin.HandlerFunc {
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	config.AllowHeaders = []string{
+		"Access-Control-Allow-Headers",
+		"Origin",
+		"Accept",
+		"X-Requested-With",
+		"Content-Type",
+		"Access-Control-Request-Method",
+		"Access-Control-Request-Headers",
+		"AuthTokens",
+	}
+
+	return cors.New(config)
+}
+
+func prometheusHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
 }

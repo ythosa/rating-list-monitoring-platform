@@ -889,7 +889,7 @@ var doc = `{
         "rdto.University": {
             "type": "object",
             "properties": {
-                "full_name": {
+                "fullName": {
                     "type": "string"
                 },
                 "id": {
@@ -904,7 +904,7 @@ var doc = `{
     "securityDefinitions": {
         "AccessTokenHeader": {
             "type": "apiKey",
-            "name": "AuthTokens",
+            "name": "Authorization",
             "in": "header"
         }
     }

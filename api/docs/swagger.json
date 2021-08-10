@@ -873,7 +873,7 @@
         "rdto.University": {
             "type": "object",
             "properties": {
-                "full_name": {
+                "fullName": {
                     "type": "string"
                 },
                 "id": {

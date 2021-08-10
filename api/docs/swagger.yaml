@@ -149,7 +149,7 @@ definitions:
     type: object
   rdto.University:
     properties:
-      full_name:
+      fullName:
         type: string
       id:
         type: integer
