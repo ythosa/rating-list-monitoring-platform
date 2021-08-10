@@ -20,7 +20,10 @@ type AuthorizationImpl struct {
 	logger               *logging.Logger
 }
 
-func NewAuthorizationImpl(validate *validator.Validate, authorizationService services.Authorization) *AuthorizationImpl {
+func NewAuthorizationImpl(
+	validate *validator.Validate,
+	authorizationService services.Authorization,
+) *AuthorizationImpl {
 	return &AuthorizationImpl{
 		validate:             validate,
 		authorizationService: authorizationService,
