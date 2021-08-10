@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache"

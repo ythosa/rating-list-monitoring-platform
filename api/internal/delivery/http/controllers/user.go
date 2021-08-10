@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"net/http"
@@ -10,20 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type UserImpl struct {
 	validate    *validator.Validate
-	userService service.User
+	userService services.User
 	logger      *logging.Logger
 }
 
-func NewUserImpl(validate *validator.Validate, userService service.User) *UserImpl {
+func NewUserImpl(validate *validator.Validate, userService services.User) *UserImpl {
 	return &UserImpl{
 		validate:    validate,
 		userService: userService,
-		logger:      logging.NewLogger("user controller"),
+		logger:      logging.NewLogger("user controllers"),
 	}
 }
 

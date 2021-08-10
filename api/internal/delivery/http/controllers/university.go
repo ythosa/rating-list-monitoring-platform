@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"net/http"
@@ -12,20 +12,20 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type UniversityImpl struct {
 	validate          *validator.Validate
-	universityService service.University
+	universityService services.University
 	logger            *logging.Logger
 }
 
-func NewUniversityImpl(validate *validator.Validate, universityService service.University) *UniversityImpl {
+func NewUniversityImpl(validate *validator.Validate, universityService services.University) *UniversityImpl {
 	return &UniversityImpl{
 		validate:          validate,
 		universityService: universityService,
-		logger:            logging.NewLogger("university controller"),
+		logger:            logging.NewLogger("university controllers"),
 	}
 }
 

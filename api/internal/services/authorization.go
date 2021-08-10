@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"fmt"
@@ -33,7 +33,7 @@ func NewAuthorizationImpl(
 		userRepository:    userRepository,
 		refreshTokenCache: refreshTokenCache,
 		blacklistCache:    blacklistCache,
-		logger:            logging.NewLogger("authorization service"),
+		logger:            logging.NewLogger("authorization services"),
 	}
 }
 

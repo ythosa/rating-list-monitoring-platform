@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type UserImpl struct {
 func NewUserImpl(userRepository repository.User) *UserImpl {
 	return &UserImpl{
 		userRepository: userRepository,
-		logger:         logging.NewLogger("user service"),
+		logger:         logging.NewLogger("user services"),
 	}
 }
 

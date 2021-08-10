@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"errors"
@@ -33,7 +33,7 @@ func NewParsingImpl(cache cache.RatingList) *ParsingImpl {
 			MaxResponseBodySize: config.Get().Parsing.MaxResponseBodySize,
 		},
 		cache:  cache,
-		logger: logging.NewLogger("parsing service"),
+		logger: logging.NewLogger("parsing services"),
 	}
 }
 

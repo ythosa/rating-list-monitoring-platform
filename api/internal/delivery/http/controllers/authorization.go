@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"net/http"
@@ -11,20 +11,20 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type AuthorizationImpl struct {
 	validate             *validator.Validate
-	authorizationService service.Authorization
+	authorizationService services.Authorization
 	logger               *logging.Logger
 }
 
-func NewAuthorizationImpl(validate *validator.Validate, authorizationService service.Authorization) *AuthorizationImpl {
+func NewAuthorizationImpl(validate *validator.Validate, authorizationService services.Authorization) *AuthorizationImpl {
 	return &AuthorizationImpl{
 		validate:             validate,
 		authorizationService: authorizationService,
-		logger:               logging.NewLogger("authorization controller"),
+		logger:               logging.NewLogger("authorization controllers"),
 	}
 }
 

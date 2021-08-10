@@ -1,10 +1,10 @@
-package controller
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type Authorization interface {
@@ -41,7 +41,7 @@ type Controller struct {
 	Direction
 }
 
-func NewController(validate *validator.Validate, services *service.Service) *Controller {
+func NewController(validate *validator.Validate, services *services.Service) *Controller {
 	return &Controller{
 		Authorization: NewAuthorizationImpl(validate, services.Authorization),
 		User:          NewUserImpl(validate, services.User),

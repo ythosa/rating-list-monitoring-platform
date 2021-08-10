@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"net/http"
@@ -12,20 +12,20 @@ import (
 	"github.com/go-playground/validator/v10"
 
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/dto"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type DirectionImpl struct {
 	validate         *validator.Validate
-	directionService service.Direction
+	directionService services.Direction
 	logger           *logging.Logger
 }
 
-func NewDirectionImpl(validate *validator.Validate, directionService service.Direction) *DirectionImpl {
+func NewDirectionImpl(validate *validator.Validate, directionService services.Direction) *DirectionImpl {
 	return &DirectionImpl{
 		validate:         validate,
 		directionService: directionService,
-		logger:           logging.NewLogger("direction controller"),
+		logger:           logging.NewLogger("direction controllers"),
 	}
 }
 

@@ -10,21 +10,21 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/middleware"
 
 	_ "github.com/ythosa/rating-list-monitoring-platform-api/docs" // swagger documentation
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/controller"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http/controllers"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 )
 
 type Handler struct {
-	services    *service.Service
+	services    *services.Service
 	validate    *validator.Validate
-	controllers *controller.Controller
+	controllers *controllers.Controller
 }
 
-func NewHandler(services *service.Service, validate *validator.Validate) *Handler {
+func NewHandler(services *services.Service, validate *validator.Validate) *Handler {
 	return &Handler{
 		services:    services,
 		validate:    validate,
-		controllers: controller.NewController(validate, services),
+		controllers: controllers.NewController(validate, services),
 	}
 }
 

@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"errors"
@@ -32,7 +32,7 @@ func NewDirectionImpl(
 		userRepository:      userRepository,
 		universityService:   universityService,
 		parsingService:      parsingService,
-		logger:              logging.NewLogger("directions service"),
+		logger:              logging.NewLogger("directions services"),
 	}
 }
 

@@ -10,7 +10,7 @@ import (
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/cache/redis"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/delivery/http"
 	"github.com/ythosa/rating-list-monitoring-platform-api/internal/repository/postgres"
-	"github.com/ythosa/rating-list-monitoring-platform-api/internal/service"
+	"github.com/ythosa/rating-list-monitoring-platform-api/internal/services"
 	"github.com/ythosa/rating-list-monitoring-platform-api/pkg/config"
 )
 
@@ -55,7 +55,7 @@ func buildContainer() *dig.Container {
 	container.Provide(redis.NewCache)
 	container.Provide(postgres.NewDB)
 	container.Provide(postgres.NewRepository)
-	container.Provide(service.New)
+	container.Provide(services.New)
 	container.Provide(validator.New)
 	container.Provide(http.NewHandler)
 	container.Provide(func(cfg *config.Server, handler *http.Handler) *http.Server {

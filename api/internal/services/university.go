@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"fmt"
@@ -18,7 +18,7 @@ type UniversityImpl struct {
 func NewUniversityImpl(universityRepository repository.University) *UniversityImpl {
 	return &UniversityImpl{
 		universityRepository: universityRepository,
-		logger:               logging.NewLogger("university service"),
+		logger:               logging.NewLogger("university services"),
 	}
 }
 
