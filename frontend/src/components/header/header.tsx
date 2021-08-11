@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext, AuthContextType } from '../../context/auth.context'
-import { Avatar, createStyles, Link, makeStyles, Theme } from '@material-ui/core'
+import { Avatar, createStyles, makeStyles, Theme } from '@material-ui/core'
 import profileIcon from './profile.png'
 import UserService from '../../services/user-service'
+import { Link } from 'react-router-dom'
 import Loader from '../loader'
 
 import './header.css'
@@ -18,7 +19,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const Header = () => {
     const classes = useStyles()
-    const preventDefault = (event: React.SyntheticEvent) => event.preventDefault()
     const authContext = useContext<AuthContextType>(AuthContext)
 
     const [ loading, setLoading ] = useState<boolean>(true)
@@ -40,13 +40,13 @@ export const Header = () => {
     const loadingBanner = loading ? <Loader/> : null
     const content = !loading ? (
         <React.Fragment>
-            <div className="header-username-profile">
+            <Link to="/profile" className="header-username-profile">
                 <Avatar alt={username} src={profileIcon} className={classes.large}/>
                 <span className="header-username">{username}</span>
-            </div>
-            <Link href="#" onClick={preventDefault} className="header-nav-link">ВУЗЫ</Link>
-            <Link href="#" onClick={preventDefault} className="header-nav-link">Программы</Link>
-            <Link href="#" onClick={authContext.logout} className="header-nav-link">Выйти</Link>
+            </Link>
+            <Link to="#" className="header-nav-link">ВУЗЫ</Link>
+            <Link to="#" className="header-nav-link">Программы</Link>
+            <Link to="#" onClick={authContext.logout} className="header-nav-link">Выйти</Link>
         </React.Fragment>
     ) : null
 

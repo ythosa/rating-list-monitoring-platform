@@ -1,7 +1,8 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../../context/auth.context'
-import { Button, Collapse, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import { Button, Collapse, Container, CssBaseline, Grid, TextField, Typography } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
+import { Link } from 'react-router-dom'
 import AuthorizationService from '../../services/authorization-service'
 import UserCredentialsDTO from '../../services/dto/user-credentials.dto'
 
@@ -83,7 +84,7 @@ export const SignInPage = () => {
                     </Collapse>
                     <Grid container className="sign-up-link-wrapper">
                         <Grid item>
-                            <Link href="/sign-up" variant="subtitle1" className="sign-up-link">
+                            <Link to="/sign-up" className="sign-up-link">
                                 {'Впервые? Регистрация'}
                             </Link>
                         </Grid>

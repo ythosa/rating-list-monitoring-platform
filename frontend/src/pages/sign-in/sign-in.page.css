@@ -39,7 +39,15 @@ label {
 }
 
 .sign-up-link {
-    font-family: "DewiEL", serif !important
+    font-family: "DewiEL", serif !important;
+    font-size: 1.7vh;
+    color: #3f51b5;
+    text-decoration: none;
+    transition: 0.1s linear;
+}
+
+.sign-up-link:hover {
+    text-decoration: underline;
 }
 
 .alert {

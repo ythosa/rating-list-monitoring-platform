@@ -9,6 +9,12 @@
 .header-username-profile {
     display: flex;
     flex-direction: row;
+    text-decoration: none;
+    transition: 0.1s linear;
+}
+
+.header-username-profile:hover span {
+    color: #103ec5;
 }
 
 .header-username {
@@ -27,7 +33,6 @@
     font-size: 20px;
     margin-top: 1vh;
     padding-left: 3.3vw;
-    padding-top: 0.5vh;
     transition: 0.1s linear;
 }
 
