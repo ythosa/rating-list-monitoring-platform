@@ -6,11 +6,14 @@
 3. Material UI
 
 #### Preview:
-* sign-in page:
+* ##### sign-in page:
 <img src="../assets/sign-in.png" />
-* /sign-up page:
+
+* ##### /sign-up page:
 <img src="../assets/sign-up.png" />
-* /directions page:
+
+* ##### /directions page:
 <img src="../assets/directions.png" />
-* /profile page:
+
+* ##### /profile page:
 <img src="../assets/profile.png" />
