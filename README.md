@@ -11,7 +11,7 @@ and other statistical information in the university rating lists.
 
 #### Build:
 For build need just to run:
-```bash
+```zsh
 docker-compose up --build
 ```
 
