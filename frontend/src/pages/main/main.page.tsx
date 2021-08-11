@@ -3,10 +3,10 @@ import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../../context/auth.context'
 import DirectionWithRating from '../../components/direction-with-rating'
 import DirectionService from '../../services/direction-service'
+import Loader from '../../components/loader'
 import UniversityDirectionsDTO from '../../services/dto/university-directions.dto'
 
 import './main.page.css'
-import Loader from '../../components/loader'
 
 export const MainPage = () => {
     const authContext = useContext(AuthContext)

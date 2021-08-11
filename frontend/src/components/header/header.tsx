@@ -45,7 +45,7 @@ export const Header = () => {
                 <span className="header-username">{username}</span>
             </Link>
             <Link to="#" className="header-nav-link">ВУЗЫ</Link>
-            <Link to="#" className="header-nav-link">Программы</Link>
+            <Link to="/results" className="header-nav-link">Программы</Link>
             <Link to="#" onClick={authContext.logout} className="header-nav-link">Выйти</Link>
         </React.Fragment>
     ) : null

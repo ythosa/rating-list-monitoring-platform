@@ -1,0 +1,27 @@
+.profile-page-wrapper {
+    padding-top: 5.5vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-page-title {
+    font-family: "DewiEB", serif;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    margin-left: 5vw;
+}
+
+.profile-page-credentials {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1vh;
+    margin-left: 10vw;
+}
+
+.profile-page-credential {
+    font-family: "DewiER", serif;
+    font-size: 1.3em;
+    margin-right: 2vw;
+    margin-top: 1vh
+}
