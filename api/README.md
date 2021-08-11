@@ -27,8 +27,8 @@
 * [Migrate](https://github.com/golang-migrate/migrate) to up and down migrates on DB;
 * Redis - for storing refresh tokens and temporary items such as recovery codes;
 * PostgreSQL - as DBMS;
-* Prometheus - for getting API metrics;
-* Grafana - for visualizing prometheus API metrics.
+* Prometheus - for getting API metrics (```host:9090```);
+* Grafana - for visualizing prometheus API metrics (```host:3000/```).
 
 #### Configuration:
 * Environment variables:
