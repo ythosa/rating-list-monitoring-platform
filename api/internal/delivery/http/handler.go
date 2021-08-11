@@ -89,7 +89,7 @@ func getCORSConfig() gin.HandlerFunc {
 		"Content-Type",
 		"Access-Control-Request-Method",
 		"Access-Control-Request-Headers",
-		"AuthTokens",
+		"Authorization",
 	}
 
 	return cors.New(config)

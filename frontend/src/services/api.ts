@@ -1,5 +1,5 @@
 export default class API {
-    private baseURL: string = 'http://localhost:8001/api'
+    private baseURL: string = 'http://localhost:8000/api'
 
     protected getResource = async (
         url: string, method: string = 'GET', payload?: any, headers?: { [key: string]: string },

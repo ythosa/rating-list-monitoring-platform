@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import CreatingAccountDataDTO from '../../services/dto/creating-accout-data.dto'
 import AuthorizationService from '../../services/authorization-service'
 import Alert from '@material-ui/lab/Alert'
-import { Button, Collapse, Container, CssBaseline, Grid, Link, TextField, Typography } from '@material-ui/core'
+import { Button, Collapse, Container, CssBaseline, Grid, TextField, Typography } from '@material-ui/core'
 
 import './sign-up.page.css'
 
@@ -30,7 +30,9 @@ export const SignUpPage = () => {
     }
 
     const errorAlert = error ?
-        <Alert className="alert" severity="error" variant="filled" onClose={() => {setError('')}}>
+        <Alert className="alert" severity="error" variant="filled" onClose={() => {
+            setError('')
+        }}>
             {error}
         </Alert> : null
 
@@ -131,7 +133,7 @@ export const SignUpPage = () => {
                     </Collapse>
                     <Grid container>
                         <Grid item>
-                            <Link href="/sign-in" variant="subtitle1" className="sign-up-link">
+                            <Link to="/sign-in" className="sign-up-link">
                                 {'Уже есть аккаунт? Войти'}
                             </Link>
                         </Grid>
