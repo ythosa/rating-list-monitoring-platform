@@ -29,9 +29,7 @@ require (
 	github.com/swaggo/swag v1.5.1
 	github.com/valyala/fasthttp v1.28.0
 	go.uber.org/dig v1.12.0
-	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
-	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
-	golang.org/x/tools v0.1.3 // indirect
+	golang.org/x/crypto v0.31.0
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/errgo.v2 v2.1.0
 )
